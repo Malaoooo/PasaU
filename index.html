@@ -1,0 +1,1242 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PasaU · Pass it on to the next batch</title>
+<meta name="description" content="PasaU is a student marketplace for eight Baguio schools. Sell, swap or give away textbooks, uniforms and school supplies, then meet on campus to hand them over.">
+<link rel="icon" type="image/svg+xml" href="logos/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Poppins:wght@500;700&display=swap">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="app.css">
+<script src="a11y.js"></script>
+<script src="motion.js"></script>
+
+<!-- Illustration + icon sprites (colors come from --c1/--c2/--c3/--leg on each <use>) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="ic-um" viewBox="-31 13 302 302"><g><path d="M26 132 V200 A94 94 0 0 0 214 200 V132" fill="none" stroke="currentColor" stroke-width="30"/><rect x="2.0" y="88" width="48" height="34" rx="6.720000000000001" fill="currentColor"/><rect x="190.0" y="88" width="48" height="34" rx="6.720000000000001" fill="currentColor"/><path d="M62 84 L120 103 L178 84 V116 C178 133 152 146 120 146 C88 146 62 133 62 116 Z" fill="currentColor"/><polygon points="120,18 228,54 120,90 12,54" fill="currentColor" stroke="currentColor" stroke-width="10" stroke-linejoin="round"/></g></symbol>
+  <defs>
+    <symbol id="i-shirt" viewBox="0 0 200 180">
+      <ellipse cx="100" cy="170" rx="62" ry="5" style="fill:#000;opacity:.12"/>
+      <path d="M80 20Q100 32 120 20L150 30L180 62L156 86L142 74V158Q100 166 58 158V74L44 86L20 62L50 30Z" style="fill:var(--c1)"/>
+      <path d="M80 20Q100 40 120 20" style="fill:none;stroke:var(--c2);stroke-width:6;stroke-linecap:round"/>
+      <path d="M26 56L50 80M174 56L150 80" style="fill:none;stroke:var(--c2);stroke-width:5;stroke-linecap:round"/>
+      <path d="M58 150Q100 158 142 150" style="fill:none;stroke:var(--c3);stroke-width:3;opacity:.6"/>
+      <path d="M64 40Q60 90 64 150L74 152Q70 96 76 36Z" style="fill:#fff;opacity:.12"/>
+      <text x="100" y="114" text-anchor="middle" style="fill:var(--c2);font:800 30px 'Bricolage Grotesque',system-ui,sans-serif">PE</text>
+    </symbol>
+    <symbol id="i-pants" viewBox="0 0 200 180">
+      <ellipse cx="100" cy="170" rx="58" ry="5" style="fill:#000;opacity:.12"/>
+      <path d="M64 28H136L146 162H108L100 70L92 162H54Z" style="fill:var(--c1)"/>
+      <rect x="62" y="16" width="76" height="16" rx="6" style="fill:var(--c3)"/>
+      <path d="M70 34L60 156M130 34L140 156" style="stroke:var(--c2);stroke-width:5;stroke-linecap:round"/>
+      <path d="M96 32L93 50M104 32L107 50" style="stroke:#fff;stroke-width:2.5;stroke-linecap:round;opacity:.85"/>
+      <rect x="54" y="152" width="38" height="12" rx="4" style="fill:var(--c3)"/>
+      <rect x="108" y="152" width="38" height="12" rx="4" style="fill:var(--c3)"/>
+    </symbol>
+    <symbol id="i-calc" viewBox="0 0 200 180">
+      <ellipse cx="100" cy="170" rx="52" ry="5" style="fill:#000;opacity:.12"/>
+      <rect x="58" y="14" width="84" height="152" rx="14" style="fill:var(--c1)"/>
+      <rect x="64" y="20" width="6" height="140" rx="3" style="fill:#fff;opacity:.12"/>
+      <rect x="68" y="26" width="65" height="30" rx="5" style="fill:#DCE7C9"/>
+      <path d="M100 46h24M84 46h8" style="stroke:#2B3A26;stroke-width:4;stroke-linecap:round"/>
+      <rect x="68" y="68" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="86" y="68" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="104" y="68" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="68" y="88" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="86" y="88" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="104" y="88" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="68" y="108" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="86" y="108" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="104" y="108" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="68" y="128" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="86" y="128" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="104" y="128" width="11" height="12" rx="3" style="fill:var(--c2)"/><rect x="122" y="68" width="11" height="12" rx="3" style="fill:var(--c3)"/><rect x="122" y="88" width="11" height="12" rx="3" style="fill:var(--c3)"/><rect x="122" y="108" width="11" height="12" rx="3" style="fill:var(--c3)"/><rect x="122" y="128" width="11" height="12" rx="3" style="fill:var(--c3)"/>
+      <rect x="68" y="148" width="47" height="10" rx="3" style="fill:var(--c2)"/>
+      <rect x="122" y="148" width="11" height="10" rx="3" style="fill:var(--c3)"/>
+    </symbol>
+    <symbol id="i-backpack" viewBox="0 0 200 180">
+      <ellipse cx="100" cy="170" rx="56" ry="5" style="fill:#000;opacity:.12"/>
+      <path d="M88 34Q88 16 100 16Q112 16 112 34" style="fill:none;stroke:var(--c3);stroke-width:7;stroke-linecap:round"/>
+      <rect x="54" y="30" width="92" height="136" rx="30" style="fill:var(--c1)"/>
+      <path d="M54 70Q100 54 146 70" style="fill:none;stroke:var(--c3);stroke-width:3;opacity:.6"/>
+      <rect x="62" y="40" width="8" height="110" rx="4" style="fill:#fff;opacity:.14"/>
+      <rect x="68" y="98" width="64" height="52" rx="14" style="fill:var(--c2)"/>
+      <path d="M76 112H124" style="stroke:var(--c3);stroke-width:3;stroke-linecap:round"/>
+      <rect x="96" y="106" width="8" height="13" rx="2" style="fill:#F2F4EF"/>
+    </symbol>
+    <symbol id="i-books" viewBox="0 0 200 180">
+      <ellipse cx="100" cy="170" rx="74" ry="5" style="fill:#000;opacity:.12"/>
+      <rect x="34" y="136" width="132" height="28" rx="5" style="fill:var(--c1)"/>
+      <rect x="150" y="140" width="10" height="20" rx="2" style="fill:#fff;opacity:.85"/>
+      <rect x="50" y="108" width="116" height="28" rx="5" style="fill:var(--c2)"/>
+      <rect x="54" y="112" width="10" height="20" rx="2" style="fill:#fff;opacity:.85"/>
+      <rect x="40" y="80" width="112" height="28" rx="5" style="fill:var(--c3)"/>
+      <rect x="136" y="84" width="10" height="20" rx="2" style="fill:#fff;opacity:.85"/>
+      <path d="M60 150h60M74 122h50M58 94h48" style="stroke:#fff;stroke-width:3;stroke-linecap:round;opacity:.55"/>
+      <rect x="92" y="44" width="38" height="36" rx="8" style="fill:#F2F4EF"/>
+      <path d="M130 52q14 0 14 10t-14 10" style="fill:none;stroke:#F2F4EF;stroke-width:5"/>
+      <path d="M102 36q-4-8 2-14M116 36q-4-8 2-14" style="fill:none;stroke:#9AA595;stroke-width:3;stroke-linecap:round;opacity:.6"/>
+    </symbol>
+
+    <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ic-sliders" viewBox="0 0 24 24"><path d="M6 4v16M12 4v16M18 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="6" cy="9" r="2.5" fill="currentColor"/><circle cx="12" cy="15" r="2.5" fill="currentColor"/><circle cx="18" cy="8" r="2.5" fill="currentColor"/></symbol>
+    <symbol id="ic-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.2-9.4C1.6 7.2 4 4 7.3 4c2 0 3.6 1.1 4.7 2.7C13.1 5.1 14.7 4 16.7 4 20 4 22.4 7.2 21.2 10.6 19.5 15.4 12 20 12 20z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12H6.2z" fill="currentColor"/><path d="M9 10V7a3 3 0 0 1 6 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" fill="currentColor"/><path d="M10 20a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="ic-arrow" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-swap" viewBox="0 0 24 24"><path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-prev" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></symbol>
+    <symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor"/></symbol>
+    <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ic-minus" viewBox="0 0 24 24"><path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <header class="nav">
+    <a class="logo" href="#top" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="wm" aria-hidden="true">Pasa<b>U</b></span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#shop">Shop</a>
+      <a class="nav-um" href="unimatch.html"><svg class="um-mark" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg>UniMatch</a>
+      <a href="#spotlight">Free &amp; swaps</a>
+    </nav>
+    <div class="nav-right">
+      <a class="round nav-um-btn" href="unimatch.html" aria-label="UniMatch" title="UniMatch"><svg class="icon um-ic" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg></a>
+      <a class="round nav-me" id="nav-me" href="profile.html" aria-label="Your profile" hidden></a>
+      <button class="round navbag" type="button" id="nav-bell" aria-label="Notifications" hidden><svg class="icon"><use href="#ic-bell"/></svg><b id="bellcount" hidden>0</b></button>
+      <button class="pill nav-sell" type="button" data-sell>Sell an item</button>
+      <button class="pill" type="button" id="login-btn" aria-haspopup="dialog">Log in</button>
+      <button class="round menu-btn" type="button" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <nav class="mnav" id="mnav" aria-label="Menu" hidden>
+      <a href="#shop">Shop</a>
+      <a href="#spotlight">Free &amp; swaps</a>
+      <a href="unimatch.html">UniMatch</a>
+      <a href="#join">Request your school</a>
+      <hr>
+      <a href="profile.html" data-auth hidden>Your profile</a>
+      <a href="profile.html#settings" data-auth hidden>Profile settings</a>
+      <button type="button" data-a11y>Accessibility</button>
+      <button type="button" id="logout-btn" data-auth hidden>Log out</button>
+    </nav>
+  </header>
+
+  <main id="top" style="display:grid;gap:var(--s-6)">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title">Need it? Have it?<br>Pass it on with PasaU.</h1>
+        <p class="lede">PasaU connects students who need textbooks, uniforms, calculators and school supplies with students on campus who already have them.<span class="lede-more"> Sell, swap or give away what you've finished with, or tell UniMatch what you need and it finds who has it.</span></p>
+        <div class="campus" id="campus">
+          <div class="campus-bar">
+            <button class="campus-toggle" type="button" id="campus-toggle" aria-expanded="false" aria-controls="campus-row">
+              <svg class="icon pin" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.3" fill="currentColor"/></svg>
+              <span class="campus-label">Campus</span>
+              <b class="campus-current" id="campus-current">All campuses</b>
+              <svg class="icon chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="campus-count" id="campus-count" role="status" aria-live="polite"></p>
+          </div>
+          <div class="campus-row" id="campus-row" role="group" aria-label="Choose your campus" hidden></div>
+        </div>
+        <form class="search" role="search" id="hero-search">
+          <svg class="icon" aria-hidden="true"><use href="#ic-search"/></svg>
+          <label for="q" class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Search campus listings</label>
+          <input id="q" name="q" type="search" placeholder="Search PE shirts, textbooks, calculators…">
+          <button class="pill" type="submit">Browse</button>
+        </form>
+        <nav class="hero-cats" aria-label="Jump to a category">
+          <button type="button" data-jump="books">Books</button>
+          <button type="button" data-jump="uniforms">Uniforms</button>
+          <button type="button" data-jump="supplies">School supplies</button>
+          <button type="button" data-jump="electronics">Electronics</button>
+          <button type="button" data-jump="lab_art">Lab &amp; art</button>
+        </nav>
+        <span class="chip-float" aria-live="polite" hidden><i></i><span id="chip-text"></span></span>
+        <div class="recent" id="recent" hidden></div>
+        <div class="trust"><span>Meet at a spot on your campus</span><span>6-digit handover code</span><span>First come, first served</span></div>
+      </div>
+
+      <div class="stage" id="stage" role="region" aria-roledescription="carousel" aria-label="Featured listings. Use the arrow keys to browse." tabindex="0">
+        <span class="hmark" aria-hidden="true"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g class="wheel"><g transform="matrix(-1 0 0 1 200 0)"><path d="M85.4 17.3 A84 84 0 0 1 181.5 120.3" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><path d="M174.2 139.4 L167.5 114.3 L196.8 120.6 Z" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/><path d="M114.6 182.7 A84 84 0 0 1 18.5 79.7" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><path d="M25.8 60.6 L32.5 85.7 L3.2 79.4 Z" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></g></g><image href="logos/mark-white.svg" x="58" y="61" width="84" height="77"/></svg></span>
+        <div class="hctl">
+          <button class="hbtn" type="button" id="h-prev" aria-label="Previous listing"><svg class="icon"><use href="#ic-prev"/></svg></button>
+          <span class="hcount"><b id="h-idx">1</b> / <span id="h-total">6</span></span>
+          <button class="hbtn" type="button" id="h-play" aria-label="Pause carousel"><svg class="icon"><use href="#ic-pause"/></svg></button>
+          <button class="hbtn" type="button" id="h-next" aria-label="Next listing"><svg class="icon"><use href="#ic-next"/></svg></button>
+        </div>
+        <div class="hcards" id="hcards">
+        <article class="hcard" data-pos="0" aria-label="1 of 6: Campus Backpack">
+          <span class="badge cond">Used</span>
+          <svg class="item" aria-hidden="true" style="--c1:#CE6A22;--c2:#E5843A;--c3:#9E4A12"><use href="#i-backpack"/></svg>
+          <div class="name">Campus Backpack</div>
+          <div class="price">₱500</div>
+          <div class="was">Example · Pickup at Student center</div>
+        </article>
+        <article class="hcard" data-pos="1" aria-label="2 of 6: PE House Shirt" aria-hidden="true">
+          <span class="badge cond">Like new</span>
+          <svg class="item" aria-hidden="true" style="--c1:#1F5A36;--c2:#FFFFFF;--c3:#1A4511"><use href="#i-shirt"/></svg>
+          <div class="name">PE House Shirt</div>
+          <div class="price">₱250</div>
+          <div class="was">Example · Pickup at Gym lobby</div>
+        </article>
+        <article class="hcard" data-pos="2" aria-label="3 of 6: Calculus I–III Bundle" aria-hidden="true">
+          <span class="badge cond">Used</span>
+          <svg class="item" aria-hidden="true" style="--c1:#1F5A36;--c2:#EF5468;--c3:#F2A900"><use href="#i-books"/></svg>
+          <div class="name">Calculus I–III Bundle</div>
+          <div class="price">₱900</div>
+          <div class="was">Example · Pickup at Library lobby</div>
+        </article>
+        <article class="hcard" data-pos="3" aria-label="4 of 6: PE Jogging Pants" aria-hidden="true">
+          <span class="badge cond">Used</span>
+          <svg class="item" aria-hidden="true" style="--c1:#2F5A34;--c2:#8DB255;--c3:#1E3D22"><use href="#i-pants"/></svg>
+          <div class="name">PE Jogging Pants</div>
+          <div class="price">₱300</div>
+          <div class="was">Example · Pickup at Gym lobby</div>
+        </article>
+        <article class="hcard" data-pos="-2" aria-label="5 of 6: Scientific Calculator" aria-hidden="true">
+          <span class="badge cond">Like new</span>
+          <svg class="item" aria-hidden="true" style="--c1:#1A1D1A;--c2:#3C443C;--c3:#8DB255"><use href="#i-calc"/></svg>
+          <div class="name">Scientific Calculator</div>
+          <div class="price">₱450</div>
+          <div class="was">Example · Pickup at Library lobby</div>
+        </article>
+        <article class="hcard" data-pos="-1" aria-label="6 of 6: English Lit Reading Set" aria-hidden="true">
+          <span class="badge cond">Used</span>
+          <svg class="item" aria-hidden="true" style="--c1:#EF5468;--c2:#F2A900;--c3:#1F5A36"><use href="#i-books"/></svg>
+          <div class="name">English Lit Reading Set</div>
+          <div class="price">₱400</div>
+          <div class="was">Example · Pickup at Library lobby</div>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- For you (logged in, from your school) -->
+    <section class="spotlight foryou" id="foryou" aria-labelledby="foryou-title" hidden>
+      <div class="head">
+        <div class="stack">
+          <h2 id="foryou-title">For you</h2>
+          <p>From students at your school, your course first.</p>
+        </div>
+      </div>
+      <div class="spot-row" id="foryou-row" role="list"></div>
+    </section>
+
+    <!-- Catalog -->
+    <section class="catalog" id="shop" aria-labelledby="shop-title">
+      <div class="head">
+        <div class="stack">
+          <h2 id="shop-title">Fresh from last semester</h2>
+        </div>
+        <div class="chips" role="group" aria-label="Filter by category">
+          <button type="button" aria-pressed="true" data-cat="all">All</button>
+          <button type="button" aria-pressed="false" data-cat="books">Books</button>
+          <button type="button" aria-pressed="false" data-cat="uniforms">Uniforms</button>
+          <button type="button" aria-pressed="false" data-cat="supplies">School supplies</button>
+          <button type="button" aria-pressed="false" data-cat="lab_art">Lab &amp; art</button>
+          <button type="button" aria-pressed="false" data-cat="electronics">Electronics</button>
+          <button type="button" aria-pressed="false" data-cat="dorm">Dorm &amp; living</button>
+          <button type="button" aria-pressed="false" data-cat="others">Others</button>
+          <button type="button" aria-pressed="false" data-cat="saved" id="chip-saved" hidden>Saved</button>
+        </div>
+      </div>
+
+      <div id="filters-mount"></div>
+      <div class="active-filters" id="active-filters" aria-live="polite" hidden></div>
+      <div class="grid" id="grid">
+        <article class="card" data-cat="uniforms">
+          <span class="badge cond">Like new</span>
+          <div class="media"><svg class="item" role="img" aria-label="Green PE house shirt" style="--c1:#1F5A36;--c2:#FFFFFF;--c3:#1A4511"><use href="#i-shirt"/></svg></div>
+          <div class="name">PE House Shirt</div>
+          <div class="price">₱250</div>
+          <div class="meta">Example · Gym lobby · Size M, chest 38 in</div>
+          <button class="round heart" type="button" aria-pressed="true" aria-label="Save PE House Shirt"><svg class="icon"><use href="#ic-heart"/></svg></button>
+        </article>
+        <article class="card" data-cat="uniforms">
+          <span class="badge cond">Used</span>
+          <div class="media"><svg class="item" role="img" aria-label="Dark PE jogging pants with green stripes" style="--c1:#2F5A34;--c2:#8DB255;--c3:#1E3D22"><use href="#i-pants"/></svg></div>
+          <div class="name">PE Jogging Pants</div>
+          <div class="price">₱300</div>
+          <div class="meta">Example · Gym lobby · Size L, 30 in waist</div>
+          <button class="round heart" type="button" aria-pressed="false" aria-label="Save PE Jogging Pants"><svg class="icon"><use href="#ic-heart"/></svg></button>
+        </article>
+        <article class="card" data-cat="books">
+          <span class="badge cond">Used</span>
+          <div class="media"><svg class="item" role="img" aria-label="Stack of calculus textbooks" style="--c1:#1F5A36;--c2:#EF5468;--c3:#F2A900"><use href="#i-books"/></svg></div>
+          <div class="name">Calculus I–III Bundle</div>
+          <div class="price">₱900</div>
+          <div class="meta">Example · Library lobby · 3 books, light notes</div>
+          <button class="round heart" type="button" aria-pressed="false" aria-label="Save Calculus I–III Bundle"><svg class="icon"><use href="#ic-heart"/></svg></button>
+        </article>
+        <article class="card" data-cat="books">
+          <span class="badge cond">Used</span>
+          <div class="media"><svg class="item" role="img" aria-label="Stack of novels" style="--c1:#EF5468;--c2:#F2A900;--c3:#1F5A36"><use href="#i-books"/></svg></div>
+          <div class="name">English Lit Reading Set</div>
+          <div class="price">₱400</div>
+          <div class="meta">Example · Library lobby · 4 novels, no highlights</div>
+          <button class="round heart" type="button" aria-pressed="false" aria-label="Save English Lit Reading Set"><svg class="icon"><use href="#ic-heart"/></svg></button>
+        </article>
+        <article class="card" data-cat="supplies">
+          <span class="badge cond">Like new</span>
+          <div class="media"><svg class="item" role="img" aria-label="Scientific calculator" style="--c1:#1A1D1A;--c2:#3C443C;--c3:#8DB255"><use href="#i-calc"/></svg></div>
+          <div class="name">Scientific Calculator</div>
+          <div class="price">₱450</div>
+          <div class="meta">Example · Library lobby · exam-approved, batteries incl.</div>
+          <button class="round heart" type="button" aria-pressed="false" aria-label="Save Scientific Calculator"><svg class="icon"><use href="#ic-heart"/></svg></button>
+        </article>
+        <article class="card" data-cat="supplies">
+          <span class="badge cond">Used</span>
+          <div class="media"><svg class="item" role="img" aria-label="Orange backpack" style="--c1:#CE6A22;--c2:#E5843A;--c3:#9E4A12"><use href="#i-backpack"/></svg></div>
+          <div class="name">Campus Backpack</div>
+          <div class="price">₱500</div>
+          <div class="meta">Example · Student center · fits a 15 in laptop</div>
+          <button class="round heart" type="button" aria-pressed="false" aria-label="Save Campus Backpack"><svg class="icon"><use href="#ic-heart"/></svg></button>
+        </article>
+      </div>
+      <div class="empty" id="empty" aria-live="polite" hidden></div>
+    </section>
+
+    <!-- Free & swaps: the same cards as the shop, in a Free group and a Swaps group -->
+    <section class="freeswap" id="spotlight" aria-labelledby="spot-title" hidden>
+      <div class="head">
+        <div class="stack">
+          <h2 id="spot-title">Free &amp; swaps</h2>
+          <p>Free to whoever claims it first, or trade something you own for it.</p>
+        </div>
+      </div>
+      <div class="fs-group" id="free-group" hidden>
+        <div class="fs-head"><h3>Free</h3><span class="fs-count"></span><button class="pill light small fs-more" type="button" data-kind="free" hidden>See all free</button></div>
+        <div class="grid" id="free-grid"></div>
+      </div>
+      <div class="fs-group" id="swap-group" hidden>
+        <div class="fs-head"><h3>Swaps</h3><span class="fs-count"></span><button class="pill light small fs-more" type="button" data-kind="swap" hidden>See all swaps</button></div>
+        <div class="grid" id="swap-grid"></div>
+      </div>
+    </section>
+
+    <!-- UniMatch preview: Looking For posts and matching live on unimatch.html -->
+    <section class="wanted" id="wanted" aria-labelledby="wanted-title">
+      <div class="head">
+        <div class="stack">
+          <h2 id="wanted-title">Can't find it? Try UniMatch.</h2>
+          <p>Post what you need. UniMatch shows what's listed now and asks the students most likely to have one.</p>
+        </div>
+        <a class="pill light um-open" href="unimatch.html" id="wanted-btn"><svg class="um-mark" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg>Open UniMatch</a>
+      </div>
+      <ul class="wanted-list" id="wanted-list"><li class="wl-empty">No Looking For posts yet.</li></ul>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="join" aria-labelledby="join-title">
+      <div class="mark" role="img" aria-label="PasaU mark: a graduation cap on a U-turn arrow, inside two cycle arrows"><svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><g class="wheel"><g transform="matrix(-1 0 0 1 200 0)"><path d="M85.4 17.3 A84 84 0 0 1 181.5 120.3" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><path d="M174.2 139.4 L167.5 114.3 L196.8 120.6 Z" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/><path d="M114.6 182.7 A84 84 0 0 1 18.5 79.7" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/><path d="M25.8 60.6 L32.5 85.7 L3.2 79.4 Z" fill="#fff" stroke="#fff" stroke-width="4" stroke-linejoin="round"/></g></g><image href="logos/mark-white.svg" x="58" y="61" width="84" height="77"/></svg></div>
+      <div class="stack">
+        <h2 id="join-title">School not on the list?</h2>
+        <p>PasaU covers eight Baguio schools. Leave your email and we'll tell you when yours can join.</p>
+        <form id="join-form" novalidate>
+          <label for="email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email">
+          <button class="pill light" type="submit">Notify me</button>
+        </form>
+        <p class="formnote" id="join-note" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="logo" href="#top" aria-label="PasaU, pass it on to the next batch. Back to top"><span class="mk" aria-hidden="true"></span><span class="lock" aria-hidden="true"><span class="wm">Pasa<b>U</b></span><small>Pass it on to the next batch</small></span></a>
+    <nav aria-label="Footer">
+      <a href="#shop">Shop</a>
+      <a href="unimatch.html">UniMatch</a>
+      <a href="#join">Request your school</a>
+      <button type="button" data-a11y>Accessibility</button>
+    </nav>
+    <span>© 2026 PasaU · Made by students</span>
+  </footer>
+</div>
+
+<button class="pill fab" type="button" data-sell>Sell an item</button>
+
+<dialog class="login" id="login" aria-labelledby="login-title">
+  <form id="login-form" novalidate>
+    <button class="round close" type="button" id="login-close" aria-label="Close"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <span class="lmark" aria-hidden="true"><img src="logos/mark-white.svg" alt="" width="232" height="304"></span>
+    <h2 id="login-title">Log in to PasaU</h2>
+    <p class="hint" data-forgot hidden>Enter the email you signed up with. We’ll send a link to set a new password.</p>
+    <div class="modes" id="login-modes" role="group" aria-label="Log in or create an account">
+      <button type="button" data-mode="login" aria-pressed="true">Log in</button>
+      <button type="button" data-mode="signup" aria-pressed="false">Create account</button>
+    </div>
+    <div class="field" data-signup hidden>
+      <label for="su-name">Full name</label>
+      <input id="su-name" type="text" autocomplete="name" placeholder="Juan dela Cruz">
+    </div>
+    <div class="field" data-signup hidden>
+      <label for="su-school">School</label>
+      <select id="su-school"></select>
+      <input id="su-school-other" type="text" autocomplete="organization" placeholder="Type your school's name" aria-label="Your school's name" hidden>
+      <small class="hint">We show listings from your school first.</small>
+    </div>
+    <div class="field" data-signup hidden>
+      <label for="su-course">Course</label>
+      <select id="su-course"></select>
+      <input id="su-course-other" type="text" placeholder="Type your course" aria-label="Your course" hidden>
+    </div>
+    <div class="field" data-signup hidden>
+      <label for="su-year">Year level</label>
+      <select id="su-year">
+        <option value="">Choose…</option>
+        <option>1st year</option>
+        <option>2nd year</option>
+        <option>3rd year</option>
+        <option>4th year</option>
+        <option>5th year</option>
+        <option>Graduate</option>
+      </select>
+    </div>
+    <p class="hint" data-signup hidden>Year and course help classmates find books and uniforms for your course. Only logged-in students can see your name and school.</p>
+    <div class="field" id="email-field">
+      <label for="login-email">Email</label>
+      <input id="login-email" type="email" autocomplete="email" placeholder="you@example.com">
+    </div>
+    <div class="field" id="pass-field">
+      <label for="login-pass" id="login-pass-label">Password</label>
+      <input id="login-pass" type="password" autocomplete="current-password" placeholder="At least 8 characters">
+      <button class="lforgot" type="button" id="forgot-btn">Forgot password?</button>
+    </div>
+    <button class="pill" type="submit" id="login-send">Log in</button>
+    <button class="lforgot back" type="button" id="back-btn" data-forgot hidden>Back to log in</button>
+    <p class="lnote" id="login-note" aria-live="polite"></p>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="universities.js"></script>
+<script>
+(function () {
+  // Supabase: publishable key is public by design; Row Level Security guards the data.
+  var SUPABASE_URL = window.UC_CONFIG.url, SUPABASE_KEY = window.UC_CONFIG.key;
+  var db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function motionOK() { var m = document.documentElement.getAttribute('data-motion'); return m === 'full' || (m !== 'reduce' && !reduce.matches); }
+
+  var toastEl = document.getElementById('toast'), tTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(tTimer);
+    tTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 4000);
+  }
+  // ---------- Mobile menu ----------
+  var menuBtn = document.getElementById('menu-btn'), mnav = document.getElementById('mnav');
+  function setMenu(open) { mnav.hidden = !open; menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+  menuBtn.addEventListener('click', function () { setMenu(mnav.hidden); if (!mnav.hidden) mnav.querySelector('a').focus(); });
+  mnav.addEventListener('click', function (e) { if (e.target.closest('a, button')) setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !mnav.hidden) { setMenu(false); menuBtn.focus(); } });
+  document.addEventListener('click', function (e) { if (!mnav.hidden && !e.target.closest('#mnav, #menu-btn')) setMenu(false); });
+
+  document.querySelectorAll('[data-toast]').forEach(function (b) {
+    b.addEventListener('click', function () { toast(b.getAttribute('data-toast')); });
+  });
+
+  // ---------- Accounts: email + password via Supabase Auth ----------
+  var loginBtn = document.getElementById('login-btn'), loginDlg = document.getElementById('login');
+  var loginForm = document.getElementById('login-form'), loginNote = document.getElementById('login-note');
+  var loginEmail = document.getElementById('login-email'), loginPass = document.getElementById('login-pass');
+  var loginSend = document.getElementById('login-send'), loginTitle = document.getElementById('login-title');
+  var suName = document.getElementById('su-name'), suSchool = document.getElementById('su-school');
+  var suYear = document.getElementById('su-year'), suCourse = document.getElementById('su-course');
+  var suSchoolOther = document.getElementById('su-school-other'), suCourseOther = document.getElementById('su-course-other');
+  // Schools and courses come from universities.js; "Other" reveals a text box
+  function opt(value, text) { var o = document.createElement('option'); o.value = value; o.textContent = text; return o; }
+  function fillSchools() {
+    suSchool.replaceChildren.apply(suSchool, [opt('', 'Choose your school\u2026')]
+      .concat((window.UC_SCHOOLS || []).map(function (sc) { return opt(sc.name, sc.name); }), [opt('other', 'Other (not listed)')]));
+  }
+  function fillCourses() {
+    var sc = window.UC_SCHOOL_BY_NAME ? window.UC_SCHOOL_BY_NAME(suSchool.value) : null;
+    var list = sc ? sc.courses : (window.UC_ALL_COURSES ? window.UC_ALL_COURSES() : []);
+    suCourse.replaceChildren.apply(suCourse, [opt('', 'Choose your course\u2026')]
+      .concat(list.map(function (c) { return opt(c, c); }), [opt('other', 'Other (type it)')]));
+    suCourseOther.hidden = true;
+  }
+  suSchool.addEventListener('change', function () { suSchoolOther.hidden = suSchool.value !== 'other'; fillCourses(); if (!suSchoolOther.hidden) suSchoolOther.focus(); });
+  suCourse.addEventListener('change', function () { suCourseOther.hidden = suCourse.value !== 'other'; if (!suCourseOther.hidden) suCourseOther.focus(); });
+  fillSchools();
+  fillCourses();
+  var modeBtns = loginDlg.querySelectorAll('.modes button'), signupFields = loginDlg.querySelectorAll('[data-signup]');
+  var mode = 'login', user = null;
+  function note(msg, isErr) {
+    loginNote.textContent = msg;
+    loginNote.classList.toggle('err', !!isErr);
+    if (isErr && msg) loginNote.scrollIntoView({ block: 'nearest' });
+  }
+  // A field's own error sits under it and is read out with it (aria-describedby); typing clears it
+  function unmark(input) {
+    var e = document.getElementById(input.id + '-err');
+    if (e) e.remove();
+    input.removeAttribute('aria-invalid');
+    var d = (input.getAttribute('aria-describedby') || '').split(' ').filter(function (x) { return x && x !== input.id + '-err'; }).join(' ');
+    if (d) input.setAttribute('aria-describedby', d); else input.removeAttribute('aria-describedby');
+  }
+  // Supabase auth messages are mostly plain ("Password should be at least 6 characters"); anything technical becomes one line
+  function authText(err) {
+    var m = (err && err.message) || '';
+    return m && m.length < 120 && !/fetch|network|jwt|permission|violates|relation|function|column|syntax|uuid|null value|schema|postgres|pgrst|duplicate key|constraint/i.test(m) ? m : 'check your connection and try again.';
+  }
+  function fieldErr(input, msg) {
+    unmark(input);
+    var e = document.createElement('small');
+    e.className = 'ferr'; e.id = input.id + '-err'; e.textContent = msg;
+    input.closest('.field').append(e);
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', ((input.getAttribute('aria-describedby') || '') + ' ' + e.id).trim());
+    note('');
+    input.focus();
+  }
+  function clearErrs() { [].forEach.call(loginForm.querySelectorAll('[aria-invalid]'), unmark); }
+  loginForm.addEventListener('input', function (e) { if (e.target.getAttribute('aria-invalid')) unmark(e.target); });
+  loginForm.addEventListener('change', function (e) { if (e.target.getAttribute('aria-invalid')) unmark(e.target); });
+  var forgotOnly = loginDlg.querySelectorAll('[data-forgot]');
+  function setMode(m) {
+    mode = m;
+    modeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'); });
+    signupFields.forEach(function (f) { f.hidden = m !== 'signup'; });
+    forgotOnly.forEach(function (f) { f.hidden = m !== 'forgot'; });
+    document.getElementById('login-modes').hidden = m === 'forgot' || m === 'newpass';
+    document.getElementById('email-field').hidden = m === 'newpass';
+    document.getElementById('pass-field').hidden = m === 'forgot';
+    document.getElementById('forgot-btn').hidden = m !== 'login';
+    document.getElementById('login-pass-label').textContent = m === 'newpass' ? 'New password' : 'Password';
+    loginTitle.textContent = { signup: 'Create your PasaU account', forgot: 'Reset your password', newpass: 'Set a new password' }[m] || 'Log in to PasaU';
+    loginSend.textContent = { signup: 'Create account', forgot: 'Send reset link', newpass: 'Save new password' }[m] || 'Log in';
+    loginPass.autocomplete = m === 'login' ? 'current-password' : 'new-password';
+    clearErrs();
+    note('');
+  }
+  document.getElementById('forgot-btn').addEventListener('click', function () { setMode('forgot'); loginEmail.focus(); });
+  document.getElementById('back-btn').addEventListener('click', function () { setMode('login'); loginEmail.focus(); });
+  modeBtns.forEach(function (b) { b.addEventListener('click', function () { setMode(b.dataset.mode); }); });
+  function showUser(u) {
+    user = u;
+    document.dispatchEvent(new CustomEvent('uc:user', { detail: u || null }));
+    loginBtn.hidden = !!u;
+    document.querySelectorAll('#mnav [data-auth]').forEach(function (el) { el.hidden = !u; });
+  }
+  document.getElementById('logout-btn').addEventListener('click', function () {
+    db.auth.signOut().then(function () { toast('Logged out'); });
+  });
+  loginBtn.addEventListener('click', function () {
+    setMode('login');
+    loginDlg.showModal();
+    loginEmail.focus();
+  });
+  window.UC = {
+    db: db, toast: toast,
+    user: function () { return user; },
+    openLogin: function () { setMode('login'); loginDlg.showModal(); loginEmail.focus(); },
+    listings: {}, match: null, refilter: null, reload: null
+  };
+  document.getElementById('login-close').addEventListener('click', function () { loginDlg.close(); });
+  // Close on backdrop only when the press AND the release both happen outside the box
+  // (dragging a text selection out of the box must not close it)
+  var downOutside = false;
+  function isOut(dlg, e) {
+    var r = dlg.getBoundingClientRect();
+    return e.target === dlg && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom);
+  }
+  document.addEventListener('pointerdown', function (e) {
+    downOutside = e.target.tagName === 'DIALOG' && isOut(e.target, e);
+  }, true);
+  function outside(dlg, e) {
+    if (!e.detail || !downOutside) return false; // keyboard-made clicks have detail 0
+    downOutside = false;
+    return isOut(dlg, e);
+  }
+  UC.outside = outside;
+  loginDlg.addEventListener('click', function (e) { if (outside(loginDlg, e)) loginDlg.close(); });
+  loginForm.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT') { e.preventDefault(); loginForm.requestSubmit(loginSend); }
+  });
+  function sendReset(email) {
+    clearErrs();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { fieldErr(loginEmail, 'Enter your email, like you@example.com.'); return; }
+    if (!db) { note("Couldn't reach PasaU. Check your connection and try again.", true); return; }
+    loginSend.disabled = true;
+    note('Sending the link\u2026');
+    db.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }).then(function (res) {
+      loginSend.disabled = false;
+      var err = res.error;
+      if (err && /rate|seconds/i.test(err.message)) { note('Too many reset emails just now. Wait a minute, then try again.', true); return; }
+      if (err) { note("Couldn't send the link: " + authText(err), true); return; }
+      // Same reply whether or not the account exists, so the form can't be used to check who has one
+      note('If ' + email + ' has a PasaU account, a reset link is on its way. Check your inbox and spam folder.');
+    });
+  }
+  function saveNewPass(pass) {
+    clearErrs();
+    if (pass.length < 8) { fieldErr(loginPass, 'Your new password needs at least 8 characters.'); return; }
+    loginSend.disabled = true;
+    note('Saving\u2026');
+    db.auth.updateUser({ password: pass }).then(function (res) {
+      loginSend.disabled = false;
+      var err = res.error;
+      if (err && /different|same/i.test(err.message)) { note('Choose a password different from your old one.', true); return; }
+      if (err && /session|expired|jwt|missing/i.test(err.message)) { setMode('forgot'); note('That reset link has expired. Enter your email to get a new one.', true); return; }
+      if (err) { note("Couldn't save your password: " + authText(err), true); return; }
+      loginPass.value = '';
+      loginDlg.close();
+      toast('Password updated. You\u2019re logged in.');
+    });
+  }
+  loginForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (mode === 'forgot') { sendReset(loginEmail.value.trim()); return; }
+    if (mode === 'newpass') { saveNewPass(loginPass.value); return; }
+    var email = loginEmail.value.trim(), pass = loginPass.value;
+    var name = suName.value.trim(), year = suYear.value;
+    var school = suSchool.value === 'other' ? suSchoolOther.value.trim() : suSchool.value;
+    var course = suCourse.value === 'other' ? suCourseOther.value.trim() : suCourse.value;
+    clearErrs();
+    if (mode === 'signup' && !name) { fieldErr(suName, 'Enter your full name.'); return; }
+    if (mode === 'signup' && !school) { fieldErr(suSchool.value === 'other' ? suSchoolOther : suSchool, suSchool.value === 'other' ? 'Type your school\u2019s name.' : 'Choose your school.'); return; }
+    if (mode === 'signup' && !course) { fieldErr(suCourse.value === 'other' ? suCourseOther : suCourse, suCourse.value === 'other' ? 'Type your course.' : 'Choose your course.'); return; }
+    if (mode === 'signup' && !year) { fieldErr(suYear, 'Choose your year level.'); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { fieldErr(loginEmail, 'Enter your email, like you@example.com.'); return; }
+    if (pass.length < 8) { fieldErr(loginPass, 'Your password needs at least 8 characters.'); return; }
+    if (!db) { note("Couldn't reach PasaU. Check your connection and try again.", true); return; }
+    loginSend.disabled = true;
+    note(mode === 'signup' ? 'Creating your account…' : 'Logging in…');
+    var req = mode === 'signup'
+      ? db.auth.signUp({ email: email, password: pass, options: { data: { full_name: name, school: school, year_level: year, course: course }, emailRedirectTo: location.origin + location.pathname } })
+      : db.auth.signInWithPassword({ email: email, password: pass });
+    req.then(function (res) {
+      loginSend.disabled = false;
+      var err = res.error;
+      if (mode === 'login') {
+        if (!err) return; // onAuthStateChange closes the pop-up
+        if (/confirm/i.test(err.message)) note('Confirm your email first: open the link we sent when you created your account.', true);
+        else if (/invalid/i.test(err.message)) note('Wrong email or password. Forgot it? Choose Forgot password? above.', true);
+        else note("Couldn't log in: " + authText(err), true);
+        return;
+      }
+      if (err) {
+        if (/registered|exists/i.test(err.message)) note('That email already has an account. Choose Log in instead.', true);
+        else if (/email rate/i.test(err.message)) note('PasaU has sent too many sign-up emails this hour. Try again later.', true);
+        else if (/rate|seconds/i.test(err.message)) note('Too many attempts just now. Wait a minute, then try again.', true);
+        else note("Couldn't create your account: " + authText(err), true);
+        return;
+      }
+      var u = res.data.user;
+      if (u && u.identities && u.identities.length === 0) { note('That email already has an account. Choose Log in instead.', true); return; }
+      if (!res.data.session) note('Account created. Check your inbox at ' + email + ' and open the link to confirm, then log in.');
+    });
+  });
+  // ?next=<page> comes from an inner page's Log in link; only plain page names are accepted, never another site
+  var nextPage = (function () {
+    var n = new URLSearchParams(location.search).get('next') || '';
+    return /^[a-z0-9_-]+(\.html)?(\?[^#]*)?$/i.test(n) ? n : '';
+  })();
+  if (db) {
+    db.auth.getSession().then(function (r) {
+      showUser(r.data.session && r.data.session.user);
+      if (r.data.session && nextPage) location.replace(nextPage);
+    });
+    db.auth.onAuthStateChange(function (event, session) {
+      showUser(session && session.user);
+      if (event === 'PASSWORD_RECOVERY') {
+        setMode('newpass');
+        loginPass.value = '';
+        if (!loginDlg.open) loginDlg.showModal();
+        loginPass.focus();
+        return;
+      }
+      if (event === 'SIGNED_IN' && loginDlg.open && mode !== 'newpass') {
+        if (nextPage) { location.href = nextPage; return; }
+        loginDlg.close(); toast('Logged in as ' + session.user.email);
+      }
+    });
+    // An old or already-used email link comes back with an error instead of a session
+    if (/error_code=|error_description=/.test(location.hash)) {
+      history.replaceState(null, '', location.pathname + location.search);
+      setMode('login');
+      loginDlg.showModal();
+      note('That email link has expired or was already used. Log in, or choose Forgot password? to get a new link.', true);
+    }
+  }
+
+  // ---------- Catalog: categories, search, filters, saved ----------
+  var CAT_LABEL = { books: 'Books', uniforms: 'Uniforms', supplies: 'School supplies', lab_art: 'Lab & art', electronics: 'Electronics', dorm: 'Dorm & living', others: 'Others', saved: 'Saved' };
+  var chips = document.querySelectorAll('.chips button');
+  var chipSaved = document.getElementById('chip-saved');
+  var grid = document.getElementById('grid');
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+  var empty = document.getElementById('empty');
+  var activeRow = document.getElementById('active-filters');
+  var chipText = document.getElementById('chip-text');
+  var qInput = document.getElementById('q');
+  var cat = 'all', qRaw = '', words = [], gridVisible = false;
+  UC.saved = {};
+  cards.forEach(function (c, i) { c.style.viewTransitionName = 'card-' + i; });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { gridVisible = es[0].isIntersecting; }).observe(grid);
+  }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function btnEl(cls, text, onclick) { var b = el('button', cls, text); b.type = 'button'; b.addEventListener('click', onclick); return b; }
+  function setCat(v) {
+    cat = v;
+    chips.forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.cat === v ? 'true' : 'false'); });
+  }
+  function setQuery(v, fromInput) {
+    qRaw = v.trim();
+    if (!fromInput) qInput.value = qRaw;
+    words = qRaw.toLowerCase().split(/\s+/).filter(Boolean);
+  }
+  // Every search word must appear (any order) in the title, category, size or course code
+  function matches(card) {
+    var hay = card.dataset.search || card.textContent.toLowerCase();
+    var inCat = cat === 'all' || (cat === 'saved' ? !!UC.saved[card.dataset.id] : card.dataset.cat === cat);
+    return inCat && words.every(function (w) { return hay.indexOf(w) !== -1; }) && (!UC.match || UC.match(card));
+  }
+  function extraFilters() { return UC.activeFilters ? UC.activeFilters() : []; }
+  function clearAll() { setQuery(''); setCat('all'); if (UC.clearFilters) UC.clearFilters(); filter(); }
+  function renderActive() {
+    var items = [];
+    if (qRaw) items.push({ label: '“' + qRaw + '”', clear: function () { setQuery(''); } });
+    if (cat !== 'all') items.push({ label: CAT_LABEL[cat], clear: function () { setCat('all'); } });
+    items = items.concat(extraFilters());
+    var els = items.map(function (f) {
+      var b = btnEl('afchip', f.label + ' ×', function () { f.clear(); filter(); });
+      b.setAttribute('aria-label', 'Remove filter: ' + f.label);
+      return b;
+    });
+    if (items.length > 1) els.push(btnEl('afclear', 'Clear all', clearAll));
+    activeRow.replaceChildren.apply(activeRow, els);
+    activeRow.hidden = !items.length;
+  }
+  // The empty state says why it's empty and offers the one useful next step
+  function renderEmpty(n) {
+    empty.hidden = n > 0;
+    if (n > 0) return;
+    var title, sub, acts = [], nf = extraFilters().length;
+    if (qRaw) {
+      title = 'No listings match “' + qRaw + '”.';
+      sub = 'Check the spelling, or try a shorter word like “PE” or “calculator”.';
+      acts.push(btnEl('pill light', 'Clear search', function () { setQuery(''); filter(); qInput.focus(); }));
+    } else if (nf) {
+      title = 'No listings match these filters.';
+      sub = 'Try another year level or price range, or clear the filters.';
+      acts.push(btnEl('pill light', 'Clear filters', function () { UC.clearFilters(); filter(); }));
+    } else if (cat === 'saved') {
+      title = 'Nothing saved yet.';
+      sub = 'Tap the heart on a listing to keep it here.';
+      acts.push(btnEl('pill light', 'Show all listings', function () { setCat('all'); filter(); }));
+    } else {
+      title = cat === 'all' ? 'No listings yet.' : 'No ' + CAT_LABEL[cat] + ' listings yet.';
+      sub = 'Be the first to list one, or post what you need and we’ll notify you when it shows up.';
+      acts.push(btnEl('pill light', 'List an item', function () { if (UC.openSell) UC.openSell(); }));
+      acts.push(btnEl('pill ghost', 'Ask UniMatch', function () { location.href = 'unimatch.html' + (qRaw ? '?need=' + encodeURIComponent(qRaw) : ''); }));
+    }
+    var row = el('div', 'empty-actions');
+    row.replaceChildren.apply(row, acts);
+    empty.replaceChildren(el('p', '', title), el('p', 'sub', sub), row);
+  }
+  function sortCards() {
+    var key = UC.sortKey || 'new';
+    function price(c) { return c.dataset.price === '' || c.dataset.price == null ? Infinity : +c.dataset.price; }
+    cards.slice().sort(function (a, b) {
+      if (key === 'price-asc') return price(a) - price(b);
+      if (key === 'price-desc') return (price(b) === Infinity ? -1 : price(b)) - (price(a) === Infinity ? -1 : price(a));
+      return (+b.dataset.created || 0) - (+a.dataset.created || 0);
+    }).forEach(function (c) { grid.appendChild(c); });
+  }
+  function applyFilter() {
+    var n = 0, shown = [];
+    if (cards.length && cards[0].dataset.id) sortCards();
+    cards.forEach(function (card) { var show = matches(card); card.hidden = !show; if (show) { n++; shown.push(card); } });
+    groupByCampus(shown);
+    renderEmpty(n);
+    renderActive();
+    // Live match count next to the hero carousel while searching
+    chipText.parentElement.hidden = !qRaw;
+    if (qRaw) chipText.textContent = (n === 1 ? '1 match' : n + ' matches') + ' for “' + qRaw + '”';
+  }
+  function filter() {
+    // Animate the reflow only when someone can see the grid move
+    if (motionOK() && gridVisible && document.startViewTransition) document.startViewTransition(applyFilter);
+    else applyFilter();
+  }
+  chips.forEach(function (c) { c.addEventListener('click', function () { setCat(c.dataset.cat); filter(); }); });
+
+  // ---------- Campus: the first decision; the whole page re-tunes to it ----------
+  // UC.campus is a school code from universities.js ("SLU"), or '' for all campuses.
+  // Default order: ?campus= link, then this device's last pick, then the logged-in student's school, then all campuses.
+  var SCHOOLS_LIST = window.UC_SCHOOLS || [];
+  var campusRow = document.getElementById('campus-row'), campusCount = document.getElementById('campus-count');
+  var CAMPUS_KEY = 'uc-campus', OTHERS_FIRST = 6, othersOpen = false, campusPicked = false, listingsLoaded = false;
+  function schoolOf(v) { return window.UC_SCHOOL_OF ? window.UC_SCHOOL_OF(v) : null; }
+  function schoolLabel(s) { return window.UC_SCHOOL_LABEL ? window.UC_SCHOOL_LABEL(s) : (s ? s.code : ''); }
+  function campusTag(camp) { return el('span', 'campus-tag' + (camp ? '' : ' unset'), camp ? schoolLabel(camp) : 'School not set'); }
+  UC.campus = '';
+  UC.campusSchool = function () { return UC.campus ? schoolOf(UC.campus) : null; };
+  (function () {
+    var fromUrl = new URLSearchParams(location.search).get('campus'), stored = '';
+    try { stored = localStorage.getItem(CAMPUS_KEY) || ''; } catch (e) {}
+    var pick = fromUrl || stored;
+    if (/^all$/i.test(pick)) campusPicked = true;
+    else if (schoolOf(pick)) { UC.campus = schoolOf(pick).code; campusPicked = true; }
+  })();
+  function countText(n) { return n === 1 ? '1 listing' : n + ' listings'; }
+  function campusCounts() {
+    var m = { all: 0 };
+    Object.keys(UC.listings).forEach(function (id) {
+      var l = UC.listings[id], c = schoolOf(l.school);
+      if (UC.blocked && UC.blocked[l.seller_id]) return;
+      m.all++;
+      if (c) m[c.code] = (m[c.code] || 0) + 1;
+    });
+    return m;
+  }
+  function drawCampus() {
+    var counts = campusCounts(), here = UC.campusSchool();
+    var opts = [{ code: '', label: 'All campuses', name: 'All Baguio campuses', n: counts.all }].concat(SCHOOLS_LIST.map(function (sc) {
+      return { code: sc.code, label: schoolLabel(sc), name: sc.name, n: counts[sc.code] || 0 };
+    }));
+    campusRow.replaceChildren.apply(campusRow, opts.map(function (o) {
+      var on = o.code === UC.campus, b = btnEl('campus-chip' + (listingsLoaded && !o.n ? ' zero' : ''), null, function () {
+        setCampus(o.code, 'user');
+        setCampusOpen(false, true);
+      });
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.setAttribute('aria-label', o.name + (listingsLoaded ? ', ' + countText(o.n) : ''));
+      b.dataset.code = o.code;
+      b.append(el('span', 'campus-name', o.label));
+      if (listingsLoaded) b.append(el('span', 'campus-n', String(o.n)));
+      return b;
+    }));
+    campusCurrent.textContent = here ? schoolLabel(here) : 'All campuses';
+    campusToggle.setAttribute('aria-label', 'Campus: ' + (here ? here.name : 'All Baguio campuses') + '. Change campus');
+    campusCount.textContent = !listingsLoaded ? '' : here ? countText(counts[here.code] || 0) + ' at ' + schoolLabel(here)
+      : countText(counts.all) + ' across ' + SCHOOLS_LIST.length + ' Baguio campuses';
+    qInput.placeholder = here ? 'Search ' + schoolLabel(here) + ' listings…' : 'Search PE shirts, textbooks, calculators…';
+  }
+  // The campus button opens and closes the list of campuses
+  var campusBox = document.getElementById('campus'), campusToggle = document.getElementById('campus-toggle');
+  var campusCurrent = document.getElementById('campus-current');
+  function setCampusOpen(open, focusButton) {
+    campusRow.hidden = !open;
+    campusToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { var sel = campusRow.querySelector('[aria-pressed="true"]') || campusRow.firstElementChild; if (sel) sel.focus({ preventScroll: true }); }
+    else if (focusButton) campusToggle.focus({ preventScroll: true });
+  }
+  campusToggle.addEventListener('click', function () { setCampusOpen(campusRow.hidden); });
+  // Tapping anywhere else or pressing Esc closes it
+  document.addEventListener('pointerdown', function (e) { if (!campusRow.hidden && !campusBox.contains(e.target)) setCampusOpen(false); });
+  campusBox.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !campusRow.hidden) { e.preventDefault(); e.stopPropagation(); setCampusOpen(false, true); return; }
+    if (!campusRow.contains(e.target)) return;
+    // Arrow keys move between campuses; Enter or Space picks one
+    var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!step && e.key !== 'Home' && e.key !== 'End') return;
+    e.preventDefault();
+    var bs = [].slice.call(campusRow.querySelectorAll('.campus-chip'));
+    var i = Math.max(0, bs.indexOf(document.activeElement));
+    var j = e.key === 'Home' ? 0 : e.key === 'End' ? bs.length - 1 : (i + step + bs.length) % bs.length;
+    bs[j].focus();
+  });
+  function setCampus(code, how) {
+    if (how === 'user') {
+      campusPicked = true;
+      try { localStorage.setItem(CAMPUS_KEY, code || 'all'); } catch (e) {}
+      var u = new URL(location.href);
+      if (code) u.searchParams.set('campus', code); else u.searchParams.delete('campus');
+      history.replaceState(history.state, '', u);
+    }
+    if (code === UC.campus) return;
+    UC.campus = code;
+    othersOpen = false;
+    drawCampus();
+    if (listingsLoaded) setHeroItems(Object.keys(UC.listings).map(function (id) { return UC.listings[id]; }));
+    filter();
+    document.dispatchEvent(new CustomEvent('uc:campus', { detail: code }));
+  }
+  UC.setCampus = setCampus;
+  // A logged-in student starts on their own school, unless they already picked a campus
+  UC.campusDefault = function (schoolName) {
+    var sc = schoolOf(schoolName);
+    if (!campusPicked && sc && sc.code !== UC.campus) setCampus(sc.code, 'profile');
+  };
+  var campusHeadMine = el('div', 'campus-head'), campusHeadOthers = el('div', 'campus-head others');
+  [campusHeadMine, campusHeadOthers].forEach(function (x) { x.setAttribute('role', 'heading'); x.setAttribute('aria-level', '3'); });
+  var campusEmpty = el('div', 'campus-empty');
+  var campusMore = btnEl('pill light campus-more', '', function () { othersOpen = true; applyFilter(); });
+  function groupByCampus(shown) {
+    if (!campusHeadMine) return;  // listings render before this block runs only if something calls filter early
+    [campusHeadMine, campusHeadOthers, campusEmpty, campusMore].forEach(function (x) { x.remove(); });
+    var here = UC.campusSchool();
+    if (!here || !cards.length || !cards[0].dataset.id || !shown.length) return;
+    var label = schoolLabel(here);
+    var mine = shown.filter(function (c) { return c.dataset.campus === here.code; });
+    var others = shown.filter(function (c) { return c.dataset.campus !== here.code; });
+    campusHeadMine.replaceChildren(el('span', '', 'At ' + label), el('small', '', countText(mine.length)));
+    grid.appendChild(campusHeadMine);
+    mine.forEach(function (c) { grid.appendChild(c); });
+    if (!mine.length) {
+      var narrowed = qRaw || cat !== 'all' || extraFilters().length;
+      var row = el('div', 'empty-actions');
+      row.append(
+        btnEl('pill light', 'List the first item', function () { if (UC.openSell) UC.openSell(); }),
+        btnEl('pill ghost', 'See other campuses', function () { campusHeadOthers.scrollIntoView({ behavior: motionOK() ? 'smooth' : 'auto', block: 'start' }); })
+      );
+      campusEmpty.replaceChildren(
+        el('p', '', narrowed ? 'Nothing at ' + label + ' matches this yet.' : 'Nothing at ' + label + ' yet.'),
+        el('p', 'sub', 'Be the first to list something here, or look at what students at other Baguio campuses have.'),
+        row);
+      grid.appendChild(campusEmpty);
+    }
+    if (!others.length) return;
+    campusHeadOthers.replaceChildren(el('span', '', 'More from other Baguio campuses'), el('small', '', countText(others.length)));
+    grid.appendChild(campusHeadOthers);
+    others.forEach(function (c, i) { grid.appendChild(c); if (!othersOpen && i >= OTHERS_FIRST) c.hidden = true; });
+    if (!othersOpen && others.length > OTHERS_FIRST) {
+      campusMore.textContent = 'Show all ' + others.length + ' from other campuses';
+      grid.appendChild(campusMore);
+    }
+  }
+  document.addEventListener('uc:user', function () { if (listingsLoaded) drawCampus(); });
+  drawCampus();
+  var recentEl = document.getElementById('recent'), recentTimer;
+  function getRecent() { try { return JSON.parse(localStorage.getItem('uc-recent') || '[]'); } catch (e) { return []; } }
+  function saveRecent(v) {
+    if (!v || v.length < 2) return;
+    var list = getRecent().filter(function (x) { return x.toLowerCase() !== v.toLowerCase(); });
+    list.unshift(v);
+    try { localStorage.setItem('uc-recent', JSON.stringify(list.slice(0, 5))); } catch (e) {}
+    drawRecent();
+  }
+  function drawRecent() {
+    var list = getRecent();
+    recentEl.hidden = !list.length;
+    recentEl.replaceChildren.apply(recentEl, [el('span', 'recent-label', 'Recent')]
+      .concat(list.map(function (v) { return btnEl('recent-chip', v, function () { setQuery(v); filter(); toShop(); }); }),
+              [btnEl('recent-clear', 'Clear', function () { try { localStorage.removeItem('uc-recent'); } catch (e) {} drawRecent(); })]));
+  }
+  qInput.addEventListener('input', function () {
+    setQuery(qInput.value, true);
+    filter();
+    clearTimeout(recentTimer);
+    recentTimer = setTimeout(function () { saveRecent(qRaw); }, 1500);
+  });
+  function toShop() { document.getElementById('shop').scrollIntoView({ behavior: motionOK() ? 'smooth' : 'auto' }); }
+  document.getElementById('hero-search').addEventListener('submit', function (e) { e.preventDefault(); saveRecent(qRaw); toShop(); });
+  drawRecent();
+
+  // ---------- Saved (hearts are stored in the saves table) ----------
+  function syncSaved() {
+    cards.forEach(function (c) {
+      var hb = c.querySelector('.heart');
+      if (hb && c.dataset.id) hb.setAttribute('aria-pressed', UC.saved[c.dataset.id] ? 'true' : 'false');
+    });
+  }
+  document.addEventListener('uc:user', function (e) {
+    UC.saved = {};
+    chipSaved.hidden = !e.detail;
+    if (!e.detail && cat === 'saved') setCat('all');
+    if (!e.detail || !db) { syncSaved(); applyFilter(); return; }
+    db.from('saves').select('listing_id').then(function (r) {
+      (r.data || []).forEach(function (x) { UC.saved[x.listing_id] = 1; });
+      syncSaved();
+      applyFilter();
+    });
+  });
+  function onCardsClick(e) {
+    var hb = e.target.closest('.heart');
+    if (hb) {
+      var card = hb.closest('.card'), id = card && card.dataset.id;
+      if (!id || !db) { toast('These are examples. Real listings appear once they load.'); return; }
+      if (!UC.user()) { toast('Log in to save listings'); UC.openLogin(); return; }
+      var on = hb.getAttribute('aria-pressed') !== 'true', uid = UC.user().id;
+      // the same listing can show in the shop and in Free/Swaps: keep every heart in step
+      function hearts(v) { document.querySelectorAll('.card[data-id="' + id + '"] .heart').forEach(function (x) { x.setAttribute('aria-pressed', v ? 'true' : 'false'); }); }
+      hearts(on);
+      if (on) { hb.classList.remove('pop'); void hb.offsetWidth; hb.classList.add('pop'); }
+      (on ? db.from('saves').insert({ user_id: uid, listing_id: Number(id) })
+          : db.from('saves').delete().eq('user_id', uid).eq('listing_id', Number(id)))
+        .then(function (r) {
+          if (r.error && r.error.code !== '23505') {
+            hearts(!on);
+            toast('Couldn’t update Saved. Check your connection and try again.');
+            return;
+          }
+          if (on) UC.saved[id] = 1; else delete UC.saved[id];
+          toast(on ? 'Saved. Find it under the Saved filter.' : 'Removed from Saved');
+          if (cat === 'saved') applyFilter();
+        });
+      return;
+    }
+    var open = e.target.closest('.open');
+    if (open) {
+      var c = open.closest('.card');
+      if (c && c.dataset.id) document.dispatchEvent(new CustomEvent('uc:open', { detail: UC.listings[c.dataset.id] }));
+    }
+  }
+  function onCardsAnim(e) { var hb = e.target.closest('.heart'); if (hb) hb.classList.remove('pop'); }
+  UC.bindCards = function (box) { box.addEventListener('click', onCardsClick); box.addEventListener('animationend', onCardsAnim); };
+  UC.bindCards(grid);
+
+  // ---------- Live listings from Supabase (the example cards stay if this fails) ----------
+  var ART = {
+    shirt: ['i-shirt', '--c1:#1F5A36;--c2:#FFFFFF;--c3:#1A4511'],
+    pants: ['i-pants', '--c1:#2F5A34;--c2:#8DB255;--c3:#1E3D22'],
+    books: ['i-books', '--c1:#1F5A36;--c2:#EF5468;--c3:#F2A900'],
+    calc: ['i-calc', '--c1:#1A1D1A;--c2:#3C443C;--c3:#8DB255'],
+    bag: ['i-backpack', '--c1:#CE6A22;--c2:#E5843A;--c3:#9E4A12']
+  };
+  function artFor(l) {
+    var t = l.title.toLowerCase();
+    if (l.category === 'uniforms') return /pant|jogg/.test(t) ? ART.pants : ART.shirt;
+    if (l.category === 'books') return ART.books;
+    return /bag|pack/.test(t) ? ART.bag : ART.calc;
+  }
+  var SVG = 'http://www.w3.org/2000/svg';
+  function priceText(l) { return l.kind === 'free' ? 'Free' : l.kind === 'swap' ? 'Swap' : '₱' + l.price_php.toLocaleString('en-PH'); }
+  // Condition matters more than a discount for second-hand uniforms and books
+  function badgeFor(l) {
+    if (l.kind === 'free') return el('span', 'badge free', 'Free');
+    if (l.kind === 'swap') return el('span', 'badge swap', 'Swap');
+    return el('span', 'badge cond', l.condition);
+  }
+  // First uploaded photo, or the matching illustration
+  function mediaFor(l, cls) {
+    var media = el('div', cls);
+    function illustrate() {
+      var a = artFor(l), svg = document.createElementNS(SVG, 'svg'), use = document.createElementNS(SVG, 'use');
+      svg.setAttribute('class', 'item');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('style', a[1]);
+      use.setAttribute('href', '#' + a[0]);
+      svg.appendChild(use);
+      media.classList.remove('has-photo');
+      media.replaceChildren(svg);
+    }
+    var photo = (l.listing_photos || []).slice().sort(function (x, y) { return x.position - y.position; })[0];
+    if (photo) {
+      var img = el('img');
+      img.src = db.storage.from('listing-photos').getPublicUrl(photo.path).data.publicUrl;
+      img.alt = l.title;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.onerror = illustrate;
+      media.classList.add('has-photo');
+      media.appendChild(img);
+    } else {
+      illustrate();
+    }
+    return media;
+  }
+  function cardFor(l) {
+    var c = el('article', 'card');
+    UC.listings[l.id] = l;
+    c.dataset.cat = l.category;
+    c.dataset.id = l.id;
+    c.dataset.school = l.school || '';
+    c.dataset.college = l.college || '';
+    c.dataset.program = l.program || '';
+    c.dataset.course = (l.course_code || '').toUpperCase();
+    c.dataset.year = l.year_level || '';
+    c.dataset.kind = l.kind || 'sell';
+    c.dataset.cond = l.condition || '';
+    c.dataset.price = l.kind === 'swap' ? '' : String(l.price_php);
+    c.dataset.created = String(Date.parse(l.bumped_at || l.created_at) || 0);
+    c.dataset.seller = l.seller_id || '';
+    var camp = schoolOf(l.school);
+    c.dataset.campus = camp ? camp.code : '';
+    c.dataset.search = [l.title, CAT_LABEL[l.category], l.size, l.course_code, l.kind === 'free' ? 'free' : l.kind === 'swap' ? 'swap' : '',
+      camp && camp.code, camp && camp.short].filter(Boolean).join(' ').toLowerCase();
+    c.appendChild(badgeFor(l));
+    if (l.status === 'reserved') c.appendChild(el('span', 'state', 'Reserved'));
+    c.appendChild(mediaFor(l, 'media'));
+    // The title is the card's button; its ::after covers the card so the whole card opens it
+    var open = el('button', 'open name', l.title);
+    open.type = 'button';
+    c.appendChild(open);
+    c.appendChild(el('div', 'price', priceText(l)));
+    var meta = el('div', 'meta');
+    meta.append(campusTag(camp), l.kind === 'swap' && l.swap_for ? 'Wants: ' + l.swap_for : [l.pickup_spot, l.size].filter(Boolean).join(' · '));
+    c.appendChild(meta);
+    var hb = el('button', 'round heart');
+    hb.type = 'button';
+    hb.setAttribute('aria-pressed', UC.saved[l.id] ? 'true' : 'false');
+    hb.setAttribute('aria-label', 'Save ' + l.title);
+    hb.innerHTML = '<svg class="icon"><use href="#ic-heart"/></svg>';
+    c.appendChild(hb);
+    return c;
+  }
+  function loadListings() {
+    if (!db) return Promise.resolve();
+    function query(col) {
+      return db.from('listings').select('*, listing_photos(path, position)').in('status', ['active', 'reserved']).order(col, { ascending: false });
+    }
+    // bumped_at arrives with db/phases2-4.sql; until then sort by created_at
+    return query('bumped_at').then(function (res) { return res.error ? query('created_at') : res; })
+      .then(function (res) {
+        if (res.error || !res.data) return;
+        UC.listings = {};
+        grid.replaceChildren.apply(grid, res.data.map(cardFor));
+        cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+        cards.forEach(function (c, i) { c.style.viewTransitionName = 'card-' + i; });
+        listingsLoaded = true;
+        setHeroItems(res.data);
+        drawCampus();
+        applyFilter();
+        document.dispatchEvent(new Event('uc:listings'));
+      });
+  }
+  UC.reload = loadListings;
+  UC.cardFor = cardFor;
+  UC.refilter = filter;
+
+  // ---------- Hero carousel: real listings pass on to the left, the wheel rolls 60deg ----------
+  var stage = document.getElementById('stage'), hwrap = document.getElementById('hcards');
+  var hcards = Array.prototype.slice.call(hwrap.querySelectorAll('.hcard'));
+  var N = hcards.length, cur = 0, turn = 0;
+  var wheel = stage.querySelector('.wheel');
+  var idxEl = document.getElementById('h-idx'), totalEl = document.getElementById('h-total'), playBtn = document.getElementById('h-play');
+  var hctl = stage.querySelector('.hctl');
+  var playing = motionOK(), hovering = false, focused = false, onScreen = true, timer = null, swiped = false;
+
+  function layout() {
+    hcards.forEach(function (c, i) {
+      var rel = (i - cur + N) % N;
+      var pos = rel <= 2 ? rel : (rel >= N - 2 ? rel - N : 3);
+      var center = pos === 0;
+      c.dataset.pos = pos;
+      c.setAttribute('aria-hidden', center ? 'false' : 'true');
+      var b = c.querySelector('button');
+      if (b) b.tabIndex = center ? 0 : -1;
+    });
+    idxEl.textContent = cur + 1;
+    totalEl.textContent = N;
+    hctl.hidden = N < 2;
+  }
+  function heroCard(l, i, n) {
+    var a = el('article', 'hcard');
+    a.dataset.id = l.id;
+    a.setAttribute('aria-label', (i + 1) + ' of ' + n + ': ' + l.title);
+    a.appendChild(badgeFor(l));
+    a.appendChild(mediaFor(l, 'hmedia'));
+    a.appendChild(el('div', 'name', l.title));
+    a.appendChild(el('div', 'price', priceText(l)));
+    var was = el('div', 'was');
+    was.append(campusTag(schoolOf(l.school)), l.pickup_spot ? 'Pickup at ' + l.pickup_spot : '');
+    a.appendChild(was);
+    var see = el('button', 'pill small see', 'See details');
+    see.type = 'button';
+    see.setAttribute('aria-label', 'See details: ' + l.title);
+    a.appendChild(see);
+    return a;
+  }
+  // Up to 6 real listings: available first, then ones with photos
+  function setHeroItems(list) {
+    list = list.filter(function (l) { return schoolOf(l.school) && (l.listing_photos || []).length && l.status !== 'removed'; });
+    if (list.length < 2) return;  // too few complete listings: the example cards stay
+    function here(l) { var c = schoolOf(l.school); return UC.campus && c && c.code === UC.campus ? 1 : 0; }
+    var pick = list.slice().sort(function (x, y) {
+      return here(y) - here(x) || (y.status === 'active') - (x.status === 'active') || !!(y.listing_photos || []).length - !!(x.listing_photos || []).length;
+    }).slice(0, 6);
+    hwrap.replaceChildren.apply(hwrap, pick.map(function (l, i) { return heroCard(l, i, pick.length); }));
+    hcards = Array.prototype.slice.call(hwrap.querySelectorAll('.hcard'));
+    N = hcards.length;
+    cur = 0;
+    layout();
+  }
+  function go(step) {
+    if (N < 2) return;
+    cur = (cur + step + N) % N;
+    turn -= step * 60;
+    wheel.style.transform = 'rotate(' + turn + 'deg)';
+    layout();
+  }
+  function tick() {
+    if (playing && !hovering && !focused && onScreen && !document.hidden) go(1);
+  }
+  function restart() {
+    clearInterval(timer);
+    timer = playing ? setInterval(tick, 4200) : null;
+  }
+  function setPlaying(on) {
+    playing = on;
+    playBtn.querySelector('use').setAttribute('href', on ? '#ic-pause' : '#ic-play');
+    playBtn.setAttribute('aria-label', on ? 'Pause carousel' : 'Play carousel');
+    restart();
+  }
+  document.getElementById('h-prev').addEventListener('click', function () { go(-1); restart(); });
+  document.getElementById('h-next').addEventListener('click', function () { go(1); restart(); });
+  playBtn.addEventListener('click', function () { setPlaying(!playing); });
+  hwrap.addEventListener('click', function (e) {
+    if (swiped) { swiped = false; return; }
+    var c = e.target.closest('.hcard');
+    if (!c) return;
+    var p = +c.dataset.pos;
+    if (p === 1 || p === -1) { go(p); restart(); return; }
+    if (p === 0 && c.dataset.id && UC.listings[c.dataset.id]) document.dispatchEvent(new CustomEvent('uc:open', { detail: UC.listings[c.dataset.id] }));
+  });
+  stage.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { go(1); restart(); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { go(-1); restart(); e.preventDefault(); }
+  });
+  var x0 = null;
+  stage.addEventListener('pointerdown', function (e) { x0 = e.clientX; });
+  stage.addEventListener('pointerup', function (e) {
+    if (x0 === null) return;
+    var dx = e.clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 40) { swiped = true; go(dx < 0 ? 1 : -1); restart(); setTimeout(function () { swiped = false; }, 0); }
+  });
+  stage.addEventListener('mouseenter', function () { hovering = true; });
+  stage.addEventListener('mouseleave', function () { hovering = false; });
+  stage.addEventListener('focusin', function () { focused = true; });
+  stage.addEventListener('focusout', function (e) { if (!stage.contains(e.relatedTarget)) focused = false; });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; }).observe(stage);
+  }
+  if (reduce.addEventListener) reduce.addEventListener('change', function () { if (reduce.matches) setPlaying(false); });
+  var lastMotion = motionOK();  // play/pause only when the Motion setting itself changes
+  document.addEventListener('uc:a11y', function () { var m = motionOK(); if (m !== lastMotion) { lastMotion = m; setPlaying(m); } });
+  setPlaying(playing);
+  layout();
+  loadListings();
+
+  // ---------- Waitlist: the wheel rolls one full cycle on success ----------
+  var ctaWheel = document.querySelector('.cta .wheel'), ctaTurn = 0;
+  document.getElementById('join-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = document.getElementById('email').value.trim();
+    var note = document.getElementById('join-note');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) { note.textContent = 'Enter your email, like you@example.com.'; return; }
+    var form = e.target, btn = form.querySelector('button');
+    function joined(msg) {
+      note.textContent = msg;
+      ctaTurn -= 360;
+      ctaWheel.style.transform = 'rotate(' + ctaTurn + 'deg)';
+      form.reset();
+    }
+    if (!db) { note.textContent = "Couldn't reach PasaU. Check your connection and try again."; return; }
+    btn.disabled = true;
+    note.textContent = 'Saving…';
+    db.from('waitlist').insert({ email: v.toLowerCase() }).then(function (res) {
+      btn.disabled = false;
+      if (!res.error) joined("You're on the list. We'll email " + v + ' when your campus opens.');
+      else if (res.error.code === '23505') joined("You're already on the list with " + v + '.');
+      else note.textContent = "Couldn't save your email. Check your connection and try again.";
+    });
+  });
+})();
+</script>
+<script src="app.js"></script>
+<script src="messenger.js"></script>
+

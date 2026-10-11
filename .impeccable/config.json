@@ -1,0 +1,37 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-08T08:44:26.820Z",
+        "reason": "Claude: white text sits on translucent glass panels over the dark green page gradient; detector resolves the background as white/grey (#ffffff on #ffffff, #b8b8b8). Placeholder contrast was fixed separately."
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-08T08:44:27.024Z",
+        "reason": "Claude: .listing clips only its own rounded corners; the positioned bag button sits inside its bounds, nothing needs to escape."
+      },
+      {
+        "rule": "clipped-overflow-container",
+        "value": "*",
+        "files": [
+          "messages.html",
+          "profile.html",
+          "unimatch.html"
+        ],
+        "createdAt": "2026-10-10T00:54:15.335Z",
+        "reason": "body overflow-x: clip only stops sideways scroll; the #mnav dropdown is measured inside the viewport at 375px and 1280px, same setup as index.html"
+      }
+    ]
+  }
+}

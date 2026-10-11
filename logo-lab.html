@@ -1,0 +1,451 @@
+<meta charset="utf-8">
+<title>Unicycle Logo Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: same green-gradient world as the landing page; a sticky switchboard of logo changes on the left,
+   live previews (before/after, on gradient, menu bar, small sizes) on the right. */
+:root {
+  --g1: #23372A; --g2: #3F5E36; --g3: #5E8443; --g4: #86AA58;
+  --on-bg: #FFFFFF; --on-bg-muted: rgba(255,255,255,.8);
+  --card: #FFFFFF; --card-2: #F1F4EE; --ink: #0D110D; --muted: #5B6558; --line: rgba(13,17,13,.09);
+  --pill: #0B0D0B; --pill-fg: #FFFFFF;
+  --brand: #013200;      /* the logo's own deep green */
+  --moss: #8DB255; --teal: #5CAB90; --amber: #F4A340;
+  --tile-light: #F5F7F2; --tile-dark: #0F1510;
+  --glass-panel: rgba(12,28,14,.26); --glass-line: rgba(255,255,255,.16);
+  --font: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --g1: #0D150F; --g2: #1A2C1C; --g3: #2A4426; --g4: #3F6233;
+    --card: #1C251D; --card-2: #172018; --ink: #ECF1E7; --muted: #9AA595; --line: rgba(236,241,231,.1);
+    --pill: #ECF1E7; --pill-fg: #0D110D; --glass-panel: rgba(0,0,0,.28);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --g1: #0D150F; --g2: #1A2C1C; --g3: #2A4426; --g4: #3F6233;
+  --card: #1C251D; --card-2: #172018; --ink: #ECF1E7; --muted: #9AA595; --line: rgba(236,241,231,.1);
+  --pill: #ECF1E7; --pill-fg: #0D110D; --glass-panel: rgba(0,0,0,.28);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background-color: var(--g1);
+  background-image:
+    radial-gradient(70% 900px at 92% 0%, rgba(147,181,96,.28), transparent 70%),
+    linear-gradient(180deg, var(--g1) 0%, var(--g2) 35%, var(--g3) 70%, var(--g4) 100%);
+  color: var(--on-bg); font-family: var(--font); font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { margin: 0; letter-spacing: -0.03em; text-wrap: balance; line-height: 1.08; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+.page { max-width: 1240px; margin: 0 auto; padding-inline: clamp(16px, 3vw, 32px); padding-block: 28px 48px; display: grid; gap: 28px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px; }
+header.top .stack { display: grid; gap: 8px; max-width: 640px; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--on-bg-muted); }
+header.top h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 800; letter-spacing: -0.04em; }
+header.top p { color: var(--on-bg-muted); font-size: 16px; max-width: 58ch; }
+.safe { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: var(--glass-panel); border: 1px solid var(--glass-line); font-size: 13px; font-weight: 600; }
+.safe::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #B8F27A; }
+
+.layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 920px) { .layout { grid-template-columns: 1fr; } }
+
+/* Switchboard */
+.panel { background: var(--card); color: var(--ink); border-radius: 28px; padding: 22px; border: 1px solid var(--line); }
+.controls { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: grid; gap: 14px; }
+@media (max-width: 920px) { .controls { position: static; } }
+.controls h2 { font-size: 20px; font-weight: 800; }
+.controls .hint { color: var(--muted); font-size: 13px; }
+.opts { display: grid; gap: 6px; }
+.opt { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 12px 14px; border-radius: 18px; background: var(--card-2); border: 1px solid transparent; cursor: pointer; transition: border-color .2s; }
+.opt:hover { border-color: var(--line); }
+.opt .t { font-weight: 700; font-size: 14px; }
+.opt .d { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.opt.off-dep { opacity: .5; cursor: not-allowed; }
+.switch { appearance: none; -webkit-appearance: none; width: 44px; height: 26px; border-radius: 999px; background: var(--line); position: relative; cursor: pointer; transition: background .2s; margin: 0; border: 1px solid var(--line); }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.switch:checked { background: var(--brand); border-color: var(--brand); }
+.switch:checked::after { transform: translateX(18px); }
+.switch:disabled { cursor: not-allowed; }
+.switch:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { height: 42px; padding-inline: 18px; border-radius: 999px; font-weight: 600; font-size: 14px; background: var(--card-2); border: 1px solid var(--line); }
+.btn.dark { background: var(--pill); color: var(--pill-fg); border-color: transparent; }
+.summary { border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 8px; }
+.summary .k { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.summary p { font-size: 14px; font-weight: 600; }
+.summary .note { font-size: 12.5px; color: var(--muted); font-weight: 500; min-height: 1.4em; }
+
+/* Previews */
+.previews { display: grid; gap: 20px; min-width: 0; }
+.ptitle { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.ptitle h3 { font-size: 17px; font-weight: 800; }
+.ptitle span { font-size: 13px; color: var(--muted); }
+.ba { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 560px) { .ba { grid-template-columns: 1fr; } }
+.tile { position: relative; border-radius: 20px; padding: 28px 20px 20px; display: grid; justify-items: center; align-content: center; gap: 18px; min-height: 300px; overflow: hidden; }
+.tile.light { background: var(--tile-light); color: #0D110D; }
+.tile.dark { background: var(--tile-dark); color: #FFFFFF; }
+.tile.grad { background: linear-gradient(165deg, var(--g1), var(--g3) 80%); color: #FFFFFF; }
+.tile .lbl { position: absolute; top: 12px; left: 12px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: rgba(13,17,13,.07); }
+.tile.dark .lbl, .tile.grad .lbl { background: rgba(255,255,255,.14); }
+.tile .lbl.new { background: var(--brand); color: #FFFFFF; }
+.tile img.orig-mark { width: 120px; height: auto; }
+.tile img.wm, .tile .wm { height: 64px; width: auto; max-width: 100%; }
+.markslot { display: block; }
+.markslot svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+.geo { font-family: var(--font); font-weight: 800; letter-spacing: -0.045em; line-height: 1; white-space: nowrap; }
+.plate { background: #F5F7F2; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; }
+.plate.circle { border-radius: 50%; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 560px) { .grid2 { grid-template-columns: 1fr; } }
+
+/* Menu bar mock */
+.navmock { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px; border-radius: 999px; background: rgba(247,249,244,.82); color: #0D110D; border: 1px solid rgba(13,17,13,.08); }
+.navwrap { border-radius: 20px; padding: 26px 16px; background: linear-gradient(165deg, var(--g1), var(--g2)); overflow-x: auto; }
+.navlogo { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding-inline: 12px 16px; border-radius: 999px; background: #F5F7F2; flex: none; }
+.navlinks { display: flex; gap: 18px; font-weight: 600; font-size: 14px; }
+.navcta { height: 44px; padding-inline: 20px; border-radius: 999px; background: #0B0D0B; color: #FFFFFF; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; flex: none; }
+@media (max-width: 640px) { .navlinks { display: none; } }
+
+/* Sizes */
+.sizes { display: flex; align-items: end; justify-content: center; gap: 22px; flex-wrap: wrap; padding: 22px 16px 16px; border-radius: 18px; }
+.sizes.light { background: var(--tile-light); color: #0D110D; }
+.sizes.dark { background: var(--tile-dark); color: #FFFFFF; }
+.sizes figure { margin: 0; display: grid; justify-items: center; gap: 8px; }
+.sizes figcaption { font-size: 11px; font-weight: 600; opacity: .65; font-variant-numeric: tabular-nums; }
+.sizerow { display: grid; gap: 10px; }
+.extras { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; margin-top: 12px; }
+@media (max-width: 560px) { .extras { grid-template-columns: 1fr; } }
+.tabmock { border-radius: 18px; background: #DEE3DA; padding: 14px 14px 0; display: grid; align-content: end; color: #0D110D; }
+.tabmock .tab { display: flex; align-items: center; gap: 8px; background: #FFFFFF; border-radius: 12px 12px 0 0; padding: 10px 14px; width: min(240px, 100%); font-size: 13px; font-weight: 600; }
+.tabmock .tab i { margin-left: auto; font-style: normal; opacity: .5; }
+.tabmock .bar { background: #FFFFFF; height: 34px; border-radius: 0 12px 0 0; display: flex; align-items: center; padding-inline: 14px; font-size: 12px; color: #6B7468; }
+.appicon { display: grid; justify-items: center; gap: 8px; padding: 16px 22px; border-radius: 18px; background: var(--card-2); }
+.appicon .ic { width: 88px; height: 88px; border-radius: 22px; display: grid; place-items: center; box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+.appicon small { font-size: 12px; font-weight: 600; color: var(--muted); }
+
+.why { color: var(--muted); font-size: 13.5px; margin-top: 12px; max-width: 70ch; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+
+<div class="page">
+  <header class="top">
+    <div class="stack">
+      <span class="eyebrow">Unicycle · Logo Lab</span>
+      <h1>Try each logo change on its own.</h1>
+      <p>Every change has its own switch. Turn one off and it goes back to your original, and the other changes stay as they are. Nothing on the landing page changes until you choose what to keep.</p>
+    </div>
+    <span class="safe">Originals untouched</span>
+  </header>
+
+  <div class="layout">
+    <!-- Switchboard -->
+    <aside class="panel controls" aria-labelledby="ctl-title">
+      <div>
+        <h2 id="ctl-title">Changes</h2>
+        <p class="hint">Off means the original. Your switches are remembered in this browser.</p>
+      </div>
+      <div class="opts" id="opts"></div>
+      <div class="btns">
+        <button class="btn" type="button" id="reset">Reset to original</button>
+        <button class="btn dark" type="button" id="picks">Use my picks</button>
+      </div>
+      <div class="summary">
+        <span class="k">Keeping</span>
+        <p id="keeping">None, this is your original logo.</p>
+        <div class="btns"><button class="btn" type="button" id="copy">Copy this list</button></div>
+        <p class="note" id="copy-note" aria-live="polite"></p>
+      </div>
+    </aside>
+
+    <div class="previews">
+      <!-- Before / after -->
+      <section class="panel" aria-labelledby="ba-title">
+        <div class="ptitle"><h3 id="ba-title">Before and after</h3><span>On white, at full size</span></div>
+        <div class="ba">
+          <div class="tile light">
+            <span class="lbl">Original</span>
+            <img class="orig-mark" src="assets/mark.png" alt="Original Unicycle mark" width="400" height="511">
+            <img class="wm" src="assets/wordmark.png" alt="Original Unicycle wordmark" width="900" height="404">
+          </div>
+          <div class="tile light" id="after">
+            <span class="lbl new">With your switches</span>
+            <span class="markslot" id="after-mark" style="width:120px;height:130px"></span>
+            <span id="after-wm"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- On the site -->
+      <section class="panel" aria-labelledby="site-title">
+        <div class="ptitle"><h3 id="site-title">On the landing page</h3><span>The green gradient and the menu bar</span></div>
+        <div class="grid2">
+          <div class="tile grad" style="min-height:260px">
+            <span class="lbl">On the gradient</span>
+            <span id="grad-mark"></span>
+            <span id="grad-wm"></span>
+          </div>
+          <div class="tile dark" style="min-height:260px">
+            <span class="lbl">On dark</span>
+            <span id="dark-mark"></span>
+            <span id="dark-wm"></span>
+          </div>
+        </div>
+        <div class="navwrap" style="margin-top:12px">
+          <div class="navmock">
+            <span class="navlogo" id="nav-logo"></span>
+            <span class="navlinks"><span>Shop</span><span>Listings</span><span>How it works</span></span>
+            <span class="navcta">Start selling</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Small sizes -->
+      <section class="panel" aria-labelledby="sz-title">
+        <div class="ptitle"><h3 id="sz-title">Small sizes</h3><span>Favicon, browser tab and app icon</span></div>
+        <div class="sizerow">
+          <div class="sizes light" id="sizes-light"></div>
+          <div class="sizes dark" id="sizes-dark"></div>
+        </div>
+        <div class="extras">
+          <div class="tabmock">
+            <div class="tab"><span id="tab-icon"></span>Unicycle · Campus market<i>×</i></div>
+            <div class="bar">unicycle.app</div>
+          </div>
+          <div class="appicon"><div class="ic" id="app-icon"></div><small>App icon</small></div>
+        </div>
+        <p class="why">The 16px and 24px icons show the problem most clearly. Thin spokes and the tassel disappear at those sizes, and the stacked shadows turn into a blur.</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var BRAND = '#013200', MOSS = '#8DB255', TEAL = '#5CAB90', CYAN = '#CFEDEF';
+  var OPTIONS = [
+    { k: 'flat',   t: 'Flat colour',               d: 'Removes the stacked teal and cyan shadows. The logo becomes one deep green, and white on dark backgrounds.' },
+    { k: 'moss',   t: 'One moss-green offset',     d: 'Keeps a little depth with a single offset in the site’s moss green.', dep: 'flat' },
+    { k: 'loop',   t: 'Reuse-loop rim',            d: 'Splits the wheel rim into two arrows, so the mark also says “passed on”.' },
+    { k: 'crank',  t: 'Crank and pedal',           d: 'Adds a pedal under the hub so the wheel reads as a unicycle.' },
+    { k: 'simple', t: 'Simplified small sizes',    d: 'At 48px and below: 4 thicker spokes, a heavier rim and no tassel.' },
+    { k: 'geo',    t: 'Geometric wordmark',        d: 'Swaps the script lettering for bold lowercase in the site’s typeface.' },
+    { k: 'lockup', t: 'Mark beside the name',      d: 'The menu bar shows the mark next to the wordmark instead of the wordmark alone.' }
+  ];
+  var PICKS = { flat: true, moss: false, loop: true, crank: false, simple: true, geo: false, lockup: true };
+  var ORIGINAL = { flat: false, moss: false, loop: false, crank: false, simple: false, geo: false, lockup: false };
+  var KEY = 'unicycle-logo-lab-v1';
+  var state = Object.assign({}, PICKS);
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) state = Object.assign({}, ORIGINAL, saved); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+
+  // ---------- Mark drawing ----------
+  var uid = 0;
+  function pt(a, r) { var t = a * Math.PI / 180; return [(120 + r * Math.cos(t)).toFixed(2), (204 + r * Math.sin(t)).toFixed(2)]; }
+  function arc(a1, a2, r) {
+    var p1 = pt(a1, r), p2 = pt(a2, r);
+    return 'M' + p1 + ' A' + r + ' ' + r + ' 0 ' + ((a2 - a1) > 180 ? 1 : 0) + ' 1 ' + p2;
+  }
+  function markSVG(color, simple) {
+    var id = 'mk' + (++uid);
+    var R = 99, rw = simple ? 22 : 15, sw = simple ? 12 : 7, hub = simple ? 26 : 20, gap = simple ? 10 : 8;
+    var spokes = simple ? [45, 135, 225, 315] : [0, 60, 120, 180, 240, 300];
+    var tassel = !simple;
+    var board = '120,18 228,54 120,90 12,54';
+    var base = 'M62 84 L120 103 L178 84 V116 C178 133 152 146 120 146 C88 146 62 133 62 116 Z';
+    var cord = 'M120 50 C96 56 64 64 50 72 C40 78 37 92 37 102';
+    var tbody = 'M31 112 C32 130 28 144 16 156 C24 164 36 168 44 164 C52 154 50 130 45 112 Z';
+
+    var wheel = '';
+    if (state.loop) {
+      var a = [-3, 151], b = [177, 331];
+      wheel += '<path d="' + arc(a[0], a[1], R) + '" fill="none" stroke="' + color + '" stroke-width="' + rw + '"/>';
+      wheel += '<path d="' + arc(b[0], b[1], R) + '" fill="none" stroke="' + color + '" stroke-width="' + rw + '"/>';
+      [a[1], b[1]].forEach(function (e) {
+        var tip = pt(e + 13, R), o = pt(e, R + rw * 0.95 + 2), i = pt(e, R - rw * 0.95 - 2);
+        wheel += '<path d="M' + o + ' L' + tip + ' L' + i + ' Z" fill="' + color + '" stroke="' + color + '" stroke-width="2" stroke-linejoin="round"/>';
+      });
+    } else {
+      wheel += '<circle cx="120" cy="204" r="' + R + '" fill="none" stroke="' + color + '" stroke-width="' + rw + '"/>';
+    }
+    spokes.forEach(function (s) {
+      var e = pt(s, R - rw / 2 + 1);
+      wheel += '<line x1="120" y1="204" x2="' + e[0] + '" y2="' + e[1] + '" stroke="' + color + '" stroke-width="' + sw + '" stroke-linecap="round"/>';
+    });
+    wheel += '<circle cx="120" cy="204" r="' + hub + '" fill="' + color + '"/>';
+    if (state.crank) {
+      var cw = simple ? 12 : 9;
+      wheel += '<line x1="120" y1="204" x2="120" y2="258" stroke="' + color + '" stroke-width="' + cw + '" stroke-linecap="round"/>';
+      wheel += '<rect x="' + (simple ? 96 : 100) + '" y="' + (simple ? 251 : 253) + '" width="' + (simple ? 48 : 40) + '" height="' + (simple ? 14 : 10) + '" rx="' + (simple ? 7 : 5) + '" fill="' + color + '"/>';
+    }
+
+    var knock = '<polygon points="' + board + '" stroke-width="' + (10 + gap * 2) + '" stroke-linejoin="round"/>' +
+                '<path d="' + base + '" stroke-width="' + (gap * 2) + '"/>';
+    if (tassel) knock += '<path d="' + cord + '" fill="none" stroke-width="' + (6 + gap * 2) + '" stroke-linecap="round"/>' +
+                         '<circle cx="37" cy="106" r="' + (8 + gap) + '"/><path d="' + tbody + '" stroke-width="' + (gap * 2) + '"/>';
+
+    var svg = '<svg viewBox="-38 8 316 316" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<defs>' +
+        '<mask id="' + id + 'w" maskUnits="userSpaceOnUse" x="-60" y="-20" width="400" height="400"><rect x="-60" y="-20" width="400" height="400" fill="#fff"/><g fill="#000" stroke="#000">' + knock + '</g></mask>' +
+        '<mask id="' + id + 'b" maskUnits="userSpaceOnUse" x="-60" y="-20" width="400" height="400"><rect x="-60" y="-20" width="400" height="400" fill="#fff"/>' +
+          (tassel ? '<path d="' + cord + '" fill="none" stroke="#000" stroke-width="16" stroke-linecap="round"/>' : '') + '</mask>' +
+      '</defs>' +
+      '<g mask="url(#' + id + 'w)">' + wheel + '</g>' +
+      '<path d="' + base + '" fill="' + color + '"/>' +
+      '<polygon points="' + board + '" fill="' + color + '" stroke="' + color + '" stroke-width="10" stroke-linejoin="round" mask="url(#' + id + 'b)"/>' +
+      (tassel ? '<path d="' + cord + '" fill="none" stroke="' + color + '" stroke-width="6" stroke-linecap="round"/>' +
+                '<circle cx="37" cy="106" r="8" fill="' + color + '"/><path d="' + tbody + '" fill="' + color + '"/>' : '') +
+      '</svg>';
+    return svg;
+  }
+
+  // Shadow treatment as a CSS filter, scaled to the rendered size
+  function shadowFilter(size, kind) {
+    var o = Math.max(1, Math.round(size * 0.028));
+    if (kind === 'stacked') return 'drop-shadow(' + o + 'px ' + o + 'px 0 ' + TEAL + ')';
+    if (kind === 'moss') return 'drop-shadow(' + o + 'px ' + o + 'px 0 ' + MOSS + ')';
+    return 'none';
+  }
+  function shadowKind() { return !state.flat ? 'stacked' : (state.moss ? 'moss' : 'none'); }
+
+  // A mark at a given size for a given ground ('light' | 'dark')
+  function mark(size, ground, forceSimple) {
+    var simple = (forceSimple !== undefined ? forceSimple : (state.simple && size <= 48));
+    var onDark = ground === 'dark';
+    var wrap = document.createElement('span');
+    wrap.className = 'markslot';
+    if (onDark && !state.flat) {
+      // Original style only works on a light plate, as on the current site
+      var pad = Math.round(size * 0.22);
+      wrap.className = 'plate circle';
+      wrap.style.width = wrap.style.height = (size + pad * 2) + 'px';
+      var inner = document.createElement('span');
+      inner.className = 'markslot';
+      inner.style.width = inner.style.height = size + 'px';
+      inner.style.filter = shadowFilter(size, 'stacked');
+      inner.innerHTML = markSVG(BRAND, simple);
+      wrap.appendChild(inner);
+      return wrap;
+    }
+    wrap.style.width = wrap.style.height = size + 'px';
+    wrap.style.filter = shadowFilter(size, shadowKind());
+    wrap.innerHTML = markSVG(onDark ? '#FFFFFF' : BRAND, simple);
+    return wrap;
+  }
+
+  // Wordmark at a given height for a given ground
+  function wordmark(h, ground) {
+    var onDark = ground === 'dark';
+    var el;
+    if (state.geo) {
+      el = document.createElement('span');
+      el.className = 'geo';
+      el.textContent = 'unicycle';
+      el.style.fontSize = Math.round(h * 0.82) + 'px';
+      el.style.color = onDark ? '#FFFFFF' : BRAND;
+      el.style.textShadow = shadowKind() === 'moss' ? Math.max(1, Math.round(h * .05)) + 'px ' + Math.max(1, Math.round(h * .05)) + 'px 0 ' + MOSS
+                          : shadowKind() === 'stacked' ? Math.max(1, Math.round(h * .05)) + 'px ' + Math.max(1, Math.round(h * .05)) + 'px 0 ' + TEAL + ',' + Math.max(2, Math.round(h * .1)) + 'px ' + Math.max(2, Math.round(h * .1)) + 'px 0 ' + CYAN : 'none';
+      if (onDark && !state.flat) { var p0 = document.createElement('span'); p0.className = 'plate'; p0.style.padding = '8px 18px'; el.style.color = BRAND; p0.appendChild(el); return p0; }
+      return el;
+    }
+    el = document.createElement('img');
+    el.alt = 'Unicycle';
+    el.style.height = h + 'px'; el.style.width = 'auto'; el.style.maxWidth = '100%';
+    if (!state.flat) {
+      el.src = 'assets/wordmark.png';
+      if (onDark) { var p = document.createElement('span'); p.className = 'plate'; p.style.padding = '8px 18px'; p.appendChild(el); return p; }
+      return el;
+    }
+    el.src = 'logo-lab/wordmark-flat.png';
+    var f = [];
+    if (onDark) f.push('brightness(0) invert(1)');
+    if (state.moss) f.push('drop-shadow(' + Math.max(1, Math.round(h * .04)) + 'px ' + Math.max(1, Math.round(h * .04)) + 'px 0 ' + MOSS + ')');
+    el.style.filter = f.length ? f.join(' ') : 'none';
+    return el;
+  }
+
+  function fill(id, node) { var s = document.getElementById(id); s.innerHTML = ''; s.appendChild(node); }
+
+  function render() {
+    // Before/after
+    var am = document.getElementById('after-mark');
+    am.innerHTML = ''; am.appendChild(mark(120, 'light', false));
+    fill('after-wm', wordmark(64, 'light'));
+
+    // On gradient and dark
+    fill('grad-mark', mark(100, 'dark', false));
+    fill('grad-wm', wordmark(52, 'dark'));
+    fill('dark-mark', mark(100, 'dark', false));
+    fill('dark-wm', wordmark(52, 'dark'));
+
+    // Menu bar
+    var nav = document.getElementById('nav-logo'); nav.innerHTML = '';
+    if (state.lockup) nav.appendChild(mark(36, 'light', false));
+    nav.appendChild(wordmark(state.lockup ? 32 : 40, 'light'));
+
+    // Sizes
+    ['light', 'dark'].forEach(function (g) {
+      var row = document.getElementById('sizes-' + g); row.innerHTML = '';
+      [96, 64, 48, 32, 24, 16].forEach(function (s) {
+        var fig = document.createElement('figure');
+        fig.appendChild(mark(s, g));
+        var cap = document.createElement('figcaption'); cap.textContent = s + 'px';
+        fig.appendChild(cap); row.appendChild(fig);
+      });
+    });
+    fill('tab-icon', mark(16, 'light'));
+    var app = document.getElementById('app-icon'); app.innerHTML = '';
+    if (state.flat) { app.style.background = 'linear-gradient(160deg, #23372A, #5E8443)'; app.appendChild(mark(56, 'dark', state.simple)); }
+    else { app.style.background = '#F5F7F2'; app.appendChild(mark(60, 'light', state.simple)); }
+
+    // Switches + summary
+    OPTIONS.forEach(function (o) {
+      var input = document.getElementById('opt-' + o.k);
+      input.checked = !!state[o.k];
+      var blocked = o.dep && !state[o.dep];
+      input.disabled = !!blocked;
+      input.closest('.opt').classList.toggle('off-dep', !!blocked);
+    });
+    var on = OPTIONS.filter(function (o) { return state[o.k] && !(o.dep && !state[o.dep]); }).map(function (o) { return o.t; });
+    document.getElementById('keeping').textContent = on.length ? on.join(', ') : 'None, this is your original logo.';
+    document.getElementById('copy-note').textContent = '';
+  }
+
+  // Build switches
+  var opts = document.getElementById('opts');
+  OPTIONS.forEach(function (o) {
+    var label = document.createElement('label');
+    label.className = 'opt';
+    label.setAttribute('for', 'opt-' + o.k);
+    label.innerHTML = '<span class="t">' + o.t + '</span>' +
+      '<input class="switch" type="checkbox" role="switch" id="opt-' + o.k + '">' +
+      '<span class="d">' + o.d + (o.dep ? ' Needs Flat colour.' : '') + '</span>';
+    opts.appendChild(label);
+    label.querySelector('input').addEventListener('change', function (e) {
+      state[o.k] = e.target.checked; save(); render();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', function () { state = Object.assign({}, ORIGINAL); save(); render(); });
+  document.getElementById('picks').addEventListener('click', function () { state = Object.assign({}, PICKS); save(); render(); });
+  document.getElementById('copy').addEventListener('click', function () {
+    var text = 'Unicycle logo changes to keep: ' + document.getElementById('keeping').textContent;
+    var note = document.getElementById('copy-note');
+    var done = function () { note.textContent = 'Copied. Paste it into the chat to apply these to the site.'; };
+    try {
+      navigator.clipboard.writeText(text).then(done, function () { note.textContent = text; });
+    } catch (e) { note.textContent = text; }
+  });
+  render();
+})();
+</script>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UniMatch · PasaU</title>
+<meta name="description" content="Tell UniMatch what you need. It shows what's listed now and asks the students most likely to have one.">
+<link rel="icon" type="image/svg+xml" href="logos/unimatch-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Poppins:wght@500;700&display=swap">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="app.css">
+<script src="a11y.js"></script>
+<script src="motion.js"></script>
+</head>
+<body>
+<div class="page sub-page">
+  <header class="nav">
+    <a class="logo" href="index.html" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="wm" aria-hidden="true">Pasa<b>U</b></span></a>
+    <div class="nav-right">
+      <a class="round nav-me" id="nav-me" href="profile.html" aria-label="Your profile" hidden></a>
+      <button class="round menu-btn" type="button" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <nav class="mnav" id="mnav" aria-label="Menu" hidden>
+      <a href="index.html">Shop</a>
+      <a href="index.html#spotlight">Free &amp; swaps</a>
+      <a href="unimatch.html">UniMatch</a>
+      <a href="messages.html" data-auth hidden>Messages</a>
+      <hr>
+      <a href="profile.html" data-auth hidden>Your profile</a>
+      <a href="profile.html#settings" data-auth hidden>Profile settings</a>
+      <a href="index.html?login=1" data-guest hidden>Log in</a>
+      <button type="button" data-a11y>Accessibility</button>
+      <button type="button" id="logout-btn" data-auth hidden>Log out</button>
+    </nav>
+  </header>
+
+  <main class="um" id="main">
+    <!-- Hero: what UniMatch does, and the one thing to do here -->
+    <section class="um-hero" aria-labelledby="um-title">
+      <div class="um-copy">
+        <h1 id="um-title"><svg class="um-mark" viewBox="4 10 232 304" aria-hidden="true" focusable="false"><defs><mask id="uw" maskUnits="userSpaceOnUse" x="-60" y="-20" width="400" height="400"><rect x="-60" y="-20" width="400" height="400" fill="#fff"/><g fill="#000" stroke="#000"><polygon points="120,18 228,54 120,90 12,54" stroke-width="26" stroke-linejoin="round"/><path d="M62 84 L120 103 L178 84 V116 C178 133 152 146 120 146 C88 146 62 133 62 116 Z" stroke-width="16"/><path d="M120 50 C96 56 64 64 50 72 C40 78 37 92 37 102" fill="none" stroke-width="22" stroke-linecap="round"/><circle cx="37" cy="106" r="16"/><path d="M31 112 C32 130 28 144 16 156 C24 164 36 168 44 164 C52 154 50 130 45 112 Z" stroke-width="16"/></g></mask><mask id="ub" maskUnits="userSpaceOnUse" x="-60" y="-20" width="400" height="400"><rect x="-60" y="-20" width="400" height="400" fill="#fff"/><path d="M120 50 C96 56 64 64 50 72 C40 78 37 92 37 102" fill="none" stroke="#000" stroke-width="16" stroke-linecap="round"/></mask></defs><g mask="url(#uw)"><path d="M24 128 V200 A96 96 0 0 0 216 200 V128" fill="none" stroke="currentColor" stroke-width="22"/><rect x="5.0" y="90" width="38" height="30" rx="5.32" fill="currentColor"/><rect x="197.0" y="90" width="38" height="30" rx="5.32" fill="currentColor"/></g><path d="M62 84 L120 103 L178 84 V116 C178 133 152 146 120 146 C88 146 62 133 62 116 Z" fill="currentColor"/><polygon points="120,18 228,54 120,90 12,54" fill="currentColor" stroke="currentColor" stroke-width="10" stroke-linejoin="round" mask="url(#ub)"/><path d="M120 50 C96 56 64 64 50 72 C40 78 37 92 37 102" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><circle cx="37" cy="106" r="8" fill="currentColor"/><path d="M31 112 C32 130 28 144 16 156 C24 164 36 168 44 164 C52 154 50 130 45 112 Z" fill="currentColor"/></svg><span class="um-word">Uni<span>Match</span></span></h1>
+        <p class="um-tag">Tell us what you need. UniMatch finds who has it.</p>
+        <p class="um-lede">It shows what's listed right now, then asks the students most likely to have one: sellers with a match, students who got one before, and higher years in your course.</p>
+        <details class="um-how">
+          <summary>How UniMatch works<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+          <ol class="um-steps">
+            <li><b>You post what you need</b><span>A few words, a category, and a top price if you have one.</span></li>
+            <li><b>UniMatch looks and asks</b><span>It shows listings that fit, and notifies up to 18 students likely to have one. Nobody is asked more than 3 times a day.</span></li>
+            <li><b>Someone taps “I have this”</b><span>You get a notification with their listing, then reserve it and meet on campus as usual.</span></li>
+          </ol>
+        </details>
+      </div>
+      <form class="um-form" id="um-form" novalidate aria-labelledby="um-form-h">
+        <h2 id="um-form-h">Post a Looking For</h2>
+        <div class="field"><label for="um-need">What do you need?</label>
+          <input id="um-need" type="text" maxlength="60" autocomplete="off" placeholder="e.g. anatomy textbook, PE shirt size M"></div>
+        <div class="um-row">
+          <div class="field"><label for="um-cat">Category</label><select id="um-cat"></select></div>
+          <div class="field"><label for="um-max">Max price (₱)</label><input id="um-max" type="number" min="0" step="1" inputmode="numeric" placeholder="Optional"></div>
+        </div>
+        <div class="field"><label for="um-school">Campus</label><select id="um-school"></select></div>
+        <button class="pill um-go" type="submit" id="um-post">Find a match</button>
+        <p class="note" id="um-note" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- Results for the post you just made (or opened from a notification) -->
+    <section class="p-panel um-results" id="um-results" aria-labelledby="um-results-h" hidden>
+      <h2 id="um-results-h">Matches</h2>
+      <div id="um-results-body"></div>
+    </section>
+
+    <section class="p-panel" id="um-mine" aria-labelledby="um-mine-h" hidden>
+      <h2 id="um-mine-h">Your Looking For posts</h2>
+      <div id="um-mine-body"></div>
+    </section>
+
+    <section class="p-panel" id="um-asked" aria-labelledby="um-asked-h" hidden>
+      <h2 id="um-asked-h">UniMatch asked you</h2>
+      <p class="muted">Students who might be looking for something you have.</p>
+      <div id="um-asked-body"></div>
+    </section>
+
+    <section class="p-panel" id="um-board" aria-labelledby="um-board-h">
+      <h2 id="um-board-h">Looking For right now</h2>
+      <div id="um-board-body"><p class="muted">Loading…</p></div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="universities.js"></script>
+<script src="ui.js"></script>
+<script src="unimatch.js"></script>
+<script src="messenger.js"></script>
+<script src="nav.js"></script>
+</body>
+</html>

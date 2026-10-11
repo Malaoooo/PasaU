@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Profile · PasaU</title>
+<link rel="icon" type="image/svg+xml" href="logos/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Poppins:wght@500;700&display=swap">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="app.css">
+<script src="a11y.js"></script>
+<script src="motion.js"></script>
+</head>
+<body>
+<div class="page sub-page">
+  <header class="nav">
+    <a class="logo" href="index.html" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="wm" aria-hidden="true">Pasa<b>U</b></span></a>
+    <div class="nav-right">
+      <a class="round nav-um-btn always" href="unimatch.html" aria-label="UniMatch" title="UniMatch"><svg class="icon um-ic" viewBox="-31 13 302 302" aria-hidden="true" focusable="false"><g><path d="M26 132 V200 A94 94 0 0 0 214 200 V132" fill="none" stroke="currentColor" stroke-width="30"/><rect x="2.0" y="88" width="48" height="34" rx="6.720000000000001" fill="currentColor"/><rect x="190.0" y="88" width="48" height="34" rx="6.720000000000001" fill="currentColor"/><path d="M62 84 L120 103 L178 84 V116 C178 133 152 146 120 146 C88 146 62 133 62 116 Z" fill="currentColor"/><polygon points="120,18 228,54 120,90 12,54" fill="currentColor" stroke="currentColor" stroke-width="10" stroke-linejoin="round"/></g></svg></a>
+      <a class="round nav-me" id="nav-me" href="profile.html" aria-label="Your profile" hidden></a>
+      <button class="round menu-btn" type="button" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <nav class="mnav" id="mnav" aria-label="Menu" hidden>
+      <a href="index.html">Shop</a>
+      <a href="index.html#spotlight">Free &amp; swaps</a>
+      <a href="unimatch.html">UniMatch</a>
+      <a href="messages.html" data-auth hidden>Messages</a>
+      <hr>
+      <a href="profile.html" data-auth hidden>Your profile</a>
+      <a href="profile.html#settings" data-auth hidden>Profile settings</a>
+      <a href="index.html?login=1" data-guest hidden>Log in</a>
+      <button type="button" data-a11y>Accessibility</button>
+      <button type="button" id="logout-btn" data-auth hidden>Log out</button>
+    </nav>
+  </header>
+
+  <main class="profile" id="profile">
+    <section class="p-head" id="profile-head" aria-live="polite"><p class="muted">Loading…</p></section>
+    <nav class="p-tabs" id="tabs" role="tablist" aria-label="Profile sections"></nav>
+    <section class="p-panel" id="panel" role="tabpanel"></section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="universities.js"></script>
+<script src="ui.js"></script>
+<script src="profile.js"></script>
+<script src="messenger.js"></script>
+<script src="nav.js"></script>
+</body>
+</html>

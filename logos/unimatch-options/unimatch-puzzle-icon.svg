@@ -1,0 +1,2 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="UniMatch"><rect width="64" height="64" rx="14" fill="#1E3322"/><g transform="translate(6.4 6.4) scale(.8)"><g transform="translate(0 -3)"><path d="M32 12 V31 H34.8 A6 6 0 1 1 34.8 37 H32 V58 A23 23 0 0 1 32 12 Z" fill="#FFFFFF"/>
+<path d="M32 12 A23 23 0 0 1 32 58 V37 H34.8 A6 6 0 1 0 34.8 31 H32 Z" fill="#B8F27A" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round"/></g></g></svg>

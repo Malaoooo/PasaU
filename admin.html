@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Admin · PasaU</title>
+<link rel="icon" type="image/svg+xml" href="logos/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Poppins:wght@500;700&display=swap">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="app.css">
+<script src="a11y.js"></script>
+<script src="motion.js"></script>
+</head>
+<body>
+<div class="page sub-page">
+  <header class="nav">
+    <a class="logo" href="index.html" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="wm" aria-hidden="true">Pasa<b>U</b></span></a>
+    <div class="nav-right"><a class="round" href="index.html" aria-label="Back to shop" title="Back to shop"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 10V7a3 3 0 0 1 6 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></a></div>
+  </header>
+  <main class="profile admin">
+    <section class="p-head"><div class="p-who"><h1>Admin dashboard</h1><p class="p-sub" id="admin-who">Checking access…</p></div></section>
+    <nav class="p-tabs" id="tabs" role="tablist" aria-label="Admin sections" hidden></nav>
+    <section class="p-panel" id="panel" role="tabpanel"></section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="ui.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
