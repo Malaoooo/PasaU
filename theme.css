@@ -188,3 +188,4 @@ footer .logo .lock small { color: var(--muted); }
 
 /* Messages, logged out: the Log in button lines up with the text above it */
 .convo-list > li:only-child { display: grid; gap: 12px; justify-items: start; padding-inline: 8px; }
+.cta input::placeholder { color: rgba(255,255,255,.82); }
