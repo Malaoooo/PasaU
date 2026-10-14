@@ -189,3 +189,35 @@ footer .logo .lock small { color: var(--muted); }
 /* Messages, logged out: the Log in button lines up with the text above it */
 .convo-list > li:only-child { display: grid; gap: 12px; justify-items: start; padding-inline: 8px; }
 .cta input::placeholder { color: rgba(255,255,255,.82); }
+
+/* ---------- Page transition (transition.js): a green panel sweeps across, the mark's arrow turns with it ---------- */
+.pg-wipe, html[data-nav-in]::after {
+  position: fixed; inset: 0; z-index: 1000; pointer-events: none;
+  background: var(--brand-green);
+}
+.pg-wipe span, html[data-nav-in]::before {
+  position: fixed; left: 50%; top: 50%; width: 120px; height: 110px; margin: -55px 0 0 -60px; z-index: 1001; pointer-events: none;
+  background: url("logos/mark-white.svg") center / contain no-repeat;
+}
+.pg-wipe span { position: absolute; }
+html[data-nav-in]::before, html[data-nav-in]::after { content: ""; }
+/* leaving: the panel sweeps in and the arrow turns a quarter to point the way you are going */
+.pg-wipe.out.fwd { animation: wipe-in-r .32s cubic-bezier(.65,0,.35,1) both; }
+.pg-wipe.out.back { animation: wipe-in-l .32s cubic-bezier(.65,0,.35,1) both; }
+.pg-wipe.out.fwd span { animation: turn-cw-a .32s cubic-bezier(.65,0,.35,1) both; }
+.pg-wipe.out.back span { animation: turn-ccw-a .32s cubic-bezier(.65,0,.35,1) both; }
+/* arriving: the panel keeps going the same way, the arrow riding on it, still pointing ahead */
+html[data-nav-in="fwd"]::after { animation: wipe-out-r .42s .05s cubic-bezier(.65,0,.35,1) both; }
+html[data-nav-in="back"]::after { animation: wipe-out-l .42s .05s cubic-bezier(.65,0,.35,1) both; }
+html[data-nav-in="fwd"]::before { animation: turn-cw-b .42s .05s cubic-bezier(.65,0,.35,1) both, ride-r .42s .05s cubic-bezier(.65,0,.35,1) both; }
+html[data-nav-in="back"]::before { animation: turn-ccw-b .42s .05s cubic-bezier(.65,0,.35,1) both, ride-l .42s .05s cubic-bezier(.65,0,.35,1) both; }
+@keyframes wipe-in-r { from { transform: translateX(-100%); } to { transform: none; } }
+@keyframes wipe-in-l { from { transform: translateX(100%); } to { transform: none; } }
+@keyframes wipe-out-r { to { transform: translateX(100%); } }
+@keyframes wipe-out-l { to { transform: translateX(-100%); } }
+@keyframes turn-cw-a { from { rotate: 0deg; } to { rotate: 90deg; } }
+@keyframes turn-ccw-a { from { rotate: 0deg; } to { rotate: -90deg; } }
+@keyframes turn-cw-b { from, to { rotate: 90deg; } }
+@keyframes turn-ccw-b { from, to { rotate: -90deg; } }
+@keyframes ride-r { to { translate: 100vw 0; } }
+@keyframes ride-l { to { translate: -100vw 0; } }
