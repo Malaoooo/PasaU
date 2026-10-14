@@ -6,3 +6,5 @@ backups/
 .bgmock.js
 .impeccable/hook.cache.json
 .impeccable/live/
+.agents/
+skills-lock.json

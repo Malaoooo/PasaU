@@ -1,0 +1,190 @@
+/* PasaU v2 "campus board". Loaded after site.css and app.css on every page.
+   Light, green-tinted ground; solid brand-green colour blocks (hero, UniMatch, waitlist); gold is the one accent.
+   No glass, no page gradient. Shapes: interactive = pill, containers = 20px (cards) / 28px (blocks), inputs = 14px. */
+:root {
+  --bg: #F1F4F0; --bg-2: #E6ECE6;
+  --card: #FFFFFF; --card-2: #EDF2ED;
+  --ink: #0F1F17; --muted: #4C5D52; --line: rgba(15,31,23,.12);
+  --pill: var(--brand-green); --pill-fg: #FFFFFF;
+  --chip: #FFFFFF; --chip-fg: var(--ink);
+  --glass: var(--card); --card-glass: var(--card); --card-edge: var(--line); --media-bg: #EDF2ED;
+  --on-bg: var(--ink); --on-bg-muted: var(--muted);
+  --glass-panel: var(--card); --glass-line: var(--line);
+  --shadow: rgba(18,52,32,.12);
+  --block: var(--brand-green); --block-2: #194A2D;   /* colour blocks */
+  --focus: var(--brand-green);
+  --display: "Outfit", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r-xl: 28px; --r-lg: 20px; --r-md: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B1510; --bg-2: #101D16; --card: #13211A; --card-2: #192B21;
+    --ink: #E8F0EA; --muted: #9DB0A3; --line: rgba(232,240,234,.12);
+    --chip: #13211A; --chip-fg: var(--ink); --media-bg: #192B21;
+    --shadow: rgba(0,0,0,.4); --block: #17452B; --block-2: #12391F; --focus: var(--brand-gold);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B1510; --bg-2: #101D16; --card: #13211A; --card-2: #192B21;
+  --ink: #E8F0EA; --muted: #9DB0A3; --line: rgba(232,240,234,.12);
+  --chip: #13211A; --chip-fg: var(--ink); --media-bg: #192B21;
+  --shadow: rgba(0,0,0,.4); --block: #17452B; --block-2: #12391F; --focus: var(--brand-gold);
+}
+
+/* ---------- Ground ---------- */
+body, body:has(.hero) { background: var(--bg); color: var(--ink); }
+html { scrollbar-color: var(--muted) var(--bg); }
+.page { gap: clamp(48px, 7vw, 88px); }
+h1, h2, h3 { letter-spacing: -0.03em; }
+h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 700; }
+:focus-visible { border-radius: 8px; }
+:is(.pill, .round, .chips button, .campus-chip, .campus-toggle, .hero-cats button, .recent-chip):focus-visible { border-radius: 999px; }
+/* glass is gone everywhere */
+:is(.nav, .card, .p-head, .inbox-list, .inbox-thread, .steps li, .wanted-list li, .um-steps li, .hmark, .hctl, .chip-float, .empty, .spot-empty) { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+/* ---------- Buttons ---------- */
+.pill { font-weight: 700; letter-spacing: -0.005em; box-shadow: none; }
+.pill:hover { transform: translateY(-1px); }
+.pill:active { transform: translateY(1px) scale(.98); }
+.pill.light { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+.round { box-shadow: none; border: 1px solid var(--line); }
+.round.solid, .round[aria-pressed="true"] { background: var(--brand-gold); color: #0F1F17; border-color: transparent; }
+
+/* ---------- Nav: a solid bar, not a floating glass pill ---------- */
+.nav { border-radius: 18px; padding: 8px 8px 8px 12px; background: var(--card); border: 1px solid var(--line); box-shadow: 0 1px 0 var(--line), 0 12px 32px -20px var(--shadow); }
+.nav .pill { height: 46px; }
+#login-btn { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+#login-btn:hover { background: var(--card-2); }
+.nav-links a { font-weight: 600; }
+.nav-links a:hover { background: var(--card-2); }
+
+/* ---------- Colour blocks: hero, UniMatch hero, waitlist ---------- */
+.hero, .um-hero, .cta {
+  position: relative; isolation: isolate; overflow: hidden;
+  background: var(--block); color: #FFFFFF; border-radius: var(--r-xl);
+  --focus: var(--brand-gold);
+}
+.hero { padding: clamp(28px, 4.5vw, 64px); grid-template-columns: minmax(0, 1.22fr) minmax(0, .78fr); gap: clamp(24px, 3vw, 44px); }
+.um-hero { padding: clamp(24px, 4vw, 56px); }
+/* the PasaU mark, very faint, bleeding off the block's corner */
+.hero::before, .um-hero::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  right: -6%; bottom: -18%; width: min(620px, 70%); aspect-ratio: 572 / 524;
+  background: url("logos/mark-bg.svg") center / contain no-repeat;
+}
+.hero h1 { font-size: clamp(38px, 4.3vw, 60px); font-weight: 800; line-height: 1; letter-spacing: -0.035em; }
+.hero h1 .hl { color: var(--brand-gold); }
+.hero p.lede { font-size: clamp(17px, 1.5vw, 19px); color: rgba(255,255,255,.86); max-width: 40ch; }
+.search { box-shadow: 0 18px 40px -18px rgba(0,0,0,.45); }
+.search .pill { background: var(--brand-gold); color: #0F1F17; }
+.hmark, .hctl, .chip-float { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); }
+.hcard { border-radius: var(--r-lg); box-shadow: 0 30px 60px -20px rgba(0,0,0,.5); }
+.hcard .bag { background: var(--brand-green); }
+.badge { background: var(--brand-green); color: #FFFFFF; }
+
+/* ---------- Trust strip: its own band under the hero ---------- */
+.trust-band { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-top: calc(-1 * clamp(24px, 4vw, 56px)); border-radius: var(--r-lg); overflow: hidden; background: var(--line); border: 1px solid var(--line); }
+.trust-band > * { background: var(--card); padding: 18px 22px; display: flex; align-items: center; gap: 12px; color: var(--ink); font-weight: 600; font-size: 15px; text-decoration: none; }
+.trust-band > a:hover { background: var(--card-2); }
+.trust-band .ti { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--brand-gold) 22%, var(--card)); color: var(--ink); }
+.trust-band .ti .icon { width: 18px; height: 18px; }
+@media (max-width: 720px) { .trust-band { grid-template-columns: 1fr; } .trust-band > * { padding: 14px 18px; } }
+
+/* ---------- Section heads ---------- */
+.head { align-items: end; }
+.head p { color: var(--muted); font-size: 17px; }
+
+/* ---------- Chips: gold marks the selection ---------- */
+.chips button { background: var(--card); border: 1px solid var(--line); font-weight: 600; }
+.chips button:hover { background: var(--card-2); }
+.chips button[aria-pressed="true"] { background: var(--brand-gold); color: #0F1F17; border-color: transparent; }
+
+/* ---------- Listing cards: photo first, text left, heart on the photo ---------- */
+.grid { gap: 28px 20px; }
+.card {
+  container-type: inline-size;
+  padding: 10px 10px 16px; text-align: left; gap: 3px;
+  background: var(--card); border: 1px solid var(--line); box-shadow: none; border-radius: var(--r-lg);
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 22px 40px -24px var(--shadow); }
+.card .media { border-radius: 14px; margin-bottom: 10px; background: var(--media-bg); }
+.card > :not(.media):not(.badge):not(.state):not(.heart) { padding-inline: 6px; }
+.card .name { font-weight: 600; font-size: 15px; text-align: left; }
+.campus-tag:not(.unset) { background: var(--brand-green); color: #FFFFFF; }
+.card .price { font-family: var(--display); font-weight: 700; font-size: 24px; letter-spacing: -0.02em; }
+.card .heart { top: 18px; right: 18px; left: auto; bottom: auto; transform: none; width: 40px; height: 40px; background: var(--card); }
+.card .heart:hover { transform: scale(1.06); }
+.card .heart[aria-pressed="true"] { color: var(--coral); }
+.card .badge { top: calc(100cqw - 26px); bottom: auto; left: 18px; right: auto; }
+.card .state { top: 18px; left: 18px; }
+@media (max-width: 480px) {
+  .card { padding: 8px 8px 12px; border-radius: 16px; }
+  .card .price { font-size: 20px; }
+  .card .heart { top: 14px; right: 14px; width: 36px; height: 36px; }
+  .card .badge { top: calc(100cqw - 28px); left: 14px; }
+  .card .state { top: 14px; left: 14px; }
+}
+
+/* ---------- Panels on the ground ---------- */
+.empty, .spot-empty, .wanted-list li, .p-head, .inbox-list, .inbox-thread, .grid > .campus-empty { background: var(--card); border: 1px solid var(--line); box-shadow: none; }
+.filters select, .filters input, .filters .more, .p-tabs button { background: var(--card); border-color: var(--line); color: var(--ink); }
+
+/* ---------- UniMatch hero block ---------- */
+.um-hero .um-steps li { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); }
+.um-hero .um-steps b { color: #FFFFFF; }
+.um-hero h1 { font-size: clamp(48px, 8vw, 96px); }
+.um-form { box-shadow: 0 30px 60px -24px rgba(0,0,0,.5); }
+
+/* ---------- Waitlist block ---------- */
+.cta { padding: clamp(28px, 5vw, 64px); background: var(--block); box-shadow: none; }
+.cta .pill.light { background: var(--brand-gold); color: #0F1F17; border-color: transparent; }
+
+/* ---------- Footer: light, a hairline above ---------- */
+footer { background: transparent; border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 24px 4px 8px; color: var(--ink); }
+footer a, footer nav button[data-a11y] { color: var(--muted); }
+footer a:hover, footer nav button[data-a11y]:hover { color: var(--ink); }
+footer .logo .mk { background-image: url("logos/mark.svg"); }
+footer .logo .wm { color: var(--brand-green); }
+footer .logo .lock small { color: var(--muted); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) footer .logo .mk { background-image: url("logos/mark-white.svg"); }
+  :root:not([data-theme="light"]) footer .logo .wm { color: #FFFFFF; }
+}
+:root[data-theme="dark"] footer .logo .mk { background-image: url("logos/mark-white.svg"); }
+:root[data-theme="dark"] footer .logo .wm { color: #FFFFFF; }
+
+/* ---------- Dialogs and toasts follow the same shapes ---------- */
+.login, .sheet { border-radius: var(--r-xl); }
+.login .modes button[aria-pressed="true"] { background: var(--brand-gold); color: #0F1F17; }
+.login input, .login select { border-radius: 14px; }
+.toast { background: var(--ink); color: var(--bg); }
+
+/* ---------- One entrance on load: the hero settles in ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > * { animation: rise .7s cubic-bezier(.16,1,.3,1) both; }
+  .hero-copy > :nth-child(2) { animation-delay: .06s; }
+  .hero-copy > :nth-child(3) { animation-delay: .12s; }
+  .hero-copy > :nth-child(n+4) { animation-delay: .18s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+}
+
+/* ---------- Free & swaps: the two groups sit side by side; cards keep their shop size ---------- */
+.freeswap { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 3vw, 40px); align-items: start; }
+.freeswap > .head { grid-column: 1 / -1; }
+.freeswap > .fs-group:only-of-type, .freeswap > .fs-group[hidden] + .fs-group, .freeswap > .fs-group:has(+ .fs-group[hidden]) { grid-column: 1 / -1; }
+.fs-group .grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+.fs-group + .fs-group:not([hidden]) { padding-top: 0; border-top: 0; }
+@media (max-width: 760px) { .freeswap { grid-template-columns: 1fr; } .fs-group + .fs-group:not([hidden]) { padding-top: 28px; border-top: 1px solid var(--line); } }
+
+/* ---------- Phones and tablets: blocks stack, padding tightens ---------- */
+@media (max-width: 900px) {
+  .hero, .um-hero { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .hero, .um-hero, .cta { padding: 28px 20px; border-radius: 24px; }
+  .hero::before, .um-hero::before { width: 90%; bottom: -8%; }
+  .trust-band { margin-top: -24px; }
+}
+
+/* Messages, logged out: the Log in button lines up with the text above it */
+.convo-list > li:only-child { display: grid; gap: 12px; justify-items: start; padding-inline: 8px; }

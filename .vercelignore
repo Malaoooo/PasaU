@@ -6,3 +6,7 @@ font-before-after.png
 logos/download/
 PRODUCT.md
 logos/unimatch-options/
+.agents/
+.claude/
+skills-lock.json
+README.md
