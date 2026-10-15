@@ -1,5 +1,5 @@
 /* Page-to-page transition: a brand-green panel sweeps across carrying the PasaU mark, and the mark's U-turn arrow
-   turns around in the direction of travel. Deeper into the site (Home > UniMatch > Messages > Profile > Admin) sweeps
+   turns around in the direction of travel. Deeper into the site (Home > PasaMatch > Messages > Profile > Admin) sweeps
    right and turns clockwise; back toward Home sweeps left and turns counter-clockwise.
    The incoming half is started by the inline script in each page's <head> (html[data-nav-in]). */
 (function () {

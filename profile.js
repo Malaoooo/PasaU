@@ -290,7 +290,7 @@
       db.from('wanted_replies').select('wanted_id, listing_id, created_at, listings(id, title, kind, price_php)')
     ]).then(function (res) {
       var posts = res[0].data || [], replies = res[1].data || [];
-      if (!posts.length) return panel.replaceChildren(UI.empty('No Looking For posts.', 'Post what you need and get notified when someone lists it.', [h('a', { class: 'pill', href: 'unimatch.html', text: 'Open UniMatch' })]));
+      if (!posts.length) return panel.replaceChildren(UI.empty('No Looking For posts.', 'Post what you need and get notified when someone lists it.', [h('a', { class: 'pill', href: 'unimatch.html', text: 'Open PasaMatch' })]));
       panel.replaceChildren(h('ul', { class: 'p-list' }, posts.map(function (w) {
         var mineReplies = replies.filter(function (r) { return r.wanted_id === w.id && r.listings; });
         return h('li', { class: 'p-item' }, [h('div', { class: 'p-main' }, [

@@ -1,4 +1,4 @@
-/* Top bar on the inner pages (UniMatch, Profile, Messages): the three-line menu, its logged-in / logged-out items,
+/* Top bar on the inner pages (PasaMatch, Profile, Messages): the three-line menu, its logged-in / logged-out items,
    Log out, and the profile photo on pages without the chats dock. Load last. The home page runs its own copy in index.html. */
 (function () {
   // Log-in lives on the home page; ?next= sends the visitor back to the page they came from

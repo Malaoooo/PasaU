@@ -1,5 +1,5 @@
 /* PasaU v2 "campus board". Loaded after site.css and app.css on every page.
-   Light, green-tinted ground; solid brand-green colour blocks (hero, UniMatch, waitlist); gold is the one accent.
+   Light, green-tinted ground; solid brand-green colour blocks (hero, PasaMatch, waitlist); gold is the one accent.
    No glass, no page gradient. Shapes: interactive = pill, containers = 20px (cards) / 28px (blocks), inputs = 14px. */
 :root {
   --bg: #F1F4F0; --bg-2: #E6ECE6;
@@ -58,7 +58,7 @@ h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 700; }
 .nav-links a { font-weight: 600; }
 .nav-links a:hover { background: var(--card-2); }
 
-/* ---------- Colour blocks: hero, UniMatch hero, waitlist ---------- */
+/* ---------- Colour blocks: hero, PasaMatch hero, waitlist ---------- */
 .hero, .um-hero, .cta {
   position: relative; isolation: isolate; overflow: hidden;
   background: var(--block); color: #FFFFFF; border-radius: var(--r-xl);
@@ -129,7 +129,7 @@ h2 { font-size: clamp(28px, 3.6vw, 44px); font-weight: 700; }
 .empty, .spot-empty, .wanted-list li, .p-head, .inbox-list, .inbox-thread, .grid > .campus-empty { background: var(--card); border: 1px solid var(--line); box-shadow: none; }
 .filters select, .filters input, .filters .more, .p-tabs button { background: var(--card); border-color: var(--line); color: var(--ink); }
 
-/* ---------- UniMatch hero block ---------- */
+/* ---------- PasaMatch hero block ---------- */
 .um-hero .um-steps li { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.16); }
 .um-hero .um-steps b { color: #FFFFFF; }
 .um-hero h1 { font-size: clamp(48px, 8vw, 96px); }
@@ -221,3 +221,26 @@ html[data-nav-in="back"]::before { animation: turn-ccw-b .42s .05s cubic-bezier(
 @keyframes turn-ccw-b { from, to { rotate: -90deg; } }
 @keyframes ride-r { to { translate: 100vw 0; } }
 @keyframes ride-l { to { translate: -100vw 0; } }
+
+/* ---------- Phones: one floating thing, a lighter hero, a calmer top bar ---------- */
+@media (max-width: 480px) {
+  /* Sell moves into the top bar (logged in); the floating pill goes, so only the chat button floats */
+  .fab { display: none !important; }
+  .nav .nav-sell { display: inline-flex; height: 40px; padding-inline: 16px; }
+  .nav .nav-sell .sell-long { display: none; }
+  .nav-right:has(#login-btn:not([hidden])) .nav-sell { display: none; }
+  /* PasaMatch and notifications live in the menu; a gold dot on the menu button means unread */
+  .nav .nav-um-btn, .nav #nav-bell { display: none; }
+  .menu-btn { position: relative; }
+  .nav-right:has(#bellcount:not([hidden])) .menu-btn::after { content: ""; position: absolute; top: 6px; right: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--brand-gold); box-shadow: 0 0 0 2px var(--card); }
+  /* Hero: headline, line, campus, search. The carousel and shortcuts step aside on phones */
+  .hero .stage, .hero .hero-cats, .hero .campus-count { display: none; }
+  .hero { gap: 0; }
+}
+@media (min-width: 481px) { .mnav .mnav-bell { display: none; } }
+@media (min-width: 481px) { .mnav .mnav-sell { display: none; } }
+.mnav .mnav-sell { min-height: 48px; padding-inline: 16px; border-radius: 16px; text-align: left; font-weight: 700; color: var(--brand-green); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mnav .mnav-sell { color: var(--moss); } }
+:root[data-theme="dark"] .mnav .mnav-sell { color: var(--moss); }
+.nav-sell { gap: 0; }
+.nav-sell .sell-long { margin-left: .28em; }

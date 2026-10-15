@@ -15,7 +15,7 @@ Live: https://unicycle-seven.vercel.app
 - `index.html`, `unimatch.html`, `profile.html`, `messages.html`, `admin.html`: the pages.
 - `site.css` (tokens and layout), `app.css` (features), `app.js` (shop, listings, deals), `messenger.js` (chat pop-up), `nav.js` (inner-page menu).
 - `db/*.sql`: database setup, run in order in the Supabase SQL editor. `db/demo-cleanup.sql` hides test data.
-- `logos/`: PasaU and UniMatch marks.
+- `logos/`: PasaU and PasaMatch marks.
 - `PRODUCT.md`: product context, users and brand rules.
 
 ## Run locally

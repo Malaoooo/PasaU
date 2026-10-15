@@ -143,7 +143,7 @@
   var fCode = h('input', { id: 'f-code', type: 'search', placeholder: 'Course code, e.g. CHEM 101', 'aria-label': 'Course code' });
   var fYear = h('select', { id: 'f-year', 'aria-label': 'Year level' }, options(YEARS, 'All year levels'));
   var fKind = h('select', { id: 'f-kind', 'aria-label': 'Listing type' },
-    [opt('', 'Sale, swap & free'), opt('sell', 'For sale'), opt('swap', 'Swap'), opt('free', 'Free'), opt('wanted', 'Looking For posts (UniMatch)')]);
+    [opt('', 'Sale, swap & free'), opt('sell', 'For sale'), opt('swap', 'Swap'), opt('free', 'Free'), opt('wanted', 'Looking For posts (PasaMatch)')]);
   var fCond = h('select', { id: 'f-cond', 'aria-label': 'Condition' }, options(CONDITIONS, 'Any condition'));
   var fMin = h('input', { id: 'f-min', type: 'number', min: 0, step: 1, inputMode: 'numeric', placeholder: 'Min ₱', 'aria-label': 'Minimum price in pesos' });
   var fMax = h('input', { id: 'f-max', type: 'number', min: 0, step: 1, inputMode: 'numeric', placeholder: 'Max ₱', 'aria-label': 'Maximum price in pesos' });
@@ -852,7 +852,7 @@
       });
   }
 
-  // ---------- Looking For lives on UniMatch (unimatch.html); the home page previews the newest posts ----------
+  // ---------- Looking For lives on PasaMatch (unimatch.html); the home page previews the newest posts ----------
   var wantedList = document.getElementById('wanted-list');
   function renderWanted() {
     if (!wantedList || !db) return;
@@ -862,7 +862,7 @@
       if (focus) rows.sort(function (a, b) { return here(b) - here(a); });
       rows = rows.slice(0, 3);
       if (r.error || !rows.length) {
-        wantedList.replaceChildren(h('li', { class: 'wl-empty', text: r.error ? 'Looking For posts are not set up yet.' : 'No Looking For posts yet. Be the first on UniMatch.' }));
+        wantedList.replaceChildren(h('li', { class: 'wl-empty', text: r.error ? 'Looking For posts are not set up yet.' : 'No Looking For posts yet. Be the first on PasaMatch.' }));
         return;
       }
       wantedList.replaceChildren.apply(wantedList, rows.map(function (w) {
@@ -921,7 +921,7 @@
   db.auth.getSession().then(function (r) {
     var who = r.data.session && r.data.session.user;
     if (params.get('login') && !who) UC.openLogin();
-    // ?sell=1 can carry a title and category, e.g. from UniMatch's "List it now"
+    // ?sell=1 can carry a title and category, e.g. from PasaMatch's "List it now"
     if (params.get('sell')) { if (who) { me = who; openSell(null, params.get('title') ? { title: params.get('title'), category: params.get('cat') } : null); } else UC.openLogin(); }
     if (params.get('wanted')) { location.replace('unimatch.html?post=' + encodeURIComponent(params.get('wanted'))); return; }
     var id = params.get('edit') || params.get('open');

@@ -1,4 +1,4 @@
-/* UniMatch: Looking For posts and matching on one page (unimatch.html).
+/* PasaMatch: Looking For posts and matching on one page (unimatch.html).
    Matching itself runs in the database (db/matching.sql): wanted_matches() finds listings, wanted_pings records who was asked. */
 (function () {
   var db = window.supabase.createClient(window.UC_CONFIG.url, window.UC_CONFIG.key);
@@ -99,7 +99,7 @@
       else if (!listed.length) kids.push(h('p', { class: 'muted', text: 'Nothing listed yet. We’ll notify you the moment a listing fits.' }));
       else kids.push(h('ul', { class: 'p-list' }, listed.map(listingRow)));
       var people = h('ul', { class: 'um-people' }, [h('li', { class: 'muted', text: pings.length ? 'Loading…' : 'No one to ask yet. We’ll keep watching new listings.' })]);
-      kids.push(h('h3', { text: 'Students UniMatch asked' }), people);
+      kids.push(h('h3', { text: 'Students PasaMatch asked' }), people);
       if (pings.length) kids.push(h('p', { class: 'p-hint', text: 'They got a notification. You’ll get one when someone replies.' }));
       box.replaceChildren.apply(box, kids);
       if (!pings.length) return;
@@ -159,7 +159,7 @@
     });
   }
 
-  // ---------- Posts UniMatch asked you about ----------
+  // ---------- Posts PasaMatch asked you about ----------
   var REASON = { listed: 'One of your listings might be it', owned: 'You got something like it on PasaU', course: 'A lower year in your course needs this' };
   function loadAsked() {
     if (!me) { asked.hidden = true; return; }
@@ -187,7 +187,7 @@
         var x = schoolOf(a.school), y = schoolOf(b.school);
         return ((y && y.code === sc.code) ? 1 : 0) - ((x && x.code === sc.code) ? 1 : 0);
       });
-      if (!rows.length) return boardBody.replaceChildren(UI.empty('No Looking For posts yet.', 'Be the first: post what you need above and UniMatch will start looking.'));
+      if (!rows.length) return boardBody.replaceChildren(UI.empty('No Looking For posts yet.', 'Be the first: post what you need above and PasaMatch will start looking.'));
       boardBody.replaceChildren(h('ul', { class: 'p-list' }, rows.map(function (w) {
         var own = me && w.user_id === me.id;
         return h('li', { class: 'p-item', id: own ? null : 'board-' + w.id }, [h('div', { class: 'p-main' }, [

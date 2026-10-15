@@ -17,7 +17,7 @@
 
 <!-- Illustration + icon sprites (colors come from --c1/--c2/--c3/--leg on each <use>) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <symbol id="ic-um" viewBox="-31 13 302 302"><g><path d="M26 132 V200 A94 94 0 0 0 214 200 V132" fill="none" stroke="currentColor" stroke-width="30"/><rect x="2.0" y="88" width="48" height="34" rx="6.720000000000001" fill="currentColor"/><rect x="190.0" y="88" width="48" height="34" rx="6.720000000000001" fill="currentColor"/><path d="M62 84 L120 103 L178 84 V116 C178 133 152 146 120 146 C88 146 62 133 62 116 Z" fill="currentColor"/><polygon points="120,18 228,54 120,90 12,54" fill="currentColor" stroke="currentColor" stroke-width="10" stroke-linejoin="round"/></g></symbol>
+    <symbol id="ic-um" viewBox="86 52 666 666"><path d="M232 372 V515 A185 185 0 0 0 602 515 V372 H502 V515 A85 85 0 0 1 332 515 V372 Z" fill="currentColor"/><rect x="232" y="372" width="100" height="56" fill="#F2A900"/><rect x="502" y="372" width="100" height="56" fill="#F2A900"/><g transform="translate(137 -125)"><path d="M118 266 L280 197 L444 266 L280 336 Z" fill="#F2A900" stroke="#F2A900" stroke-width="10" stroke-linejoin="round"/><path d="M405 280 V372" stroke="#F2A900" stroke-width="11" stroke-linecap="round"/><circle cx="405" cy="381" r="17" fill="#F2A900"/></g></symbol>
   <defs>
     <symbol id="i-shirt" viewBox="0 0 200 180">
       <ellipse cx="100" cy="170" rx="62" ry="5" style="fill:#000;opacity:.12"/>
@@ -93,22 +93,24 @@
     <a class="logo" href="#top" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="wm" aria-hidden="true">Pasa<b>U</b></span></a>
     <nav class="nav-links" aria-label="Main">
       <a href="#shop">Shop</a>
-      <a class="nav-um" href="unimatch.html"><svg class="um-mark" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg>UniMatch</a>
+      <a class="nav-um" href="unimatch.html"><svg class="um-mark" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg>PasaMatch</a>
       <a href="#spotlight">Free &amp; swaps</a>
     </nav>
     <div class="nav-right">
-      <a class="round nav-um-btn" href="unimatch.html" aria-label="UniMatch" title="UniMatch"><svg class="icon um-ic" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg></a>
+      <a class="round nav-um-btn" href="unimatch.html" aria-label="PasaMatch" title="PasaMatch"><svg class="icon um-ic" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg></a>
       <a class="round nav-me" id="nav-me" href="profile.html" aria-label="Your profile" hidden></a>
       <button class="round navbag" type="button" id="nav-bell" aria-label="Notifications" hidden><svg class="icon"><use href="#ic-bell"/></svg><b id="bellcount" hidden>0</b></button>
-      <button class="pill nav-sell" type="button" data-sell>Sell an item</button>
+      <button class="pill nav-sell" type="button" data-sell>Sell<span class="sell-long"> an item</span></button>
       <button class="pill" type="button" id="login-btn" aria-haspopup="dialog">Log in</button>
       <button class="round menu-btn" type="button" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
     <nav class="mnav" id="mnav" aria-label="Menu" hidden>
+      <button type="button" class="mnav-sell" data-sell>Sell an item</button>
       <a href="#shop">Shop</a>
       <a href="#spotlight">Free &amp; swaps</a>
-      <a href="unimatch.html">UniMatch</a>
+      <a href="unimatch.html">PasaMatch</a>
       <a href="#join">Request your school</a>
+      <button type="button" class="mnav-bell" data-auth hidden onclick="document.getElementById('nav-bell').click()">Notifications</button>
       <hr>
       <a href="profile.html" data-auth hidden>Your profile</a>
       <a href="profile.html#settings" data-auth hidden>Profile settings</a>
@@ -318,14 +320,14 @@
       </div>
     </section>
 
-    <!-- UniMatch preview: Looking For posts and matching live on unimatch.html -->
+    <!-- PasaMatch preview: Looking For posts and matching live on unimatch.html -->
     <section class="wanted" id="wanted" aria-labelledby="wanted-title">
       <div class="head">
         <div class="stack">
-          <h2 id="wanted-title">Can't find it? Try UniMatch.</h2>
-          <p>Post what you need. UniMatch shows what's listed now and asks the students most likely to have one.</p>
+          <h2 id="wanted-title">Can't find it? Try PasaMatch.</h2>
+          <p>Post what you need. PasaMatch shows what's listed now and asks the students most likely to have one.</p>
         </div>
-        <a class="pill light um-open" href="unimatch.html" id="wanted-btn"><svg class="um-mark" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg>Open UniMatch</a>
+        <a class="pill light um-open" href="unimatch.html" id="wanted-btn"><svg class="um-mark" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg>Open PasaMatch</a>
       </div>
       <ul class="wanted-list" id="wanted-list"><li class="wl-empty">No Looking For posts yet.</li></ul>
     </section>
@@ -350,7 +352,7 @@
     <a class="logo" href="#top" aria-label="PasaU, pass it on to the next batch. Back to top"><span class="mk" aria-hidden="true"></span><span class="lock" aria-hidden="true"><span class="wm">Pasa<b>U</b></span><small>Pass it on to the next batch</small></span></a>
     <nav aria-label="Footer">
       <a href="#shop">Shop</a>
-      <a href="unimatch.html">UniMatch</a>
+      <a href="unimatch.html">PasaMatch</a>
       <a href="#join">Request your school</a>
       <button type="button" data-a11y>Accessibility</button>
     </nav>
@@ -747,7 +749,7 @@
       title = cat === 'all' ? 'No listings yet.' : 'No ' + CAT_LABEL[cat] + ' listings yet.';
       sub = 'Be the first to list one, or post what you need and we’ll notify you when it shows up.';
       acts.push(btnEl('pill light', 'List an item', function () { if (UC.openSell) UC.openSell(); }));
-      acts.push(btnEl('pill ghost', 'Ask UniMatch', function () { location.href = 'unimatch.html' + (qRaw ? '?need=' + encodeURIComponent(qRaw) : ''); }));
+      acts.push(btnEl('pill ghost', 'Ask PasaMatch', function () { location.href = 'unimatch.html' + (qRaw ? '?need=' + encodeURIComponent(qRaw) : ''); }));
     }
     var row = el('div', 'empty-actions');
     row.replaceChildren.apply(row, acts);

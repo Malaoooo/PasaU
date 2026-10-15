@@ -557,7 +557,7 @@ body { overflow-x: clip; }
   footer > span { font-size: 14px; padding-top: 4px; border-top: 1px solid var(--glass-line); padding-top: 14px; }
 }
 
-/* ===================== UniMatch (unimatch.html): Looking For + matching ===================== */
+/* ===================== PasaMatch (unimatch.html): Looking For + matching ===================== */
 .um-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(20px, 4vw, 52px); align-items: center; padding-block: clamp(8px, 3vw, 28px); color: var(--on-hero); }
 @media (max-width: 860px) { .um-hero { grid-template-columns: minmax(0, 1fr); } }
 .um-copy { display: grid; gap: 14px; min-width: 0; }
@@ -621,12 +621,12 @@ body { overflow-x: clip; }
 .fs-head h3 { font: 800 clamp(22px, 2.6vw, 28px)/1.1 var(--display); letter-spacing: -0.02em; }
 .fs-count { font-size: 14px; font-weight: 700; color: var(--on-bg-muted); font-variant-numeric: tabular-nums; }
 .fs-head .fs-more { margin-left: auto; width: auto; align-self: center; }
-/* UniMatch mark: the PasaU cap held in a horseshoe magnet, drawn like the PasaU mark (one colour, rim-weight line) */
+/* PasaMatch mark: the PasaU cap held in a horseshoe magnet, drawn like the PasaU mark (one colour, rim-weight line) */
 .um-hero h1 { display: flex; align-items: center; gap: .14em; flex-wrap: wrap; }
 .um-hero h1 .um-mark { width: .78em; height: auto; flex: none; color: #FFFFFF; }
 .um-open { display: inline-flex; align-items: center; gap: 8px; }
 .um-open .um-mark { width: 22px; height: 22px; flex: none; }
-/* Top bar: logo inside the UniMatch link on PC; a round logo button where the links are hidden */
+/* Top bar: logo inside the PasaMatch link on PC; a round logo button where the links are hidden */
 .nav-links a.nav-um { display: inline-flex; align-items: center; gap: 7px; }
 .nav-um .um-mark { width: 22px; height: 22px; flex: none; }
 .round .um-ic { width: 26px; height: 26px; }

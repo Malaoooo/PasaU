@@ -56,6 +56,7 @@ Campus-bound, course-aware and handover-verified, unlike a general classifieds s
 
 - **Name:** PasaU (renamed from UniCycle, Oct 2026). Tagline "Pass it on to the next batch". Logo: concept A, cap on a U-turn arrow (logos/mark.svg, mark-white.svg, icon.svg); wordmark is live Poppins 700 text, "Pasa" green #1F5A36 (white on dark) and "U" gold #F2A900.
 - **Colour roles:** brand green #1F5A36 is the UI green (buttons, focus on light cards); brand gold #F2A900 is the one accent (selected chips, primary highlights, swap/reserved, focus on the green page); mint #BFE3C9 is success/free/done. Tokens in site.css :root.
+- **PasaMatch** (was UniMatch, renamed Oct 2026): the Looking For matching feature. Wordmark "Pasa" green + "Match" gold. The page URL stays unimatch.html so old links keep working.
 - **Mark:** a graduation cap on a U-turn arrow; on the hero badge and waitlist section it sits inside two cycle arrows that turn (the .wheel). Old UniCycle files are in `backups/unicycle-brand/`.
 - **Tagline:** "Pass it on to the next batch." Shown in the footer lockup and the page title.
 - **Voice:** plain, warm, honest, student to student. Examples: "No shipping and no home addresses", "No code, no sale", "Your email is never shown".
