@@ -397,6 +397,21 @@ a.p-title:hover { text-decoration: underline; text-underline-offset: 3px; }
 .p-panel .note { font-size: 14px; min-height: 1.2em; }
 @media (max-width: 560px) { .p-item { flex-wrap: wrap; } .p-head { padding: 18px; } .p-panel { padding: 14px; } }
 
+/* Family page (parents and guardians) */
+.family-body { display: grid; gap: 16px; min-width: 0; }
+.f-h2 { font-size: 20px; font-weight: 800; }
+.f-h3 { font-size: 15px; font-weight: 800; margin-top: 4px; }
+.f-student { display: flex; align-items: center; gap: 12px; }
+.f-invite { font-size: 14px; font-weight: 600; min-height: 1.2em; }
+.f-invite.err { color: var(--err); }
+.f-points { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.f-concern { display: grid; gap: 10px; justify-items: start; }
+.f-concern .p-inline { width: 100%; max-width: 560px; }
+.f-concern select { max-width: 100%; }
+.f-alerts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.f-alerts li { display: grid; gap: 2px; padding: 10px 12px; border-radius: 14px; background: var(--card-2); border: 1px solid var(--line); }
+.f-alerts li.unread { border-color: var(--amber); }
+
 /* Admin */
 .a-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
 .a-stat { display: grid; gap: 2px; padding: 16px; border-radius: 18px; background: var(--card-2); border: 1px solid var(--line); }

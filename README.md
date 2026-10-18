@@ -12,7 +12,7 @@ Live: https://unicycle-seven.vercel.app
 
 ## Files
 
-- `index.html`, `unimatch.html`, `profile.html`, `messages.html`, `admin.html`: the pages.
+- `index.html`, `unimatch.html`, `profile.html`, `messages.html`, `family.html`, `admin.html`: the pages. `family.html` is for parents and guardians (sign-up with a student's invite, then their dashboard; `family.js`).
 - `site.css` (tokens and layout), `app.css` (features), `app.js` (shop, listings, deals), `messenger.js` (chat pop-up), `nav.js` (inner-page menu).
 - `db/*.sql`: database setup, run in order in the Supabase SQL editor. `db/demo-cleanup.sql` hides test data.
 - `logos/`: PasaU and PasaMatch marks.

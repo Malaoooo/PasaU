@@ -149,7 +149,7 @@
             if (r.error && r.error.code !== '23505') throw r.error;
             toast('Blocked. You won’t see their listings or messages.');
           });
-        }, n, 'pill ghost small')
+        }, n, 'pill light small')
       ]), n
     ]));
   }
@@ -157,7 +157,7 @@
   // ---------- tabs ----------
   function buildTabs() {
     var tabs = self
-      ? [['listings', 'Listings'], ['wanted', 'Looking For'], ['saved', 'Saved'], ['history', 'History'], ['vouches', 'Vouches'], ['settings', 'Settings']]
+      ? [['listings', 'Listings'], ['wanted', 'Looking For'], ['saved', 'Saved'], ['history', 'History'], ['vouches', 'Vouches'], ['family', 'Family'], ['settings', 'Settings']]
       : [['listings', 'Listings'], ['vouches', 'Vouches']];
     var want = (location.hash || '').slice(1);
     tabsEl.replaceChildren.apply(tabsEl, tabs.map(function (t) {
@@ -185,7 +185,7 @@
     panel.setAttribute('aria-labelledby', 'tab-' + name);
     if (self) history.replaceState(null, '', '#' + name);
     panel.replaceChildren(h('p', { class: 'muted', text: 'Loading…' }));
-    ({ listings: tabListings, wanted: tabWanted, saved: tabSaved, history: tabHistory, vouches: tabVouches, settings: tabSettings })[name]();
+    ({ listings: tabListings, wanted: tabWanted, saved: tabSaved, history: tabHistory, vouches: tabVouches, family: tabFamily, settings: tabSettings })[name]();
   }
   function refresh() { show(current); }
 
@@ -380,6 +380,82 @@
         })));
       });
     });
+  }
+
+  // ---------- Family: parent / guardian accounts (db/guardians.sql) ----------
+  function tabFamily() {
+    panel.replaceChildren(h('p', { class: 'muted', text: 'Loading…' }));
+    rpc('my_family').then(function (f) {
+      var gs = f.guardians || [];
+      panel.replaceChildren(
+        section('Parents and guardians', h('div', { class: 'p-form' }, [
+          h('p', { class: 'p-hint', text: 'A linked parent or guardian sees your meetups (place, time and item) and gets a check-in if a meetup isn’t marked done. They never see your chats or handover codes, and they can’t buy, sell or message anyone.' }),
+          gs.length ? h('ul', { class: 'p-list' }, gs.map(guardianRow)) : h('p', { class: 'muted', text: 'No one is linked yet.' })
+        ])),
+        section('Invite a parent or guardian', inviteBox(f.invite, gs.length))
+      );
+    }).catch(function (e) { panel.replaceChildren(UI.empty('Couldn’t load your family settings.', errText(e))); });
+  }
+  function guardianRow(g) {
+    var n = UI.note();
+    function toggle(key, label) {
+      var box = h('input', { type: 'checkbox', id: 'gl-' + key + '-' + g.id, checked: !!g[key] });
+      box.addEventListener('change', function () {
+        var patch = {}; patch[key] = box.checked;
+        db.from('guardian_links').update(patch).eq('student_id', me.id).eq('guardian_id', g.id).then(function (r) {
+          if (r.error) { box.checked = !box.checked; return UI.say(n, errText(r.error), true); }
+          g[key] = box.checked;
+          UI.say(n, 'Saved');
+        });
+      });
+      return h('label', { class: 'check', htmlFor: box.id }, [box, h('span', { text: label })]);
+    }
+    return h('li', { class: 'p-item' }, [UI.avatar(null, g.name, 44), h('div', { class: 'p-main' }, [
+      h('p', { class: 'p-title', text: g.name || 'Parent or guardian' }),
+      h('p', { class: 'p-meta', text: (g.email || '') + ' · linked ' + day(g.since) }),
+      h('div', { class: 'p-form' }, [
+        toggle('share_meetups', 'Meetup alerts and check-ins'),
+        toggle('share_deals', 'Completed buys and sells (item and price), last 90 days'),
+        h('div', { class: 'p-row' }, [UI.action('Unlink', function (b) {
+          if (!b.dataset.sure) { b.dataset.sure = '1'; b.textContent = 'Tap again to unlink'; return; }
+          return db.from('guardian_links').delete().eq('student_id', me.id).eq('guardian_id', g.id).then(function (r) {
+            ok(r); toast('Unlinked. They’ve been told.'); refresh();
+          });
+        }, n, 'pill light small')]), n
+      ])
+    ])]);
+  }
+  function inviteBox(inv, count) {
+    var n = UI.note(), box = h('div', { class: 'p-form' });
+    function draw(inv) {
+      if (!inv) {
+        box.replaceChildren(
+          h('p', { class: 'p-hint', text: count >= 4 ? 'You can link up to 4 parents or guardians.' : 'You’ll get a link to send them. They sign up with any email (Gmail is fine), and the link works once, for 7 days.' }),
+          count >= 4 ? null : h('div', { class: 'p-row' }, [UI.action('Get an invite link', function () {
+            return rpc('create_guardian_invite').then(function (x) { draw(x); });
+          }, n, 'pill')]), n);
+        return;
+      }
+      var url = location.origin + location.pathname.replace(/[^/]*$/, '') + 'family.html?invite=' + inv.code;
+      var share = navigator.share
+        ? h('button', { class: 'pill small', type: 'button', text: 'Share', onclick: function () { navigator.share({ title: 'PasaU', text: 'Link your parent account to my PasaU account', url: url }).catch(function () {}); } })
+        : null;
+      box.replaceChildren(
+        h('p', { class: 'p-hint', text: 'Send this to your parent or guardian. It works once and expires ' + day(inv.expires_at) + '.' }),
+        h('input', { id: 'g-invite-url', type: 'text', readOnly: true, value: url, 'aria-label': 'Invite link', onfocus: function () { this.select(); } }),
+        h('p', { class: 'p-meta', text: 'Or they can type this code on the sign-up page: ' + inv.code }),
+        h('div', { class: 'p-row' }, [
+          h('button', { class: 'pill small', type: 'button', text: 'Copy link', onclick: function () {
+            (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { UI.say(n, 'Link copied'); }, function () { UI.say(n, 'Select the link above and copy it.'); });
+          } }),
+          share,
+          UI.action('Cancel invite', function () {
+            return db.from('guardian_invites').delete().eq('code', inv.code).then(function (r) { ok(r); draw(null); });
+          }, n, 'pill light small')
+        ]), n);
+    }
+    draw(inv);
+    return box;
   }
 
   // ---------- Settings ----------
@@ -579,7 +655,7 @@
           return h('li', { class: 'p-item' }, [h('div', { class: 'p-main' }, [h('p', { class: 'p-title', text: nameOf(map, b.blocked_id) }), h('p', { class: 'p-meta', text: 'Blocked ' + day(b.created_at) })]),
             UI.action('Unblock', function () {
               return db.from('blocks').delete().eq('blocker_id', me.id).eq('blocked_id', b.blocked_id).then(function (x) { ok(x); toast('Unblocked'); refresh(); });
-            }, null, 'pill ghost small')]);
+            }, null, 'pill light small')]);
         })));
       });
     });

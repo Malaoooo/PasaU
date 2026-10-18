@@ -3,7 +3,7 @@
    right and turns clockwise; back toward Home sweeps left and turns counter-clockwise.
    The incoming half is started by the inline script in each page's <head> (html[data-nav-in]). */
 (function () {
-  var ORDER = ['index', 'unimatch', 'messages', 'profile', 'admin'];
+  var ORDER = ['index', 'unimatch', 'messages', 'profile', 'family', 'admin'];
   var reduce = matchMedia('(prefers-reduced-motion: reduce)');
   function rank(path) {
     var name = (path.split('/').pop() || 'index').replace(/\.html$/, '') || 'index';

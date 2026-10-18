@@ -111,6 +111,10 @@
     UC.blocked = {};
     renderWanted();
     if (!u) { if (UC.refilter) UC.refilter(); return; }
+    // Parent / guardian accounts go to their own page (not while the log-in pop-up is open, e.g. setting a new password)
+    db.from('profiles').select('role').eq('id', u.id).maybeSingle().then(function (r) {
+      if (r.data && r.data.role === 'guardian' && !document.querySelector('dialog[open]')) location.replace('family.html');
+    });
     db.from('profiles').select('full_name, school, year_level, course').eq('id', u.id).maybeSingle().then(function (r) {
       profile = r.data;
       if (profile && UC.campusDefault) UC.campusDefault(profile.school);
