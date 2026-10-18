@@ -387,6 +387,7 @@
     panel.replaceChildren(
       section('Edit profile', editProfile()),
       section('Password', changePassword()),
+      section('Two-step login', twoStep()),
       section('Notifications', notifSettings()),
       section('Privacy', privacySettings()),
       section('Verified student', verification()),
@@ -445,6 +446,69 @@
         UI.say(n, 'Password changed.');
       });
     }, n, 'pill'), n]);
+  }
+
+  // Authenticator-app codes (Supabase MFA, TOTP): after the password, a 6-digit code from the student's phone
+  function twoStep() {
+    var box = h('div', { class: 'p-form' }, [h('p', { class: 'muted', text: 'Loading…' })]);
+    function draw() {
+      return db.auth.mfa.listFactors().then(function (r) {
+        if (r.error) { box.replaceChildren(h('p', { class: 'p-hint', text: errText(r.error) })); return; }
+        var on = (r.data.totp || [])[0], n = UI.note();  // totp lists only finished setups
+        if (on) {
+          box.replaceChildren(h('p', {}, [h('span', { class: 'verified', text: '✓ On' }), ' After your password, you type the code from your authenticator app.']),
+            UI.action('Turn off two-step login', function () {
+              if (!confirm('Turn off two-step login? Your password alone will be enough to log in.')) return;
+              return db.auth.mfa.unenroll({ factorId: on.id }).then(function (x) { if (x.error) throw x.error; toast('Two-step login is off'); return draw(); });
+            }, n, 'pill ghost'), n);
+          return;
+        }
+        box.replaceChildren(
+          h('p', { class: 'p-hint', text: 'Add a second step to logging in: after your password, you type a 6-digit code from an app like Google Authenticator or Microsoft Authenticator. Someone who learns your password still can’t get in.' }),
+          UI.action('Set up two-step login', setup, n, 'pill'), n);
+      });
+    }
+    function setup() {
+      // A setup left halfway blocks a new one, so clear those first
+      return db.auth.mfa.listFactors().then(function (r) {
+        var stale = ((r.data && r.data.all) || []).filter(function (f) { return f.status === 'unverified'; });
+        return Promise.all(stale.map(function (f) { return db.auth.mfa.unenroll({ factorId: f.id }); }));
+      }).then(function () {
+        return db.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'PasaU ' + Date.now() });
+      }).then(function (r) {
+        if (r.error) throw r.error;
+        var f = r.data, n = UI.note(), busy = false;
+        var code = h('input', { id: 'tf-code', type: 'text', inputMode: 'numeric', autocomplete: 'one-time-code', maxLength: 6, placeholder: '123456' });
+        function turnOn() {
+          var c = code.value.replace(/\D/g, '');
+          if (c.length !== 6) { UI.say(n, 'Enter the 6 digits from your app.', true); return; }
+          if (busy) return;
+          busy = true;
+          return db.auth.mfa.challengeAndVerify({ factorId: f.id, code: c }).then(function (x) {
+            busy = false;
+            if (x.error) { UI.say(n, /invalid|expired/i.test(x.error.message) ? 'That code didn’t match. Type the newest code from the app.' : errText(x.error), true); return; }
+            toast('Two-step login is on');
+            return draw();
+          }, function (e) { busy = false; throw e; });
+        }
+        // Six digits typed or pasted turns it on, no button press needed
+        code.addEventListener('input', function () { if (code.value.replace(/\D/g, '').length === 6) Promise.resolve(turnOn()).catch(function (e) { UI.say(n, errText(e), true); }); });
+        var phone = matchMedia('(pointer: coarse)').matches;
+        box.replaceChildren.apply(box, [
+          // On a phone one tap hands the account to the authenticator app; on a computer, scan the QR code with the phone
+          phone ? h('a', { class: 'pill', href: f.totp.uri, text: '1. Add PasaU to my authenticator app' }) : h('p', { class: 'p-hint', text: '1. Scan this with your authenticator app (Google Authenticator, Microsoft Authenticator…).' }),
+          phone ? null : h('img', { src: f.totp.qr_code, alt: 'QR code for your authenticator app', width: 180, height: 180, class: 'tf-qr' }),
+          h('details', {}, [h('summary', { class: 'p-hint', text: phone ? 'Button didn’t work? Show a QR code and key' : 'Can’t scan? Show the setup key' }),
+            phone ? h('img', { src: f.totp.qr_code, alt: 'QR code for your authenticator app', width: 180, height: 180, class: 'tf-qr' }) : null,
+            field('Setup key', h('input', { id: 'tf-secret', type: 'text', readOnly: true, value: f.totp.secret }))]),
+          field('2. Type the 6-digit code the app shows', code),
+          UI.action('Turn on', turnOn, n, 'pill'),
+          UI.action('Cancel', function () { return db.auth.mfa.unenroll({ factorId: f.id }).then(draw); }, null, 'pill ghost'), n].filter(Boolean));
+        if (!phone) code.focus();
+      });
+    }
+    draw();
+    return box;
   }
 
   function notifSettings() {
