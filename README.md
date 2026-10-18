@@ -31,3 +31,5 @@ Then open http://localhost:8780.
 ```bash
 npx vercel --prod
 ```
+
+<!-- Deploy check: confirms Vercel builds from GitHub pushes. -->
