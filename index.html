@@ -376,11 +376,15 @@
       <label for="su-name">Full name</label>
       <input id="su-name" type="text" autocomplete="name" placeholder="Juan dela Cruz">
     </div>
+    <div class="field" id="email-field">
+      <label for="login-email" id="login-email-label">Email</label>
+      <input id="login-email" type="email" autocomplete="email" placeholder="you@example.com">
+      <small class="hint" data-signup hidden>Use your school email, like you@slu.edu.ph. PasaU is for Baguio students only.</small>
+    </div>
     <div class="field" data-signup hidden>
       <label for="su-school">School</label>
-      <select id="su-school"></select>
-      <input id="su-school-other" type="text" autocomplete="organization" placeholder="Type your school's name" aria-label="Your school's name" hidden>
-      <small class="hint">We show listings from your school first.</small>
+      <select id="su-school" disabled aria-describedby="su-school-hint"></select>
+      <small class="hint" id="su-school-hint">Filled in from your school email. We show listings from your school first.</small>
     </div>
     <div class="field" data-signup hidden>
       <label for="su-course">Course</label>
@@ -400,10 +404,6 @@
       </select>
     </div>
     <p class="hint" data-signup hidden>Year and course help classmates find books and uniforms for your course. Only logged-in students can see your name and school.</p>
-    <div class="field" id="email-field">
-      <label for="login-email">Email</label>
-      <input id="login-email" type="email" autocomplete="email" placeholder="you@example.com">
-    </div>
     <div class="field" id="pass-field">
       <label for="login-pass" id="login-pass-label">Password</label>
       <input id="login-pass" type="password" autocomplete="current-password" placeholder="At least 8 characters">
@@ -455,12 +455,12 @@
   var loginSend = document.getElementById('login-send'), loginTitle = document.getElementById('login-title');
   var suName = document.getElementById('su-name'), suSchool = document.getElementById('su-school');
   var suYear = document.getElementById('su-year'), suCourse = document.getElementById('su-course');
-  var suSchoolOther = document.getElementById('su-school-other'), suCourseOther = document.getElementById('su-course-other');
-  // Schools and courses come from universities.js; "Other" reveals a text box
+  var suCourseOther = document.getElementById('su-course-other');
+  // Schools and courses come from universities.js; the school follows the email's domain, "Other" course reveals a text box
   function opt(value, text) { var o = document.createElement('option'); o.value = value; o.textContent = text; return o; }
   function fillSchools() {
-    suSchool.replaceChildren.apply(suSchool, [opt('', 'Choose your school\u2026')]
-      .concat((window.UC_SCHOOLS || []).map(function (sc) { return opt(sc.name, sc.name); }), [opt('other', 'Other (not listed)')]));
+    suSchool.replaceChildren.apply(suSchool, [opt('', 'Type your school email first')]
+      .concat((window.UC_SCHOOLS || []).map(function (sc) { return opt(sc.name, sc.name); })));
   }
   function fillCourses() {
     var sc = window.UC_SCHOOL_BY_NAME ? window.UC_SCHOOL_BY_NAME(suSchool.value) : null;
@@ -469,7 +469,13 @@
       .concat(list.map(function (c) { return opt(c, c); }), [opt('other', 'Other (type it)')]));
     suCourseOther.hidden = true;
   }
-  suSchool.addEventListener('change', function () { suSchoolOther.hidden = suSchool.value !== 'other'; fillCourses(); if (!suSchoolOther.hidden) suSchoolOther.focus(); });
+  function schoolFromEmail() {
+    var sc = window.UC_SCHOOL_OF_EMAIL ? window.UC_SCHOOL_OF_EMAIL(loginEmail.value) : null;
+    var name = sc ? sc.name : '';
+    if (suSchool.value !== name) { suSchool.value = name; fillCourses(); }
+    return sc;
+  }
+  loginEmail.addEventListener('input', schoolFromEmail);
   suCourse.addEventListener('change', function () { suCourseOther.hidden = suCourse.value !== 'other'; if (!suCourseOther.hidden) suCourseOther.focus(); });
   fillSchools();
   fillCourses();
@@ -516,6 +522,8 @@
     document.getElementById('email-field').hidden = m === 'newpass';
     document.getElementById('pass-field').hidden = m === 'forgot';
     document.getElementById('forgot-btn').hidden = m !== 'login';
+    document.getElementById('login-email-label').textContent = m === 'signup' ? 'School email' : 'Email';
+    loginEmail.placeholder = m === 'signup' ? 'you@slu.edu.ph' : 'you@example.com';
     document.getElementById('login-pass-label').textContent = m === 'newpass' ? 'New password' : 'Password';
     loginTitle.textContent = { signup: 'Create your PasaU account', forgot: 'Reset your password', newpass: 'Set a new password' }[m] || 'Log in to PasaU';
     loginSend.textContent = { signup: 'Create account', forgot: 'Send reset link', newpass: 'Save new password' }[m] || 'Log in';
@@ -604,11 +612,12 @@
     if (mode === 'newpass') { saveNewPass(loginPass.value); return; }
     var email = loginEmail.value.trim(), pass = loginPass.value;
     var name = suName.value.trim(), year = suYear.value;
-    var school = suSchool.value === 'other' ? suSchoolOther.value.trim() : suSchool.value;
+    var sc = schoolFromEmail(), school = sc ? sc.name : '';
     var course = suCourse.value === 'other' ? suCourseOther.value.trim() : suCourse.value;
     clearErrs();
     if (mode === 'signup' && !name) { fieldErr(suName, 'Enter your full name.'); return; }
-    if (mode === 'signup' && !school) { fieldErr(suSchool.value === 'other' ? suSchoolOther : suSchool, suSchool.value === 'other' ? 'Type your school\u2019s name.' : 'Choose your school.'); return; }
+    if (mode === 'signup' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { fieldErr(loginEmail, 'Enter your school email, like you@slu.edu.ph.'); return; }
+    if (mode === 'signup' && !school) { fieldErr(loginEmail, 'Use the email your school gave you (like you@slu.edu.ph). Personal Gmail or iCloud addresses can\u2019t sign up.'); return; }
     if (mode === 'signup' && !course) { fieldErr(suCourse.value === 'other' ? suCourseOther : suCourse, suCourse.value === 'other' ? 'Type your course.' : 'Choose your course.'); return; }
     if (mode === 'signup' && !year) { fieldErr(suYear, 'Choose your year level.'); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { fieldErr(loginEmail, 'Enter your email, like you@example.com.'); return; }
@@ -630,7 +639,8 @@
         return;
       }
       if (err) {
-        if (/registered|exists/i.test(err.message)) note('That email already has an account. Choose Log in instead.', true);
+        if (/database error saving/i.test(err.message)) fieldErr(loginEmail, 'Use the email your school gave you (like you@slu.edu.ph). Personal Gmail or iCloud addresses can\u2019t sign up.');
+        else if (/registered|exists/i.test(err.message)) note('That email already has an account. Choose Log in instead.', true);
         else if (/email rate/i.test(err.message)) note('PasaU has sent too many sign-up emails this hour. Try again later.', true);
         else if (/rate|seconds/i.test(err.message)) note('Too many attempts just now. Wait a minute, then try again.', true);
         else note("Couldn't create your account: " + authText(err), true);

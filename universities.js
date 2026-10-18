@@ -1,32 +1,34 @@
 // Baguio schools and their courses, used by sign-up, the sell form, Looking For and the filters.
 // STARTER LISTS: check each school's official program list and edit freely.
 // Every course picker also offers "Other", so a missing course never blocks anyone.
+// domains: the school's student email domains. Sign-up only accepts these (subdomains count too,
+// e.g. e.ubaguio.edu). Keep in sync with public.school_email_domains in db/school-email.sql.
 window.UC_SCHOOLS = [
-  { code: 'UC', name: 'University of the Cordilleras (UC)', courses: [
+  { code: 'UC', name: 'University of the Cordilleras (UC)', domains: ['uc-bcf.edu.ph'], courses: [
     'BS Accountancy', 'BS Business Administration', 'BS Criminology', 'BS Information Technology', 'BS Computer Science',
     'BS Civil Engineering', 'BS Electrical Engineering', 'BS Hospitality Management', 'BS Tourism Management',
     'BS Psychology', 'Bachelor of Elementary Education', 'Bachelor of Secondary Education', 'AB Communication'] },
-  { code: 'UB', name: 'University of Baguio (UB)', courses: [
+  { code: 'UB', name: 'University of Baguio (UB)', domains: ['ubaguio.edu'], courses: [
     'BS Nursing', 'BS Medical Technology', 'BS Pharmacy', 'BS Criminology', 'BS Accountancy', 'BS Business Administration',
     'BS Information Technology', 'BS Computer Science', 'BS Civil Engineering', 'BS Hospitality Management',
     'BS Tourism Management', 'BS Psychology', 'Bachelor of Secondary Education'] },
-  { code: 'SLU', name: 'Saint Louis University (SLU)', courses: [
+  { code: 'SLU', name: 'Saint Louis University (SLU)', domains: ['slu.edu.ph'], courses: [
     'BS Nursing', 'BS Medical Technology', 'BS Pharmacy', 'BS Accountancy', 'BS Business Administration', 'BS Architecture',
     'BS Civil Engineering', 'BS Electrical Engineering', 'BS Mechanical Engineering', 'BS Computer Science',
     'BS Information Technology', 'BS Psychology', 'AB Communication', 'Bachelor of Secondary Education'] },
-  { code: 'UPB', short: 'UP Baguio', name: 'University of the Philippines Baguio (UP Baguio)', courses: [
+  { code: 'UPB', short: 'UP Baguio', name: 'University of the Philippines Baguio (UP Baguio)', domains: ['up.edu.ph', 'upb.edu.ph'], courses: [
     'BS Computer Science', 'BS Mathematics', 'BS Biology', 'BS Physics', 'BA Communication', 'BA Language and Literature',
     'BA Social Sciences', 'BS Management', 'BA Fine Arts'] },
-  { code: 'BCU', name: 'Baguio Central University (BCU)', courses: [
+  { code: 'BCU', name: 'Baguio Central University (BCU)', domains: ['bcu.edu.ph'], courses: [
     'BS Criminology', 'BS Accountancy', 'BS Business Administration', 'BS Information Technology',
     'Bachelor of Elementary Education', 'Bachelor of Secondary Education', 'BS Hospitality Management'] },
-  { code: 'BSU', name: 'Benguet State University (BSU)', courses: [
+  { code: 'BSU', name: 'Benguet State University (BSU)', domains: ['bsu.edu.ph'], courses: [
     'BS Agriculture', 'BS Forestry', 'BS Agricultural Engineering', 'BS Nursing', 'BS Information Technology',
     'BS Biology', 'Bachelor of Elementary Education', 'Bachelor of Secondary Education', 'Doctor of Veterinary Medicine'] },
-  { code: 'PCC', name: 'Pines City Colleges (PCC)', courses: [
+  { code: 'PCC', name: 'Pines City Colleges (PCC)', domains: ['pcc.edu.ph'], courses: [
     'BS Nursing', 'BS Pharmacy', 'BS Medical Technology', 'BS Radiologic Technology', 'BS Physical Therapy',
     'BS Psychology', 'BS Accountancy'] },
-  { code: 'BCT', name: 'Baguio College of Technology (BCT)', courses: [
+  { code: 'BCT', name: 'Baguio College of Technology (BCT)', domains: ['bct.edu.ph'], courses: [
     'BS Information Technology', 'BS Computer Engineering', 'BS Criminology', 'BS Hospitality Management',
     'BS Business Administration'] }
 ];
@@ -61,6 +63,14 @@ window.UC_SCHOOL_LABEL = function (s) { return s ? (s.short || s.code) : ''; };
 window.UC_SPOTS_FOR = function (value) {
   var s = window.UC_SCHOOL_OF(value);
   return (s && window.UC_SPOTS[s.code]) || window.UC_DEFAULT_SPOTS;
+};
+// The school a student email belongs to ("juan@slu.edu.ph" -> SLU); null if it isn't a school email
+window.UC_SCHOOL_OF_EMAIL = function (email) {
+  var d = ((email || '').trim().toLowerCase().split('@')[1]) || '';
+  if (!d) return null;
+  return window.UC_SCHOOLS.filter(function (s) {
+    return (s.domains || []).some(function (x) { return d === x || d.slice(-x.length - 1) === '.' + x; });
+  })[0] || null;
 };
 window.UC_SCHOOL_BY_NAME = function (name) {
   var n = (name || '').trim().toLowerCase();
