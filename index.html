@@ -368,6 +368,7 @@
     <span class="lmark" aria-hidden="true"><img src="logos/mark-white.svg" alt="" width="232" height="304"></span>
     <h2 id="login-title">Log in to PasaU</h2>
     <p class="hint" data-forgot hidden>Enter the email you signed up with. We’ll send a link to set a new password.</p>
+    <p class="hint" id="code-hint" hidden></p>
     <div class="modes" id="login-modes" role="group" aria-label="Log in or create an account">
       <button type="button" data-mode="login" aria-pressed="true">Log in</button>
       <button type="button" data-mode="signup" aria-pressed="false">Create account</button>
@@ -409,13 +410,19 @@
       <input id="login-pass" type="password" autocomplete="current-password" placeholder="At least 8 characters">
       <button class="lforgot" type="button" id="forgot-btn">Forgot password?</button>
     </div>
+    <div class="field" id="otp-field" hidden>
+      <label for="login-otp">Code from your email</label>
+      <input id="login-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456">
+      <button class="lforgot" type="button" id="resend-btn">Send a new code</button>
+    </div>
     <div class="field" id="mfa-field" hidden>
       <label for="login-code">6-digit code</label>
       <input id="login-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
       <small class="hint">From your authenticator app. You only need it once on each phone or computer.</small>
     </div>
     <button class="pill" type="submit" id="login-send">Log in</button>
-    <button class="lforgot back" type="button" id="back-btn" data-forgot hidden>Back to log in</button>
+    <button class="lforgot back" type="button" id="otp-btn">Log in with an email code instead</button>
+    <button class="lforgot back" type="button" id="back-btn" hidden>Back to log in</button>
     <p class="lnote" id="login-note" aria-live="polite"></p>
   </form>
 </dialog>
@@ -485,7 +492,8 @@
   fillSchools();
   fillCourses();
   var modeBtns = loginDlg.querySelectorAll('.modes button'), signupFields = loginDlg.querySelectorAll('[data-signup]');
-  var mode = 'login', user = null;
+  var mode = 'login', user = null, codeSent = false, codeEmail = '';
+  var loginOtp = document.getElementById('login-otp');
   function note(msg, isErr) {
     loginNote.textContent = msg;
     loginNote.classList.toggle('err', !!isErr);
@@ -523,22 +531,33 @@
     modeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'); });
     signupFields.forEach(function (f) { f.hidden = m !== 'signup'; });
     forgotOnly.forEach(function (f) { f.hidden = m !== 'forgot'; });
-    document.getElementById('login-modes').hidden = m === 'forgot' || m === 'newpass' || m === 'mfa';
-    document.getElementById('email-field').hidden = m === 'newpass' || m === 'mfa';
-    document.getElementById('pass-field').hidden = m === 'forgot' || m === 'mfa';
+    // otp = log in with a code sent to the email (codeSent: step 2); confirm = the code from the sign-up email
+    if (m !== 'otp') codeSent = false;
+    document.getElementById('login-modes').hidden = m !== 'login' && m !== 'signup';
+    document.getElementById('email-field').hidden = m === 'newpass' || m === 'mfa' || m === 'confirm' || codeSent;
+    document.getElementById('pass-field').hidden = m === 'forgot' || m === 'mfa' || m === 'otp' || m === 'confirm';
     document.getElementById('mfa-field').hidden = m !== 'mfa';
+    document.getElementById('otp-field').hidden = !(m === 'confirm' || codeSent);
     document.getElementById('forgot-btn').hidden = m !== 'login';
+    document.getElementById('otp-btn').hidden = m !== 'login';
+    document.getElementById('back-btn').hidden = m !== 'forgot' && m !== 'otp' && m !== 'confirm';
+    var hint = document.getElementById('code-hint');
+    hint.hidden = !(m === 'confirm' || m === 'otp');
+    hint.textContent = m === 'confirm' ? 'We sent a code to ' + codeEmail + '. Type it here (or tap the link in that email) to finish making your account. Check spam if it isn\u2019t there.'
+      : codeSent ? 'We sent a code to ' + codeEmail + '. Type it here, or tap the link in that email.' : 'Enter the email of your PasaU account. We\u2019ll send you a code, no password needed.';
     document.getElementById('login-email-label').textContent = m === 'signup' ? 'School email' : 'Email';
     loginEmail.placeholder = m === 'signup' ? 'you@slu.edu.ph' : 'you@example.com';
     document.getElementById('login-pass-label').textContent = m === 'newpass' ? 'New password' : 'Password';
-    loginTitle.textContent = { signup: 'Create your PasaU account', forgot: 'Reset your password', newpass: 'Set a new password', mfa: 'Enter your code' }[m] || 'Log in to PasaU';
-    loginSend.textContent = { signup: 'Create account', forgot: 'Send reset link', newpass: 'Save new password', mfa: 'Verify' }[m] || 'Log in';
+    loginTitle.textContent = { signup: 'Create your PasaU account', forgot: 'Reset your password', newpass: 'Set a new password', mfa: 'Enter your code', otp: 'Log in with an email code', confirm: 'Confirm your email' }[m] || 'Log in to PasaU';
+    loginSend.textContent = { signup: 'Create account', forgot: 'Send reset link', newpass: 'Save new password', mfa: 'Verify', otp: codeSent ? 'Log in' : 'Send code', confirm: 'Confirm' }[m] || 'Log in';
     loginPass.autocomplete = m === 'login' ? 'current-password' : 'new-password';
     clearErrs();
     note('');
   }
   document.getElementById('forgot-btn').addEventListener('click', function () { setMode('forgot'); loginEmail.focus(); });
   document.getElementById('back-btn').addEventListener('click', function () { setMode('login'); loginEmail.focus(); });
+  document.getElementById('otp-btn').addEventListener('click', function () { setMode('otp'); loginEmail.focus(); });
+  document.getElementById('resend-btn').addEventListener('click', function () { if (mode === 'confirm') resendConfirm(); else sendLoginCode(codeEmail); });
   modeBtns.forEach(function (b) { b.addEventListener('click', function () { setMode(b.dataset.mode); }); });
   function showUser(u) {
     user = u;
@@ -596,6 +615,59 @@
       note('If ' + email + ' has a PasaU account, a reset link is on its way. Check your inbox and spam folder.');
     });
   }
+  // ---- Codes by email: log in without a password, and confirm a new account ----
+  function emailErr(err, what) {
+    if (/rate|seconds|too many/i.test(err.message)) note('Too many emails just now. Wait a minute, then try again.', true);
+    else note("Couldn't " + what + ': ' + authText(err), true);
+  }
+  function sendLoginCode(email) {
+    clearErrs();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { fieldErr(loginEmail, 'Enter your email, like you@slu.edu.ph.'); return; }
+    if (!db) { note("Couldn't reach PasaU. Check your connection and try again.", true); return; }
+    loginSend.disabled = true;
+    note('Sending your code\u2026');
+    // shouldCreateUser false: only for people who already have an account
+    db.auth.signInWithOtp({ email: email, options: { shouldCreateUser: false } }).then(function (res) {
+      loginSend.disabled = false;
+      var err = res.error;
+      if (err && /signups? not allowed|not found|no user/i.test(err.message)) { fieldErr(loginEmail, 'There\u2019s no PasaU account with that email. Choose Back to log in, then Create account.'); return; }
+      if (err) { emailErr(err, 'send the code'); return; }
+      codeEmail = email; codeSent = true;
+      setMode('otp');
+      loginOtp.value = '';
+      loginOtp.focus();
+    });
+  }
+  function resendConfirm() {
+    note('Sending a new code\u2026');
+    db.auth.resend({ type: 'signup', email: codeEmail }).then(function (res) {
+      if (res.error) { emailErr(res.error, 'send a new code'); return; }
+      note('New code sent to ' + codeEmail + '.');
+    });
+  }
+  function askConfirm(email) {
+    codeEmail = email;
+    setMode('confirm');
+    loginOtp.value = '';
+    loginOtp.focus();
+  }
+  function verifyEmailCode(raw) {
+    clearErrs();
+    var code = (raw || '').replace(/\D/g, '');
+    if (code.length < 6) { fieldErr(loginOtp, 'Enter the code from the email we sent.'); return; }
+    loginSend.disabled = true;
+    note('Checking\u2026');
+    db.auth.verifyOtp({ email: codeEmail, token: code, type: mode === 'confirm' ? 'signup' : 'email' }).then(function (res) {
+      loginSend.disabled = false;
+      if (res.error) {
+        if (/invalid|expired/i.test(res.error.message)) fieldErr(loginOtp, 'That code didn\u2019t work. Check the newest email, or choose Send a new code.');
+        else note("Couldn't check the code: " + authText(res.error), true);
+        return;
+      }
+      note(''); // SIGNED_IN closes the pop-up (or asks for the two-step code)
+    });
+  }
+
   // Two-step login: a password-only session for an account with an authenticator app isn't logged in yet
   var pendingPass = '';
   function needsCode() {
@@ -660,6 +732,8 @@
     if (mode === 'forgot') { sendReset(loginEmail.value.trim()); return; }
     if (mode === 'newpass') { saveNewPass(loginPass.value); return; }
     if (mode === 'mfa') { verifyCode(loginCode.value); return; }
+    if (mode === 'confirm' || (mode === 'otp' && codeSent)) { verifyEmailCode(loginOtp.value); return; }
+    if (mode === 'otp') { sendLoginCode(loginEmail.value.trim()); return; }
     var email = loginEmail.value.trim(), pass = loginPass.value;
     var name = suName.value.trim(), year = suYear.value;
     var sc = schoolFromEmail(), school = sc ? sc.name : '';
@@ -683,7 +757,7 @@
       var err = res.error;
       if (mode === 'login') {
         if (!err) return; // onAuthStateChange closes the pop-up
-        if (/confirm/i.test(err.message)) note('Confirm your email first: open the link we sent when you created your account.', true);
+        if (/confirm/i.test(err.message)) { askConfirm(email); resendConfirm(); return; }
         else if (/invalid/i.test(err.message)) note('Wrong email or password. Forgot it? Choose Forgot password? above.', true);
         else note("Couldn't log in: " + authText(err), true);
         return;
@@ -698,7 +772,7 @@
       }
       var u = res.data.user;
       if (u && u.identities && u.identities.length === 0) { note('That email already has an account. Choose Log in instead.', true); return; }
-      if (!res.data.session) note('Account created. Check your inbox at ' + email + ' and open the link to confirm, then log in.');
+      if (!res.data.session) askConfirm(email);
     });
   });
   // ?next=<page> comes from an inner page's Log in link; only plain page names are accepted, never another site
