@@ -477,24 +477,34 @@
         return db.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'PasaU ' + Date.now() });
       }).then(function (r) {
         if (r.error) throw r.error;
-        var f = r.data, n = UI.note();
+        var f = r.data, n = UI.note(), busy = false;
         var code = h('input', { id: 'tf-code', type: 'text', inputMode: 'numeric', autocomplete: 'one-time-code', maxLength: 6, placeholder: '123456' });
-        box.replaceChildren(
-          h('p', { class: 'p-hint', text: '1. In your authenticator app, add an account and scan this QR code. On this same phone? Copy the setup key into the app instead.' }),
-          h('img', { src: f.totp.qr_code, alt: 'QR code for your authenticator app', width: 180, height: 180, class: 'tf-qr' }),
-          field('Setup key', h('input', { id: 'tf-secret', type: 'text', readOnly: true, value: f.totp.secret })),
+        function turnOn() {
+          var c = code.value.replace(/\D/g, '');
+          if (c.length !== 6) { UI.say(n, 'Enter the 6 digits from your app.', true); return; }
+          if (busy) return;
+          busy = true;
+          return db.auth.mfa.challengeAndVerify({ factorId: f.id, code: c }).then(function (x) {
+            busy = false;
+            if (x.error) { UI.say(n, /invalid|expired/i.test(x.error.message) ? 'That code didn’t match. Type the newest code from the app.' : errText(x.error), true); return; }
+            toast('Two-step login is on');
+            return draw();
+          }, function (e) { busy = false; throw e; });
+        }
+        // Six digits typed or pasted turns it on, no button press needed
+        code.addEventListener('input', function () { if (code.value.replace(/\D/g, '').length === 6) Promise.resolve(turnOn()).catch(function (e) { UI.say(n, errText(e), true); }); });
+        var phone = matchMedia('(pointer: coarse)').matches;
+        box.replaceChildren.apply(box, [
+          // On a phone one tap hands the account to the authenticator app; on a computer, scan the QR code with the phone
+          phone ? h('a', { class: 'pill', href: f.totp.uri, text: '1. Add PasaU to my authenticator app' }) : h('p', { class: 'p-hint', text: '1. Scan this with your authenticator app (Google Authenticator, Microsoft Authenticator…).' }),
+          phone ? null : h('img', { src: f.totp.qr_code, alt: 'QR code for your authenticator app', width: 180, height: 180, class: 'tf-qr' }),
+          h('details', {}, [h('summary', { class: 'p-hint', text: phone ? 'Button didn’t work? Show a QR code and key' : 'Can’t scan? Show the setup key' }),
+            phone ? h('img', { src: f.totp.qr_code, alt: 'QR code for your authenticator app', width: 180, height: 180, class: 'tf-qr' }) : null,
+            field('Setup key', h('input', { id: 'tf-secret', type: 'text', readOnly: true, value: f.totp.secret }))]),
           field('2. Type the 6-digit code the app shows', code),
-          UI.action('Turn on', function () {
-            var c = code.value.replace(/\D/g, '');
-            if (c.length !== 6) { UI.say(n, 'Enter the 6 digits from your app.', true); return; }
-            return db.auth.mfa.challengeAndVerify({ factorId: f.id, code: c }).then(function (x) {
-              if (x.error) { UI.say(n, /invalid|expired/i.test(x.error.message) ? 'That code didn’t match. Type the newest code from the app.' : errText(x.error), true); return; }
-              toast('Two-step login is on');
-              return draw();
-            });
-          }, n, 'pill'),
-          UI.action('Cancel', function () { return db.auth.mfa.unenroll({ factorId: f.id }).then(draw); }, null, 'pill ghost'), n);
-        code.focus();
+          UI.action('Turn on', turnOn, n, 'pill'),
+          UI.action('Cancel', function () { return db.auth.mfa.unenroll({ factorId: f.id }).then(draw); }, null, 'pill ghost'), n].filter(Boolean));
+        if (!phone) code.focus();
       });
     }
     draw();

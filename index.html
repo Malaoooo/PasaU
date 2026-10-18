@@ -412,7 +412,7 @@
     <div class="field" id="mfa-field" hidden>
       <label for="login-code">6-digit code</label>
       <input id="login-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
-      <small class="hint">Open your authenticator app and type the code it shows for PasaU. Lost your phone? Message the PasaU team.</small>
+      <small class="hint">From your authenticator app. You only need it once on each phone or computer.</small>
     </div>
     <button class="pill" type="submit" id="login-send">Log in</button>
     <button class="lforgot back" type="button" id="back-btn" data-forgot hidden>Back to log in</button>
@@ -631,6 +631,11 @@
       // otherwise MFA_CHALLENGE_VERIFIED closes the pop-up
     }).catch(function (e) { loginSend.disabled = false; note("Couldn't check the code: " + authText(e), true); });
   }
+  // Six digits typed or pasted: check right away, no button press needed
+  loginCode.addEventListener('input', function () {
+    // after this input event finishes, so the form's clear-the-error-on-typing doesn't wipe a "didn't match"
+    if (mode === 'mfa' && !loginSend.disabled && loginCode.value.replace(/\D/g, '').length === 6) setTimeout(function () { verifyCode(loginCode.value); }, 0);
+  });
   // Closing the pop-up halfway through two-step login logs the half-finished session out
   loginDlg.addEventListener('close', function () { if (mode === 'mfa') { setMode('login'); pendingPass = ''; db.auth.signOut(); } });
   function saveNewPass(pass) {
