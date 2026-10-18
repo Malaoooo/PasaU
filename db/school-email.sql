@@ -46,8 +46,7 @@ begin
   return new;
 end $$;
 
-drop trigger if exists require_school_email on auth.users;
-create trigger require_school_email
+create or replace trigger require_school_email
   before insert or update of email on auth.users
   for each row execute function public.require_school_email();
 
