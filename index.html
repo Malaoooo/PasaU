@@ -409,6 +409,11 @@
       <input id="login-pass" type="password" autocomplete="current-password" placeholder="At least 8 characters">
       <button class="lforgot" type="button" id="forgot-btn">Forgot password?</button>
     </div>
+    <div class="field" id="mfa-field" hidden>
+      <label for="login-code">6-digit code</label>
+      <input id="login-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456">
+      <small class="hint">Open your authenticator app and type the code it shows for PasaU. Lost your phone? Message the PasaU team.</small>
+    </div>
     <button class="pill" type="submit" id="login-send">Log in</button>
     <button class="lforgot back" type="button" id="back-btn" data-forgot hidden>Back to log in</button>
     <p class="lnote" id="login-note" aria-live="polite"></p>
@@ -455,7 +460,7 @@
   var loginSend = document.getElementById('login-send'), loginTitle = document.getElementById('login-title');
   var suName = document.getElementById('su-name'), suSchool = document.getElementById('su-school');
   var suYear = document.getElementById('su-year'), suCourse = document.getElementById('su-course');
-  var suCourseOther = document.getElementById('su-course-other');
+  var suCourseOther = document.getElementById('su-course-other'), loginCode = document.getElementById('login-code');
   // Schools and courses come from universities.js; the school follows the email's domain, "Other" course reveals a text box
   function opt(value, text) { var o = document.createElement('option'); o.value = value; o.textContent = text; return o; }
   function fillSchools() {
@@ -518,15 +523,16 @@
     modeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'); });
     signupFields.forEach(function (f) { f.hidden = m !== 'signup'; });
     forgotOnly.forEach(function (f) { f.hidden = m !== 'forgot'; });
-    document.getElementById('login-modes').hidden = m === 'forgot' || m === 'newpass';
-    document.getElementById('email-field').hidden = m === 'newpass';
-    document.getElementById('pass-field').hidden = m === 'forgot';
+    document.getElementById('login-modes').hidden = m === 'forgot' || m === 'newpass' || m === 'mfa';
+    document.getElementById('email-field').hidden = m === 'newpass' || m === 'mfa';
+    document.getElementById('pass-field').hidden = m === 'forgot' || m === 'mfa';
+    document.getElementById('mfa-field').hidden = m !== 'mfa';
     document.getElementById('forgot-btn').hidden = m !== 'login';
     document.getElementById('login-email-label').textContent = m === 'signup' ? 'School email' : 'Email';
     loginEmail.placeholder = m === 'signup' ? 'you@slu.edu.ph' : 'you@example.com';
     document.getElementById('login-pass-label').textContent = m === 'newpass' ? 'New password' : 'Password';
-    loginTitle.textContent = { signup: 'Create your PasaU account', forgot: 'Reset your password', newpass: 'Set a new password' }[m] || 'Log in to PasaU';
-    loginSend.textContent = { signup: 'Create account', forgot: 'Send reset link', newpass: 'Save new password' }[m] || 'Log in';
+    loginTitle.textContent = { signup: 'Create your PasaU account', forgot: 'Reset your password', newpass: 'Set a new password', mfa: 'Enter your code' }[m] || 'Log in to PasaU';
+    loginSend.textContent = { signup: 'Create account', forgot: 'Send reset link', newpass: 'Save new password', mfa: 'Verify' }[m] || 'Log in';
     loginPass.autocomplete = m === 'login' ? 'current-password' : 'new-password';
     clearErrs();
     note('');
@@ -590,6 +596,43 @@
       note('If ' + email + ' has a PasaU account, a reset link is on its way. Check your inbox and spam folder.');
     });
   }
+  // Two-step login: a password-only session for an account with an authenticator app isn't logged in yet
+  var pendingPass = '';
+  function needsCode() {
+    return db.auth.mfa.getAuthenticatorAssuranceLevel().then(function (r) {
+      return !!(r.data && r.data.nextLevel === 'aal2' && r.data.currentLevel !== 'aal2');
+    });
+  }
+  function askCode() {
+    setMode('mfa');
+    loginCode.value = '';
+    if (!loginDlg.open) loginDlg.showModal();
+    loginCode.focus();
+  }
+  function verifyCode(raw) {
+    clearErrs();
+    var code = (raw || '').replace(/\D/g, '');
+    if (code.length !== 6) { fieldErr(loginCode, 'Enter the 6 digits from your authenticator app.'); return; }
+    loginSend.disabled = true;
+    note('Checking\u2026');
+    db.auth.mfa.listFactors().then(function (r) {
+      var f = r.data && r.data.totp && r.data.totp[0];
+      if (!f) throw r.error || new Error('No authenticator app on this account');
+      return db.auth.mfa.challengeAndVerify({ factorId: f.id, code: code });
+    }).then(function (res) {
+      loginSend.disabled = false;
+      if (res.error) {
+        if (/invalid|expired/i.test(res.error.message)) fieldErr(loginCode, 'That code didn\u2019t match. Type the newest code from the app.');
+        else note("Couldn't check the code: " + authText(res.error), true);
+        return;
+      }
+      note('');
+      if (pendingPass) { var p = pendingPass; pendingPass = ''; setMode('newpass'); saveNewPass(p); }
+      // otherwise MFA_CHALLENGE_VERIFIED closes the pop-up
+    }).catch(function (e) { loginSend.disabled = false; note("Couldn't check the code: " + authText(e), true); });
+  }
+  // Closing the pop-up halfway through two-step login logs the half-finished session out
+  loginDlg.addEventListener('close', function () { if (mode === 'mfa') { setMode('login'); pendingPass = ''; db.auth.signOut(); } });
   function saveNewPass(pass) {
     clearErrs();
     if (pass.length < 8) { fieldErr(loginPass, 'Your new password needs at least 8 characters.'); return; }
@@ -599,6 +642,7 @@
       loginSend.disabled = false;
       var err = res.error;
       if (err && /different|same/i.test(err.message)) { note('Choose a password different from your old one.', true); return; }
+      if (err && /aal/i.test(err.message)) { pendingPass = pass; askCode(); note('Your account has two-step login. Enter the code from your authenticator app to save the new password.'); return; }
       if (err && /session|expired|jwt|missing/i.test(err.message)) { setMode('forgot'); note('That reset link has expired. Enter your email to get a new one.', true); return; }
       if (err) { note("Couldn't save your password: " + authText(err), true); return; }
       loginPass.value = '';
@@ -610,6 +654,7 @@
     e.preventDefault();
     if (mode === 'forgot') { sendReset(loginEmail.value.trim()); return; }
     if (mode === 'newpass') { saveNewPass(loginPass.value); return; }
+    if (mode === 'mfa') { verifyCode(loginCode.value); return; }
     var email = loginEmail.value.trim(), pass = loginPass.value;
     var name = suName.value.trim(), year = suYear.value;
     var sc = schoolFromEmail(), school = sc ? sc.name : '';
@@ -658,22 +703,34 @@
   })();
   if (db) {
     db.auth.getSession().then(function (r) {
-      showUser(r.data.session && r.data.session.user);
-      if (r.data.session && nextPage) location.replace(nextPage);
+      var s = r.data.session;
+      (s ? needsCode() : Promise.resolve(false)).then(function (code) {
+        if (code) { showUser(null); askCode(); return; }
+        showUser(s && s.user);
+        if (s && nextPage) location.replace(nextPage);
+      });
     });
     db.auth.onAuthStateChange(function (event, session) {
-      showUser(session && session.user);
       if (event === 'PASSWORD_RECOVERY') {
+        showUser(session && session.user);
         setMode('newpass');
         loginPass.value = '';
         if (!loginDlg.open) loginDlg.showModal();
         loginPass.focus();
         return;
       }
-      if (event === 'SIGNED_IN' && loginDlg.open && mode !== 'newpass') {
-        if (nextPage) { location.href = nextPage; return; }
-        loginDlg.close(); toast('Logged in as ' + session.user.email);
-      }
+      // Other auth calls must wait until this callback returns, so the two-step check runs just after it
+      setTimeout(function () {
+        (session && mode !== 'newpass' ? needsCode() : Promise.resolve(false)).then(function (code) {
+          if (code) { showUser(null); if (mode !== 'mfa') askCode(); return; }
+          showUser(session && session.user);
+          if ((event === 'SIGNED_IN' || event === 'MFA_CHALLENGE_VERIFIED') && loginDlg.open && mode !== 'newpass') {
+            if (nextPage) { location.href = nextPage; return; }
+            setMode('login');
+            loginDlg.close(); toast('Logged in as ' + session.user.email);
+          }
+        });
+      }, 0);
     });
     // An old or already-used email link comes back with an error instead of a session
     if (/error_code=|error_description=/.test(location.hash)) {

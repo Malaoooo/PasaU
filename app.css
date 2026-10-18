@@ -351,6 +351,7 @@ body:has(.hero) {
 .p-stats { color: var(--muted); font-size: 14px; }
 .p-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .p-hint { color: var(--muted); font-size: 13px; }
+.tf-qr { display: block; width: 180px; height: 180px; padding: 10px; background: #fff; border-radius: 12px; }
 .p-tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
 .p-tabs button { flex: none; min-height: 44px; padding-inline: 18px; border-radius: 999px; background: var(--glass-panel); border: 1px solid var(--glass-line); color: var(--on-bg); font-weight: 600; font-size: 14px; }
 .p-tabs button[aria-selected="true"] { background: var(--pill); color: var(--pill-fg); border-color: transparent; }

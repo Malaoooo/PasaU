@@ -43,6 +43,10 @@
     });
   }
   db.auth.onAuthStateChange(function (ev, s) { show(s && s.user); });
+  // Two-step login not finished yet: back to the home page to enter the code
+  db.auth.mfa.getAuthenticatorAssuranceLevel().then(function (r) {
+    if (r.data && r.data.nextLevel === 'aal2' && r.data.currentLevel !== 'aal2') location.replace(loginUrl());
+  });
 
   var out = document.getElementById('logout-btn');
   if (out) out.addEventListener('click', function () { db.auth.signOut().then(function () { location.href = 'index.html'; }); });
