@@ -113,7 +113,7 @@ begin
   if (select count(*) from public.guardian_links where student_id = auth.uid()) >= 4 then
     raise exception 'You can link up to 4 parents or guardians. Unlink one first.';
   end if;
-  delete from public.guardian_invites where student_id = auth.uid() and used_by is null;
+  update public.guardian_invites set expires_at = now() where student_id = auth.uid() and used_by is null and expires_at > now();
   insert into public.guardian_invites (code, student_id)
   values (upper(substr(replace(gen_random_uuid()::text, '-', ''), 1, 10)), auth.uid())
   returning * into inv;
