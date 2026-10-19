@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Family · PasaU</title>
+<link rel="icon" type="image/svg+xml" href="logos/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Poppins:wght@500;700&family=Outfit:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="theme.css">
+<script src="a11y.js"></script>
+<script>try{var d=sessionStorage.getItem("pasau-nav");if(d){sessionStorage.removeItem("pasau-nav");var m=document.documentElement.getAttribute("data-motion");if(m!=="reduce"&&(m==="full"||!matchMedia("(prefers-reduced-motion: reduce)").matches))document.documentElement.dataset.navIn=d}}catch(e){}</script>
+<script src="motion.js"></script>
+</head>
+<body>
+<div class="page sub-page">
+  <header class="nav">
+    <a class="logo" href="index.html" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="wm" aria-hidden="true">Pasa<b>U</b></span></a>
+    <div class="nav-right">
+      <button class="round menu-btn" type="button" id="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <nav class="mnav" id="mnav" aria-label="Menu" hidden>
+      <a href="family.html">Family dashboard</a>
+      <a href="index.html">PasaU home</a>
+      <hr>
+      <a href="index.html?login=1" data-guest hidden>Log in</a>
+      <button type="button" data-a11y>Accessibility</button>
+      <button type="button" id="logout-btn" data-auth hidden>Log out</button>
+    </nav>
+  </header>
+
+  <main class="profile family" id="family">
+    <section class="p-head" id="family-head" aria-live="polite"><p class="muted">Loading…</p></section>
+    <div class="family-body" id="family-body"></div>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="universities.js"></script>
+<script src="ui.js"></script>
+<script src="family.js"></script>
+<script src="nav.js"></script>
+<script src="transition.js"></script>
+</body>
+</html>

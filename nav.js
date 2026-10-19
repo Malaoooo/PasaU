@@ -42,7 +42,14 @@
       navMe.setAttribute('aria-label', 'Your profile' + (p.full_name ? ': ' + p.full_name : ''));
     });
   }
-  db.auth.onAuthStateChange(function (ev, s) { show(s && s.user); });
+  // Parent / guardian accounts only have the family page
+  function guardianHome(u) {
+    if (!u || /family\.html$/.test(location.pathname)) return;
+    db.from('profiles').select('role').eq('id', u.id).maybeSingle().then(function (r) {
+      if (r.data && r.data.role === 'guardian') location.replace('family.html');
+    });
+  }
+  db.auth.onAuthStateChange(function (ev, s) { show(s && s.user); guardianHome(s && s.user); });
   // Two-step login not finished yet: back to the home page to enter the code
   db.auth.mfa.getAuthenticatorAssuranceLevel().then(function (r) {
     if (r.data && r.data.nextLevel === 'aal2' && r.data.currentLevel !== 'aal2') location.replace(loginUrl());
