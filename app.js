@@ -342,7 +342,7 @@
     var price = h('input', { id: 's-price', type: 'number', min: 1, step: 1, inputMode: 'numeric', placeholder: '250' });
     var retail = h('input', { id: 's-retail', type: 'number', min: 1, step: 1, inputMode: 'numeric', placeholder: 'Optional' });
     var swapFor = h('input', { id: 's-swap', type: 'text', maxLength: 120, placeholder: 'e.g. Calculator or lab gown, size S' });
-    var size = h('input', { id: 's-size', type: 'text', maxLength: 60, placeholder: 'Size, edition or model' });
+    var size = h('input', { id: 's-size', type: 'text', maxLength: 60 });
     var spot = h('select', { id: 's-spot' }, options(spotsFor(profile && profile.school, ex && ex.pickup_spot)));
     var desc = h('textarea', { id: 's-desc', maxLength: 600, placeholder: 'Anything a buyer should know' });
     var mySchool = profile && window.UC_SCHOOL_BY_NAME ? window.UC_SCHOOL_BY_NAME(profile.school) : null;
@@ -359,6 +359,14 @@
     if (profile && profile.year_level) year.value = profile.year_level;
     var photos = h('input', { id: 's-photos', type: 'file', accept: 'image/jpeg,image/png,image/webp', multiple: true });
     var thumbs = h('div', { class: 'thumbs' });
+    // The size field fits the category: a size for uniforms, an edition for books, a model for calculators
+    var sizeField = field('Size', size);
+    function drawSize() {
+      var sf = window.UC_SIZE_FIELD && window.UC_SIZE_FIELD(cat.value);
+      sizeField.hidden = !sf;
+      if (sf) { sizeField.firstChild.textContent = sf.label; size.placeholder = sf.hint; }
+    }
+    cat.addEventListener('change', drawSize);
     var priceRow = h('div', { class: 'grid2' }, [field('Price (₱)', price), field('Original price (₱)', retail)]);
     var swapRow = field('What do you want in exchange?', swapFor);
     var send = h('button', { class: 'pill', type: 'submit', text: 'Post listing' });
@@ -410,6 +418,7 @@
       title.value = preset.title || '';
       if (preset.category) cat.value = preset.category;
     }
+    drawSize();
     // Each pick adds to the photos already chosen (phones often pick one at a time); each can be removed
     var picked = [];
     function drawPicked() {
@@ -437,7 +446,7 @@
       field('Title', title),
       h('div', { class: 'grid2' }, [field('Category', cat), field('Condition', cond)]),
       priceRow, swapRow,
-      h('div', { class: 'grid2' }, [field('Size / details', size), field(mySchool ? 'Pickup spot at ' + campusLabel(mySchool) : 'Pickup spot', spot)]),
+      h('div', { class: 'grid2' }, [sizeField, field(mySchool ? 'Pickup spot at ' + campusLabel(mySchool) : 'Pickup spot', spot)]),
       field('Description', desc),
       h('p', { class: 'muted', text: 'Course tags help classmates find it' }),
       field('Course', program), programOther,
@@ -461,7 +470,7 @@
       var row = {
         kind: kind, title: title.value.trim(), category: cat.value, condition: cond.value,
         price_php: kind === 'sell' ? p : 0, retail_php: kind === 'sell' && r > 0 ? r : null,
-        swap_for: kind === 'swap' ? swapFor.value.trim() : null, size: size.value.trim() || null,
+        swap_for: kind === 'swap' ? swapFor.value.trim() : null, size: (!sizeField.hidden && size.value.trim()) || null,
         pickup_spot: spot.value, description: desc.value.trim() || null,
         college: null, program: (program.value === 'other' ? programOther.value.trim() : program.value) || null,
         course_code: course.value.trim().toUpperCase() || null, year_level: year.value || null
@@ -539,7 +548,8 @@
       : [h('div', {}, card && card.firstElementChild ? [card.firstElementChild.cloneNode(true)] : [])]);
     var priceTxt = l.kind === 'free' ? 'Free' : l.kind === 'swap' ? 'Swap' : peso(l.price_php);
     function fact(label, v) { return v ? h('span', {}, [h('b', { text: label + ' ' }), String(v)]) : null; }
-    var facts = h('div', { class: 'facts' }, [fact('Category', CATS[l.category]), fact('Condition', l.condition), fact('Size', l.size),
+    function sizeFact(l) { var sf = window.UC_SIZE_FIELD && window.UC_SIZE_FIELD(l.category); return fact(sf ? sf.fact : 'Details', l.size); }
+    var facts = h('div', { class: 'facts' }, [fact('Category', CATS[l.category]), fact('Condition', l.condition), sizeFact(l),
       fact('Pickup', spotLabel(l)), fact('Course', l.course_code), fact('Year', l.year_level), fact('College', l.college),
       fact('Program', l.program)].filter(Boolean));
     var seller = h('div', { class: 'seller-card' }, [h('p', { class: 'muted', text: me ? 'Loading seller\u2026' : 'Log in to see who\u2019s selling.' })]);
