@@ -67,11 +67,11 @@
       body: 'When someone needs what you have, PasaMatch asks you. One tap on “I have this” sends them your listing.' },
     vouches: { as: 'student', url: 'profile.html#vouches', target: ['.p-panel:not([hidden])', '#panel-vouches', 'main'], title: 'Vouches build trust',
       body: 'After a deal, students vouch for each other, so good traders stand out.' },
-    parent: { as: 'parent', url: 'family.html', target: [function () { var l = document.querySelector('.f-student'); return l && l.closest('.p-panel'); }, '.p-panel', 'main'], title: 'Parents can follow along',
-      body: 'You’re now Maria, a demo parent account for Andrea’s mom. She sees Andrea’s meetups: where, when and with whom. Never her chats.' },
-    palerts: { as: 'parent', url: 'family.html', target: ['.f-alerts', 'main'], prep: function () { return waitFor('.f-alerts').then(function (el) { if (el) el.scrollIntoView({ block: 'center' }); return wait(400); }); }, title: 'Alerts and check-ins',
+    parent: { as: 'parent', url: 'family.html', target: [function () { var l = document.querySelector('.f-student'); return l && l.closest('.p-panel'); }, '.p-panel', 'main'], title: 'Prototype: parent accounts',
+      body: 'An early feature we’re still testing. You’re now Maria, Andrea’s mom: she sees Andrea’s meetups, where, when and with whom. Never her chats.' },
+    palerts: { as: 'parent', url: 'family.html', target: ['.f-alerts', 'main'], prep: function () { return waitFor('.f-alerts').then(function (el) { if (el) el.scrollIntoView({ block: 'center' }); return wait(400); }); }, title: 'Prototype: alerts and check-ins',
       body: 'Maria is told when a meetup is set, and gets a check-in if it isn’t marked done 30 minutes after it starts.' },
-    pconcern: { as: 'parent', url: 'family.html', target: ['.f-concern', 'main'], prep: function () { return waitFor('.f-concern button').then(function (b) { if (b) { b.click(); b.scrollIntoView({ block: 'center' }); } return wait(400); }); }, title: 'Help, not control',
+    pconcern: { as: 'parent', url: 'family.html', target: ['.f-concern', 'main'], prep: function () { return waitFor('.f-concern button').then(function (b) { if (b) { b.click(); b.scrollIntoView({ block: 'center' }); } return wait(400); }); }, title: 'Prototype: help, not control',
       body: 'Parents can report a concern straight to the PasaU team. They never see chats and can’t buy, sell or message anyone, and the student can unlink them.' },
     endH: { as: 'student', url: 'index.html', end: true, title: 'That’s the highlights',
       body: 'Explore freely as Andrea, or see the rest of PasaU’s features.', nextText: 'See all features', skipText: 'Explore' },
@@ -94,7 +94,7 @@
       body: 'Buyers and sellers chat from a pop-up that follows them around the site.' },
     twostep: { as: 'student', url: 'profile.html#settings', target: [twoStep, '.p-panel:not([hidden])', 'main'], title: 'Two-step login',
       body: 'Students can add an authenticator app, and choose what others see and which alerts they get.' },
-    family: { as: 'student', url: 'profile.html#family', target: ['.p-panel:not([hidden])', 'main'], title: 'Invite a parent',
+    family: { as: 'student', url: 'profile.html#family', target: ['.p-panel:not([hidden])', 'main'], title: 'Prototype: invite a parent',
       body: 'Families worry about meeting strangers. Andrea can invite her mom or a guardian with a link, and she chooses what they see.' },
     admin: { as: 'student', url: 'admin.html', target: ['.stats', '.a-stats', 'main'], title: 'Moderation',
       body: 'The PasaU team handles reports, verifies students and removes bad listings.' },
@@ -281,7 +281,7 @@
     if (Demo.persona() === 'parent') {
       var main = document.querySelector('main');
       if (main) main.prepend(Object.assign(document.createElement('div'), { className: 'pd-flag', role: 'note',
-        innerHTML: '<strong>Demo parent account</strong><span>Maria Santos is a sample parent with sample data. Real parent accounts are made by invitation from a student.</span>' }));
+        innerHTML: '<strong>Prototype feature</strong><span>Parent accounts are an early prototype we’re still testing. Maria Santos and everything on this page are sample data.</span>' }));
     }
     var t = ss.get('pasau-demo-tour');
     var p = parse(t) || (/^\d+$/.test(t || '') ? ['h', 0] : null);
