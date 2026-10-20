@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "unicycle-seven.vercel.app" }],
+      "destination": "https://pasau.vercel.app/:path*",
+      "permanent": true
+    }
+  ]
+}
