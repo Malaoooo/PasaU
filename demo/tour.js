@@ -68,7 +68,7 @@
     vouches: { as: 'student', url: 'profile.html#vouches', target: ['.p-panel:not([hidden])', '#panel-vouches', 'main'], title: 'Vouches build trust',
       body: 'After a deal, students vouch for each other, so good traders stand out.' },
     parent: { as: 'parent', url: 'family.html', target: [function () { var l = document.querySelector('.f-student'); return l && l.closest('.p-panel'); }, '.p-panel', 'main'], title: 'Parents can follow along',
-      body: 'Now you’re Maria, Andrea’s mom. Andrea invited her, so Maria sees her meetups: where, when and with whom. Never her chats.' },
+      body: 'You’re now Maria, a demo parent account for Andrea’s mom. She sees Andrea’s meetups: where, when and with whom. Never her chats.' },
     palerts: { as: 'parent', url: 'family.html', target: ['.f-alerts', 'main'], prep: function () { return waitFor('.f-alerts').then(function (el) { if (el) el.scrollIntoView({ block: 'center' }); return wait(400); }); }, title: 'Alerts and check-ins',
       body: 'Maria is told when a meetup is set, and gets a check-in if it isn’t marked done 30 minutes after it starts.' },
     pconcern: { as: 'parent', url: 'family.html', target: ['.f-concern', 'main'], prep: function () { return waitFor('.f-concern button').then(function (b) { if (b) { b.click(); b.scrollIntoView({ block: 'center' }); } return wait(400); }); }, title: 'Help, not control',
@@ -277,6 +277,12 @@
 
   function boot() {
     document.body.append(chip, dlg);
+    // The parent persona is a made-up account: say so on the page itself, not only in the tour box
+    if (Demo.persona() === 'parent') {
+      var main = document.querySelector('main');
+      if (main) main.prepend(Object.assign(document.createElement('div'), { className: 'pd-flag', role: 'note',
+        innerHTML: '<strong>Demo parent account</strong><span>Maria Santos is a sample parent with sample data. Real parent accounts are made by invitation from a student.</span>' }));
+    }
     var t = ss.get('pasau-demo-tour');
     var p = parse(t) || (/^\d+$/.test(t || '') ? ['h', 0] : null);
     if (!p) return;
