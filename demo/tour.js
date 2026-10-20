@@ -85,7 +85,8 @@
   [back, next, skip].forEach(function (b) { b.type = 'button'; });
   var head = el('div', 'pd-head'); head.append(title, count);
   var row = el('div', 'pd-row'); row.append(skip, back, next);
-  card.append(head, body, row);
+  var bar = el('div', 'pd-bar'), fill = el('i'); bar.append(fill);
+  card.append(bar, head, body, row);
   dlg.append(hole, card);
 
   var chip = el('div', 'pd-chip');
@@ -125,6 +126,7 @@
     var s = steps[i];
     cur = i; ss.set('pasau-demo-tour', String(i));
     count.textContent = (i + 1) + '/' + steps.length;
+    fill.style.width = ((i + 1) / steps.length * 100) + '%';
     title.textContent = s.title; body.textContent = s.body;
     back.hidden = i === 0;
     next.textContent = i === steps.length - 1 ? 'Start exploring' : 'Next';
@@ -140,6 +142,7 @@
     }).then(function () {
       dlg.inert = false; // the full-screen chats pop-up makes everything else inert, the tour included
       if (!dlg.open) dlg.showModal();
+      card.classList.remove('pd-pop'); void card.offsetWidth; card.classList.add('pd-pop');
       place(); place();
       next.focus();
     });
