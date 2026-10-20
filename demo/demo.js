@@ -100,6 +100,7 @@
     if (name === 'release_reservation' && l) { l.status = 'active'; l.reserved_by = null; persist(); }
     if (name === 'set_listing_status' && l && args.p_status) { l.status = args.p_status; persist(); }
     if (name === 'is_admin') return page === 'admin.html';
+    if (name === 'queue_count' && args.p_listing) return tables.queue_entries.filter(function (q) { return q.listing_id === +args.p_listing; }).length;
     return name in rpcs ? rpcs[name] : null;
   }
 

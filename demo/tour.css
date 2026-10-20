@@ -31,3 +31,7 @@
 .pd-menu button:hover { background: var(--card-2, #EDF2ED); }
 .pd-menu-note { margin: 4px 12px 6px; font-size: 13px; line-height: 1.4; color: var(--muted, #4C5D52); }
 @media (prefers-reduced-motion: reduce) { .pd-hole { transition: none; animation: none; } }
+/* keep the Demo button off the chat box and out of the full-screen chats pop-up */
+body.dock-open .pd-chip { display: none; }
+body:has(.composer) .pd-chip { bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
+.pd-tour .pg-wipe { z-index: 3; }

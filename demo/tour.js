@@ -14,7 +14,7 @@
     return null;
   }
   function waitFor(sel, ms) {
-    var end = Date.now() + (ms || 6000);
+    var end = Date.now() + (ms || 4000);
     return new Promise(function (res) { (function poll() { var el = find(sel); if (el || Date.now() > end) return res(el); setTimeout(poll, 120); })(); });
   }
   function click(sel) { return waitFor(sel).then(function (el) { if (el) el.click(); return wait(500); }); }
@@ -145,17 +145,33 @@
   }
   function close() { if (cur >= 0) ss.set('pasau-demo-last', String(cur)); if (dlg.open) dlg.close(); target = null; ss.set('pasau-demo-tour', ''); chip.hidden = false; }
   function same(url) { var u = new URL(url, location.href); return u.pathname === location.pathname && u.search === location.search && u.hash === location.hash; }
+  var leaving = false;  // a second tap during the page change must not skip a step
   function go(i) {
+    if (leaving) return;
     if (i >= steps.length) { close(); return; }
     var s = steps[i], prev = steps[cur] || {};
     ss.set('pasau-demo-tour', String(i));
     var inPlace = cur >= 0 && s.as === Demo.persona() && same(s.url) && !s.prep && !prev.prep && !document.querySelector('dialog[open]:not(.pd-tour)');
     if (inPlace) { show(i); return; }
-    if (dlg.open) dlg.close();
     Demo.setPersona(s.as);
     var u = new URL(s.url, location.href);
-    if (u.pathname === location.pathname && u.search === location.search) { history.replaceState(null, '', u.href); location.reload(); }
-    else location.href = u.href;
+    leaving = true;
+    leave(i < cur ? 'back' : 'fwd', function () {
+      if (u.pathname === location.pathname && u.search === location.search) { history.replaceState(null, '', u.href); location.reload(); }
+      else location.href = u.href;
+    });
+  }
+  // The site's own page transition (transition.js): a green panel sweeps across with the PasaU mark
+  function leave(dir, then) {
+    var m = document.documentElement.getAttribute('data-motion');
+    if (m === 'reduce' || (m !== 'full' && matchMedia('(prefers-reduced-motion: reduce)').matches)) { if (dlg.open) dlg.close(); return then(); }
+    ss.set('pasau-nav', dir);
+    var wipe = el('div', 'pg-wipe out ' + dir); wipe.setAttribute('aria-hidden', 'true'); wipe.append(el('span'));
+    (dlg.open ? dlg : document.body).appendChild(wipe);  // inside the tour so it sweeps over everything, open pop-ups included
+    var went = false;
+    function go2() { if (!went) { went = true; then(); } }
+    wipe.addEventListener('animationend', go2);
+    setTimeout(go2, 450);
   }
   next.onclick = function () { if (cur === steps.length - 1) { close(); return; } go(cur + 1); };
   back.onclick = function () { go(cur - 1); };
@@ -167,10 +183,11 @@
   mExit.onclick = function () {
     ['pasau-demo', 'pasau-demo-db', 'pasau-demo-img', 'pasau-demo-as', 'pasau-demo-tour', 'pasau-demo-last', 'pasau-demo-2fa'].forEach(function (k) { try { sessionStorage.removeItem(k); } catch (e) {} });
     try { localStorage.removeItem('sb-' + new URL(window.UC_CONFIG.url).hostname.split('.')[0] + '-auth-token'); } catch (e) {}
-    location.href = 'index.html';
+    leaving = true;
+    leave('back', function () { location.href = 'index.html'; });
   };
-  addEventListener('resize', function () { if (dlg.open) place(); });
-  addEventListener('scroll', function () { if (dlg.open) place(); }, true);
+  // Follow the target while things settle (content rising in, images loading, pop-ups sliding open)
+  (function follow() { if (dlg.open && !dlg.querySelector('.pg-wipe')) place(); requestAnimationFrame(follow); })();
 
   function boot() {
     document.body.append(chip, dlg);
@@ -178,9 +195,9 @@
     if (t === '' || t == null) return;
     var i = +t; ss.set('pasau-demo-last', String(i));
     // let the page draw itself (and its page-in animation) first
-    wait(document.readyState === 'complete' ? 400 : 0).then(function () {
-      if (document.readyState !== 'complete') return new Promise(function (r) { addEventListener('load', r, { once: true }); }).then(function () { return wait(400); });
-    }).then(function () { show(i); });
+    // let the page draw itself and its page-in sweep finish first, but don't wait forever on slow photos or fonts
+    var loaded = document.readyState === 'complete' ? Promise.resolve() : Promise.race([new Promise(function (r) { addEventListener('load', r, { once: true }); }), wait(2500)]);
+    loaded.then(function () { return wait(700); }).then(function () { show(i); });
   }
   var save = function () { if (cur >= 0) ss.set('pasau-demo-last', String(cur)); };
   addEventListener('pagehide', save);
