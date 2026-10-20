@@ -75,7 +75,11 @@
     var rows = tables[table] = tables[table] || [], out = [];
     if (method === 'POST') {
       (Array.isArray(body) ? body : [body]).forEach(function (b) {
+        // Columns the real database fills in from the logged-in account
+        var mine = { messages: 'sender_id', vouches: 'voucher_id', reports: 'reporter_id', wanted_posts: 'user_id', saves: 'user_id', listings: 'seller_id' }[table];
+        var who = persona === 'parent' ? MARIA : ME;
         var r = Object.assign({ id: nextId(rows), created_at: new Date().toISOString() }, b);
+        if (mine && r[mine] == null) r[mine] = who;
         if (table === 'listings') { r = Object.assign({ status: 'active', views: 0, bumped_at: r.created_at, listing_photos: [] }, r); if (!r.school) r.school = me0 && me0.school; }
         if (table === 'listing_photos') tables.listings.forEach(function (l) { if (l.id === r.listing_id) l.listing_photos.push({ path: r.path, position: r.position }); });
         if (table === 'conversations') r.listings = tables.listings.filter(function (l) { return l.id === r.listing_id; })[0];
@@ -90,6 +94,7 @@
       if (table === 'profiles') tables.public_profiles = tables.profiles;
     }
     persist();
+    if (method === 'POST' && table === 'messages') out.forEach(function (m) { if (m.sender_id === ME && persona === 'student') replyLater(m); });
     return out;
   }
   function listing(id) { return tables.listings.filter(function (l) { return l.id === +id; })[0]; }
@@ -183,11 +188,60 @@
     return realFetch(input, init);
   };
 
-  // Live updates go nowhere in the demo
+  // ---------- live updates: a pretend realtime server, so chats and alerts arrive as they happen ----------
+  var sockets = [], bindId = 0;
+  function FakeSocket(u) {
+    var s = this; s.url = String(u); s.readyState = 0; s.topics = {};
+    sockets.push(s);
+    setTimeout(function () { s.readyState = 1; if (s.onopen) s.onopen({}); }, 20);
+  }
+  FakeSocket.prototype.send = function (raw) {
+    var m; try { m = JSON.parse(raw); } catch (e) { return; }
+    var s = this, out = { status: 'ok', response: {} };
+    if (m.event === 'phx_join') {
+      var pc = ((m.payload || {}).config || {}).postgres_changes || [];
+      s.topics[m.topic] = pc.map(function (b) { return Object.assign({ id: ++bindId }, b); });
+      out.response = { postgres_changes: s.topics[m.topic] };
+    } else if (m.event === 'phx_leave') delete s.topics[m.topic];
+    setTimeout(function () { if (s.onmessage && s.readyState === 1) s.onmessage({ data: JSON.stringify({ topic: m.topic, event: 'phx_reply', payload: out, ref: m.ref }) }); }, 10);
+  };
+  FakeSocket.prototype.close = function () { this.readyState = 3; sockets.splice(sockets.indexOf(this), 1); if (this.onclose) this.onclose({ code: 1000, reason: '' }); };
+  FakeSocket.prototype.addEventListener = FakeSocket.prototype.removeEventListener = function () {};
+  function pushInsert(table, row) {
+    sockets.forEach(function (s) {
+      Object.keys(s.topics).forEach(function (topic) {
+        var ids = s.topics[topic].filter(function (b) {
+          if (b.table !== table || (b.event !== 'INSERT' && b.event !== '*')) return false;
+          var f = /^(\w+)=eq\.(.*)$/.exec(b.filter || '');
+          return !f || String(row[f[1]]) === f[2];
+        }).map(function (b) { return b.id; });
+        if (!ids.length || !s.onmessage) return;
+        s.onmessage({ data: JSON.stringify({ topic: topic, event: 'postgres_changes', ref: null,
+          payload: { ids: ids, data: { schema: 'public', table: table, type: 'INSERT', commit_timestamp: row.created_at, columns: [], record: row, errors: null } } }) });
+      });
+    });
+  }
+  // The other student answers a moment after the judge sends a message
+  var REPLIES = ['Hi! Yes, it’s still available.', 'Sure! I can meet you at the {spot} tomorrow after class.', 'Great, see you there! Message me if anything changes.', 'Thanks! 😊'];
+  function replyLater(m) {
+    var c = tables.conversations.filter(function (x) { return x.id === m.conversation_id; })[0];
+    if (!c) return;
+    var other = c.buyer_id === ME ? c.seller_id : c.buyer_id, l = c.listings || listing(c.listing_id) || {};
+    var who = tables.profiles.filter(function (p) { return p.id === other; })[0] || {};
+    var said = tables.messages.filter(function (x) { return x.conversation_id === c.id && x.bot; }).length;
+    setTimeout(function () {
+      var now = new Date().toISOString();
+      var r = { id: nextId(tables.messages), conversation_id: c.id, sender_id: other, body: REPLIES[Math.min(said, REPLIES.length - 1)].replace('{spot}', (l.pickup_spot || 'library lobby').toLowerCase()), created_at: now, bot: true };
+      var n = { id: nextId(tables.notifications), user_id: ME, kind: 'chat', body: 'New message from ' + (who.display_name || 'a student') + ' about "' + (l.title || 'your listing') + '"', listing_id: c.listing_id, read: false, created_at: now };
+      tables.messages.push(r); tables.notifications.push(n); persist();
+      pushInsert('messages', r); pushInsert('notifications', n);
+      document.dispatchEvent(new CustomEvent('pasau-demo:reply', { detail: r }));
+    }, 2200);
+  }
   var RealWS = window.WebSocket;
   window.WebSocket = function (u, pr) {
     if (String(u).indexOf('/demo/sb/') < 0 && !/supabase\.co/.test(String(u))) return new RealWS(u, pr);
-    return { readyState: 0, url: String(u), send: function () {}, close: function () { this.readyState = 3; }, addEventListener: function () {}, removeEventListener: function () {} };
+    return new FakeSocket(u);
   };
   ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'].forEach(function (k, i) { window.WebSocket[k] = i; });
 

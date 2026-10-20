@@ -25,80 +25,112 @@
     for (var i = 0; i < hs.length; i++) if (/two-step/i.test(hs[i].textContent)) return hs[i].closest('.p-section') || hs[i].parentNode;
     return null;
   }
-  var steps = [
-    { as: 'visitor', url: 'index.html', title: 'Welcome to PasaU',
-      body: 'Students from eight Baguio schools buy, sell, swap and give away school things. This quick tour uses sample data.' },
-    { as: 'visitor', url: 'index.html', target: ['#campus-toggle', '.campus-toggle'], title: 'Pick your campus',
-      body: 'Students pick their school so they see items they can pick up on campus.' },
-    { as: 'visitor', url: 'index.html?login=1', target: ['#login form', '#login'],
+  function inSheet(re) {  // a button in the open listing pop-up whose label matches
+    var bs = document.querySelectorAll('dialog[open] button');
+    for (var i = 0; i < bs.length; i++) if (re.test(bs[i].textContent.trim())) return bs[i];
+    return null;
+  }
+  function sheetSays(re) { var d = document.querySelector('dialog[open]:not(.pd-tour)'); return !!d && re.test(d.textContent); }
+  var replied = false;
+  document.addEventListener('pasau-demo:reply', function () { replied = true; });
+
+  var S = {
+    welcome: { as: 'visitor', url: 'index.html', title: 'Welcome to PasaU',
+      body: 'Students from eight Baguio schools buy, sell, swap and give away school things. Here are the highlights, with sample data.' },
+    signup: { as: 'visitor', url: 'index.html?login=1', target: ['#login form', '#login'],
       prep: function () { return click('#login-modes button[data-mode="signup"]').then(function () { var e = document.getElementById('login-email'); if (e) { e.value = 'andrea.santos@students.uc-bcf.edu.ph'; e.dispatchEvent(new Event('input', { bubbles: true })); } var n = document.getElementById('su-name'); if (n) n.value = 'Andrea Santos'; return wait(300); }); },
       title: 'Students only, by school email',
       body: 'Only school emails can sign up, and the school fills itself in. Confirming the email gives a Verified badge.' },
-    { as: 'student', url: 'index.html', title: 'You are now Andrea',
-      body: 'You’re logged in as Andrea, a 2nd-year UC Nursing student. Everyone here is sample data.' },
-    { as: 'student', url: 'index.html', target: ['#shop .grid', '#shop'], prep: function () { return waitFor('#shop').then(function (el) { if (el) el.scrollIntoView({ block: 'start' }); return wait(600); }); },
-      title: 'The shop',
-      body: 'Filter by category, condition, price, course and year. Each card shows the price next to the price new.' },
-    { as: 'student', url: 'index.html', target: '#spotlight', title: 'Free items and swaps',
-      body: 'Give things away or trade them, so last term’s books go to the next batch.' },
-    { as: 'student', url: 'index.html?open=' + L.ANAT, target: ['dialog[open] .seller-card'], title: 'Know who you are dealing with',
-      body: 'Every listing shows the seller’s school, course, Verified badge and vouches.' },
-    { as: 'student', url: 'index.html?open=' + L.ANAT, target: ['dialog[open] .steps-bar', 'dialog[open] .box'], title: 'Reserve, then follow the steps',
-      body: 'Reserve to hold an item, or join the queue. The step bar shows where the deal is.' },
-    { as: 'student', url: 'index.html?open=' + L.BAG, target: ['#swap-pick', 'dialog[open] .box'], title: 'Offer a swap',
-      body: 'Offer one of your own items in exchange.' },
-    { as: 'student', url: 'index.html?open=' + L.SHIRT, target: ['dialog[open] .owner-row', 'dialog[open] .box'], title: 'Selling: offers and a waiting line',
-      body: 'Set your listing’s status and see offers and who’s waiting in line.' },
-    { as: 'student', url: 'index.html?open=' + L.DRAW, target: ['dialog[open] .code', 'dialog[open] .box'], title: 'Safe campus meetups',
-      body: 'Meet on campus. The buyer reads out this 6-digit code at handover to close the deal.' },
-    { as: 'student', url: 'index.html?sell=1&title=Pharmacology%20textbook&cat=books', target: ['dialog[open] form', 'dialog[open]'], title: 'Selling takes a minute',
-      body: 'Photos, price, pickup spot, and course tags so the right students find it.' },
-    { as: 'student', url: 'index.html', target: ['dialog[open]', '#nav-bell'], prep: function () { return phone() ? click('#menu-btn').then(function () { return click('.mnav-bell'); }) : click('#nav-bell'); }, title: 'Notifications',
-      body: 'Messages, offers, meetups, vouches and matches arrive right away.' },
-    { as: 'student', url: 'index.html', target: ['#dock-panel', '.dock-btn'], prep: function () { return click('.dock-btn'); }, title: 'Chats on every page',
-      body: 'Buyers and sellers chat from a pop-up on every page.' },
-    { as: 'student', url: 'messages.html?c=502', target: ['.meetup-card', '.mcard', '.inbox-thread'], title: 'Meetups live in the chat',
-      body: 'Meetups are proposed and accepted right in the chat, with the handover code.' },
-    { as: 'student', url: 'unimatch.html?post=901', target: ['#um-results'], prep: function () { return waitFor('#um-results').then(function (el) { if (el) el.scrollIntoView({ block: 'start' }); return wait(500); }); }, title: 'PasaMatch',
+    shop: { as: 'student', url: 'index.html', target: ['#shop .grid', '#shop'], prep: function () { return waitFor('#shop').then(function (el) { if (el) el.scrollIntoView({ block: 'start' }); return wait(600); }); },
+      title: 'You’re now Andrea, a UC student',
+      body: 'This is the shop. Filter by category, condition, price, course and year, and see each price next to the price new.' },
+    reserve: { as: 'student', url: 'index.html?open=' + L.ANAT, target: [function () { return inSheet(/^Reserve$/); }, 'dialog[open] .box'],
+      try: { done: function () { return sheetSays(/Reserved for you/) || !inSheet(/^Reserve$/); }, after: ['dialog[open] .steps-bar', 'dialog[open] .box'], title: 'Reserved!', body: 'It’s held for you. If you back out, it goes to the next person in line automatically.' },
+      title: 'Try it: tap Reserve',
+      body: 'Reserving holds a book for you, first come, first served.' },
+    meetup: { as: 'student', url: 'index.html?open=' + L.DRAW, target: ['dialog[open] .code', 'dialog[open] .box'], title: 'Safe campus meetups',
+      body: 'Meet on campus. The buyer reads out this 6-digit code at handover to close the deal. No code, no sale.' },
+    chat: { as: 'student', url: 'messages.html?c=501', target: ['.composer'],
+      prep: function () { replied = false; return waitFor('.composer').then(function (f) { var i = f && f.querySelector('textarea, input[type=text], input:not([type])'); if (i && !i.value) { i.value = 'Hi! Is this still available?'; i.dispatchEvent(new Event('input', { bubbles: true })); } }); },
+      try: { done: function () { return replied; }, after: ['.inbox-thread', '.composer'], title: 'It arrived live', body: 'Bea answered right away, with a notification. Real chats on PasaU work the same way.' },
+      title: 'Try it: send a message',
+      body: 'Tap the send button and watch the seller reply.' },
+    pasamatch: { as: 'student', url: 'unimatch.html?post=901', target: ['#um-results'], prep: function () { return waitFor('#um-results').then(function (el) { if (el) el.scrollIntoView({ block: 'start' }); return wait(500); }); }, title: 'PasaMatch',
       body: 'Post what you need. PasaMatch finds listings and pings students who might have it.' },
-    { as: 'student', url: 'profile.html#vouches', target: ['.p-panel:not([hidden])', '#panel-vouches', 'main'], title: 'Vouches build trust',
+    vouches: { as: 'student', url: 'profile.html#vouches', target: ['.p-panel:not([hidden])', '#panel-vouches', 'main'], title: 'Vouches build trust',
       body: 'After a deal, students vouch for each other, so good traders stand out.' },
-    { as: 'student', url: 'profile.html#settings', target: [twoStep, '.p-panel:not([hidden])', 'main'], title: 'Two-step login and privacy',
-      body: 'Two-step login with an authenticator app, plus privacy and alert settings.' },
-    { as: 'student', url: 'profile.html#family', target: ['.p-panel:not([hidden])', 'main'], title: 'Parents can follow along',
-      body: 'Invite a parent by link. They see meetups and deals, never chats.' },
-    { as: 'parent', url: 'family.html', target: ['.p-panel', 'main'], title: 'The parent’s view',
-      body: 'You’re Maria, Andrea’s mother. She sees upcoming meetups and can report a concern.' },
-    { as: 'student', url: 'admin.html', target: ['.stats', '.a-stats', 'main'], title: 'Moderation',
-      body: 'The PasaU team handles reports, verifies students and removes bad listings.' },
-    { as: 'student', url: 'index.html', title: 'That’s PasaU',
-      body: 'Explore freely as Andrea. Tap Demo at the bottom to restart or leave.' }
-  ];
+    parent: { as: 'parent', url: 'family.html', target: ['.p-panel', 'main'], title: 'Parents can follow along',
+      body: 'Now you’re Maria, Andrea’s mother. Parents see upcoming meetups and deals, never chats, and can report a concern.' },
+    endH: { as: 'student', url: 'index.html', end: true, title: 'That’s the highlights',
+      body: 'Explore freely as Andrea, or see the rest of PasaU’s features.', nextText: 'See all features', skipText: 'Explore' },
 
+    campus: { as: 'visitor', url: 'index.html', target: ['#campus-toggle', '.campus-toggle'], title: 'Pick your campus',
+      body: 'Students pick their school so they see items they can pick up on campus.' },
+    free: { as: 'student', url: 'index.html', target: '#spotlight', title: 'Free items and swaps',
+      body: 'Give things away or trade them, so last term’s books go to the next batch.' },
+    seller: { as: 'student', url: 'index.html?open=' + L.CALC, target: ['dialog[open] .seller-card'], title: 'Know who you’re dealing with',
+      body: 'Every listing shows the seller’s school, course, Verified badge and vouches. The step bar shows where a deal is.' },
+    swap: { as: 'student', url: 'index.html?open=' + L.BAG, target: ['#swap-pick', 'dialog[open] .box'], title: 'Offer a swap',
+      body: 'Offer one of your own items in exchange.' },
+    selling: { as: 'student', url: 'index.html?open=' + L.SHIRT, target: ['dialog[open] .owner-row', 'dialog[open] .box'], title: 'Offers and a waiting line',
+      body: 'On your own listing, set its status and see offers and who’s waiting in line.' },
+    sell: { as: 'student', url: 'index.html?sell=1&title=Pharmacology%20textbook&cat=books', target: ['dialog[open] form', 'dialog[open]'], title: 'Selling takes a minute',
+      body: 'Photos, price, pickup spot, and course tags so the right students find it.' },
+    notes: { as: 'student', url: 'index.html', target: ['dialog[open]', '#nav-bell'], prep: function () { return phone() ? click('#menu-btn').then(function () { return click('.mnav-bell'); }) : click('#nav-bell'); }, title: 'Notifications',
+      body: 'Messages, offers, meetups, vouches and matches arrive right away.' },
+    dock: { as: 'student', url: 'index.html', target: ['#dock-panel', '.dock-btn'], prep: function () { return click('.dock-btn'); }, title: 'Chats on every page',
+      body: 'Buyers and sellers chat from a pop-up that follows them around the site.' },
+    twostep: { as: 'student', url: 'profile.html#settings', target: [twoStep, '.p-panel:not([hidden])', 'main'], title: 'Two-step login',
+      body: 'Students can add an authenticator app, and choose what others see and which alerts they get.' },
+    family: { as: 'student', url: 'profile.html#family', target: ['.p-panel:not([hidden])', 'main'], title: 'Inviting a parent',
+      body: 'A student invites a parent or guardian with a link, and chooses what they share.' },
+    admin: { as: 'student', url: 'admin.html', target: ['.stats', '.a-stats', 'main'], title: 'Moderation',
+      body: 'The PasaU team handles reports, verifies students and removes bad listings.' },
+    endF: { as: 'student', url: 'index.html', end: true, title: 'That’s everything',
+      body: 'Explore freely as Andrea. Tap the Demo tab on the left to jump to any feature or leave.', nextText: 'Start exploring' }
+  };
+  var LISTS = {
+    h: ['welcome', 'signup', 'shop', 'reserve', 'meetup', 'chat', 'pasamatch', 'vouches', 'parent', 'endH'],
+    x: ['campus', 'free', 'seller', 'swap', 'selling', 'sell', 'notes', 'dock', 'twostep', 'family', 'admin', 'endF']
+  };
   // ---------- UI ----------
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   var dlg = el('dialog', 'pd-tour'); dlg.setAttribute('aria-labelledby', 'pd-title');
   var hole = el('div', 'pd-hole'), card = el('section', 'pd-card');
   var count = el('p', 'pd-count'), title = el('h2', 'pd-title'), body = el('p', 'pd-body');
   title.id = 'pd-title';
-  var back = el('button', 'pd-btn pd-ghost', 'Back'), next = el('button', 'pd-btn', 'Next'), skip = el('button', 'pd-skip', 'Skip tour');
+  var back = el('button', 'pd-btn pd-ghost', 'Back'), next = el('button', 'pd-btn pd-next', 'Next'), skip = el('button', 'pd-skip', 'Skip tour');
   [back, next, skip].forEach(function (b) { b.type = 'button'; });
   var head = el('div', 'pd-head'); head.append(title, count);
   var row = el('div', 'pd-row'); row.append(skip, back, next);
   var bar = el('div', 'pd-bar'), fill = el('i'); bar.append(fill);
   card.append(bar, head, body, row);
   dlg.append(hole, card);
+  // Clicks on the card must not reach a listing pop-up underneath (it closes on outside clicks)
+  card.addEventListener('click', function (e) { e.stopPropagation(); });
 
+  // The Demo tab: continue, jump to a feature, start over, leave
   var chip = el('div', 'pd-chip');
   var chipMain = el('button', 'pd-chip-btn', 'Demo'), menu = el('div', 'pd-menu');
-  chipMain.type = 'button'; chipMain.setAttribute('aria-expanded', 'false');
-  var mResume = el('button', '', 'Continue the tour'), mRestart = el('button', '', 'Start the tour over'), mExit = el('button', '', 'Leave the demo');
-  var mNote = el('p', 'pd-menu-note', 'Sample data only. Nothing here reaches real students.');
-  menu.append(mNote, mResume, mRestart, mExit); menu.hidden = true;
+  chipMain.type = 'button'; chipMain.setAttribute('aria-expanded', 'false'); chipMain.setAttribute('aria-label', 'Demo menu');
+  var mResume = el('button', 'pd-strong', 'Continue the tour'), mRestart = el('button', '', 'Start over'), mExit = el('button', '', 'Leave the demo');
+  var jumps = el('div', 'pd-jumps');
+  jumps.append(el('p', 'pd-menu-head', 'Jump to a feature'));
+  ['h', 'x'].forEach(function (k) {
+    LISTS[k].forEach(function (id, i) {
+      if (id === 'welcome' || S[id].end) return;
+      var b = el('button', '', S[id].title.replace(/^Try it: /, '').replace(/, a UC student$/, '').replace(/^You’re now Andrea$/, 'The shop'));
+      b.type = 'button';
+      b.onclick = function () { menu.hidden = true; go(k, i); };
+      jumps.append(b);
+    });
+  });
+  menu.append(el('p', 'pd-menu-note', 'Sample data only. Nothing here reaches real students.'), mResume, jumps, mRestart, mExit); menu.hidden = true;
   [mResume, mRestart, mExit].forEach(function (b) { b.type = 'button'; });
-  chip.append(menu, chipMain);
+  chip.append(chipMain, menu);
 
-  var cur = -1, target = null;
+  var list = 'h', cur = -1, target = null, trying = null;
+  function step() { return S[LISTS[list][cur]] || {}; }
   function place() {
     var vw = innerWidth, vh = innerHeight, pad = 8;
     if (target && target.isConnected) {
@@ -122,15 +154,28 @@
       card.style.cssText = phone() ? 'bottom:10px;left:10px;right:10px' : 'top:50%;left:50%;transform:translate(-50%,-50%)';
     }
   }
-  function show(i) {
-    var s = steps[i];
-    cur = i; ss.set('pasau-demo-tour', String(i));
-    count.textContent = (i + 1) + '/' + steps.length;
-    fill.style.width = ((i + 1) / steps.length * 100) + '%';
+  function setState() { ss.set('pasau-demo-tour', list + ':' + cur); }
+  // A "try it" step leaves the page usable: the tour sits inside whatever pop-up is open, without blocking it
+  function openTour(interactive) {
+    if (dlg.open) dlg.close();
+    dlg.classList.toggle('pd-try', interactive);
+    var host = interactive ? [].slice.call(document.querySelectorAll('dialog[open]:not(.pd-tour)')).pop() || document.body : document.body;
+    if (dlg.parentNode !== host) host.appendChild(dlg);
+    dlg.inert = false; // the full-screen chats pop-up makes everything else inert, the tour included
+    if (interactive) dlg.show(); else dlg.showModal();
+  }
+  function show(k, i) {
+    list = k; cur = i; setState();
+    var s = step(), n = LISTS[k].length;
+    trying = null; card.classList.remove('pd-win');
+    count.textContent = (i + 1) + '/' + n;
+    fill.style.width = ((i + 1) / n * 100) + '%';
     title.textContent = s.title; body.textContent = s.body;
     back.hidden = i === 0;
-    next.textContent = i === steps.length - 1 ? 'Start exploring' : 'Next';
-    skip.hidden = i === steps.length - 1;
+    next.textContent = s.nextText || (s.try ? 'Skip this' : 'Next');
+    next.classList.toggle('pd-ghost', !!s.try);
+    skip.textContent = s.skipText || 'Skip tour';
+    skip.hidden = !!s.end && !s.skipText;
     chip.hidden = true;
     return Promise.resolve(s.prep && s.prep()).then(function () { return s.target ? waitFor(s.target) : null; }).then(function (t) {
       target = t;
@@ -140,27 +185,42 @@
       }
       return wait(t ? 350 : 0);
     }).then(function () {
-      dlg.inert = false; // the full-screen chats pop-up makes everything else inert, the tour included
-      if (!dlg.open) dlg.showModal();
+      var tryIt = s.try && target && !s.try.done();
+      openTour(!!tryIt);
+      if (s.try && !tryIt) finishTry(s);
+      else if (tryIt) trying = s;
       card.classList.remove('pd-pop'); void card.offsetWidth; card.classList.add('pd-pop');
       place(); place();
-      next.focus();
+      if (!tryIt) next.focus();
     });
   }
-  function close() { if (cur >= 0) ss.set('pasau-demo-last', String(cur)); if (dlg.open) dlg.close(); target = null; ss.set('pasau-demo-tour', ''); chip.hidden = false; }
+  function finishTry(s) {
+    trying = null;
+    title.textContent = s.try.title; body.textContent = s.try.body;
+    next.textContent = 'Next'; next.classList.remove('pd-ghost');
+    card.classList.remove('pd-pop'); void card.offsetWidth; card.classList.add('pd-pop', 'pd-win');
+    // back to a normal step: point at the result, page blocked again so Next is the obvious move
+    target = s.try.after ? find(s.try.after) : target;
+    openTour(false); place();
+    next.focus();
+  }
+  setInterval(function () { if (trying && trying.try.done()) finishTry(trying); }, 300);
+
+  function close() { if (cur >= 0) ss.set('pasau-demo-last', list + ':' + cur); if (dlg.open) dlg.close(); target = null; trying = null; ss.set('pasau-demo-tour', ''); chip.hidden = false; }
   function same(url) { var u = new URL(url, location.href); return u.pathname === location.pathname && u.search === location.search && u.hash === location.hash; }
   var leaving = false;  // a second tap during the page change must not skip a step
-  function go(i) {
+  function go(k, i) {
     if (leaving) return;
-    if (i >= steps.length) { close(); return; }
-    var s = steps[i], prev = steps[cur] || {};
-    ss.set('pasau-demo-tour', String(i));
-    var inPlace = cur >= 0 && s.as === Demo.persona() && same(s.url) && !s.prep && !prev.prep && !document.querySelector('dialog[open]:not(.pd-tour)');
-    if (inPlace) { show(i); return; }
+    var s = S[LISTS[k][i]];
+    if (!s) { close(); return; }
+    var prev = step(), goingBack = k === list && i < cur;
+    var inPlace = cur >= 0 && s.as === Demo.persona() && same(s.url) && !s.prep && !s.try && !prev.prep && !prev.try && !document.querySelector('dialog[open]:not(.pd-tour)');
+    if (inPlace) { show(k, i); return; }
+    list = k; cur = i; setState();
     Demo.setPersona(s.as);
     var u = new URL(s.url, location.href);
     leaving = true;
-    leave(i < cur ? 'back' : 'fwd', function () {
+    leave(goingBack ? 'back' : 'fwd', function () {
       if (u.pathname === location.pathname && u.search === location.search) { history.replaceState(null, '', u.href); location.reload(); }
       else location.href = u.href;
     });
@@ -177,13 +237,23 @@
     wipe.addEventListener('animationend', go2);
     setTimeout(go2, 450);
   }
-  next.onclick = function () { if (cur === steps.length - 1) { close(); return; } go(cur + 1); };
-  back.onclick = function () { go(cur - 1); };
+  next.onclick = function () {
+    var s = step();
+    if (s.end) { if (list === 'h') go('x', 0); else close(); return; }
+    go(list, cur + 1);
+  };
+  back.onclick = function () { go(list, cur - 1); };
   skip.onclick = close;
   dlg.addEventListener('cancel', function (e) { e.preventDefault(); close(); });
   chipMain.onclick = function () { menu.hidden = !menu.hidden; chipMain.setAttribute('aria-expanded', String(!menu.hidden)); };
-  mResume.onclick = function () { menu.hidden = true; var i = +(ss.get('pasau-demo-last') || 0); go(Math.min(i, steps.length - 1)); };
-  mRestart.onclick = function () { menu.hidden = true; cur = -1; go(0); };
+  document.addEventListener('click', function (e) { if (!menu.hidden && !chip.contains(e.target)) { menu.hidden = true; chipMain.setAttribute('aria-expanded', 'false'); } });
+  function parse(v) { var m = /^([hx]):(\d+)$/.exec(v || ''); return m ? [m[1], +m[2]] : null; }
+  mResume.onclick = function () { menu.hidden = true; var p = parse(ss.get('pasau-demo-last')) || ['h', 0]; go(p[0], Math.min(p[1], LISTS[p[0]].length - 1)); };
+  mRestart.onclick = function () {
+    menu.hidden = true;
+    ['pasau-demo-db', 'pasau-demo-img', 'pasau-demo-2fa'].forEach(function (k) { try { sessionStorage.removeItem(k); } catch (e) {} });  // fresh sample data
+    cur = -1; go('h', 0);
+  };
   mExit.onclick = function () {
     ['pasau-demo', 'pasau-demo-db', 'pasau-demo-img', 'pasau-demo-as', 'pasau-demo-tour', 'pasau-demo-last', 'pasau-demo-2fa'].forEach(function (k) { try { sessionStorage.removeItem(k); } catch (e) {} });
     try { localStorage.removeItem('sb-' + new URL(window.UC_CONFIG.url).hostname.split('.')[0] + '-auth-token'); } catch (e) {}
@@ -196,14 +266,12 @@
   function boot() {
     document.body.append(chip, dlg);
     var t = ss.get('pasau-demo-tour');
-    if (t === '' || t == null) return;
-    var i = +t; ss.set('pasau-demo-last', String(i));
-    // let the page draw itself (and its page-in animation) first
+    var p = parse(t) || (/^\d+$/.test(t || '') ? ['h', 0] : null);
+    if (!p) return;
+    ss.set('pasau-demo-last', p[0] + ':' + p[1]);
     // let the page draw itself and its page-in sweep finish first, but don't wait forever on slow photos or fonts
     var loaded = document.readyState === 'complete' ? Promise.resolve() : Promise.race([new Promise(function (r) { addEventListener('load', r, { once: true }); }), wait(2500)]);
-    loaded.then(function () { return wait(700); }).then(function () { show(i); });
+    loaded.then(function () { return wait(700); }).then(function () { show(p[0], Math.min(p[1], LISTS[p[0]].length - 1)); });
   }
-  var save = function () { if (cur >= 0) ss.set('pasau-demo-last', String(cur)); };
-  addEventListener('pagehide', save);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

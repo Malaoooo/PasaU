@@ -18,7 +18,7 @@
     sessionStorage.setItem('pasau-demo', '1');
     var explore = /[?&]explore\b/.test(location.search);
     sessionStorage.setItem('pasau-demo-as', explore ? 'student' : 'visitor');
-    sessionStorage.setItem('pasau-demo-tour', explore ? '' : '0');
+    sessionStorage.setItem('pasau-demo-tour', explore ? '' : 'h:0');
     location.replace('index.html');
   } catch (e) {}
 </script>

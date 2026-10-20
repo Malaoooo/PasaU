@@ -24,17 +24,28 @@
 .pd-btn:focus-visible, .pd-skip:focus-visible, .pd-chip button:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .pd-card.pd-pop { animation: none; } }
 
-.pd-chip { position: fixed; left: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); z-index: 2147483000; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-family: var(--body, system-ui, sans-serif); }
+.pd-chip { position: fixed; left: 0; top: 58%; z-index: 2147483000; font-family: var(--body, system-ui, sans-serif); }
 .pd-chip[hidden] { display: none; }
-.pd-chip-btn { height: 44px; padding: 0 18px 0 14px; border-radius: 999px; border: 0; background: var(--brand-gold, #F2A900); color: #0D110D; font: 800 14px/1 var(--body, system-ui); box-shadow: 0 10px 28px -8px rgba(0,0,0,.45); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-.pd-chip-btn::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #1F5A36; }
-.pd-menu { width: 248px; background: var(--card, #fff); color: var(--ink, #0F1F17); border: 1px solid var(--line, rgba(15,31,23,.12)); border-radius: 18px; padding: 8px; box-shadow: 0 24px 60px -20px rgba(0,0,0,.5); }
+/* a tab on the left edge, out of the way of chat boxes and buttons */
+.pd-chip-btn { display: block; writing-mode: vertical-rl; transform: rotate(180deg); padding: 14px 8px; border: 0; border-radius: 0 0 0 0; border-top-left-radius: 12px; border-bottom-left-radius: 12px; background: var(--brand-gold, #F2A900); color: #0D110D; font: 800 13px/1 var(--body, system-ui); letter-spacing: .04em; box-shadow: -6px 0 20px -6px rgba(0,0,0,.45); cursor: pointer; }
+.pd-menu { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); width: 252px; max-height: min(70vh, 560px); overflow: auto; background: var(--card, #fff); color: var(--ink, #0F1F17); border: 1px solid var(--line, rgba(15,31,23,.12)); border-radius: 18px; padding: 8px; box-shadow: 0 24px 60px -20px rgba(0,0,0,.5); }
 .pd-menu[hidden] { display: none; }
-.pd-menu button { display: block; width: 100%; min-height: 44px; text-align: left; padding: 0 12px; border: 0; border-radius: 12px; background: none; color: inherit; font: 600 15px/1 var(--body, system-ui); cursor: pointer; }
+.pd-menu button { display: block; width: 100%; min-height: 40px; text-align: left; padding: 0 12px; border: 0; border-radius: 12px; background: none; color: inherit; font: 600 14px/1.2 var(--body, system-ui); cursor: pointer; }
 .pd-menu button:hover { background: var(--card-2, #EDF2ED); }
-.pd-menu-note { margin: 4px 12px 6px; font-size: 13px; line-height: 1.4; color: var(--muted, #4C5D52); }
+.pd-menu .pd-strong { background: var(--brand-green, #1F5A36); color: #fff; font-weight: 800; }
+.pd-menu .pd-strong:hover { background: var(--brand-green, #1F5A36); filter: brightness(1.1); }
+.pd-jumps { margin: 6px 0; padding: 4px 0; border-top: 1px solid var(--line, rgba(15,31,23,.12)); border-bottom: 1px solid var(--line, rgba(15,31,23,.12)); }
+.pd-jumps button { min-height: 36px; font-weight: 500; }
+.pd-menu-head { margin: 8px 12px 4px; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted, #4C5D52); }
+.pd-menu-note { margin: 4px 12px 8px; font-size: 13px; line-height: 1.4; color: var(--muted, #4C5D52); }
+/* "try it" steps: the page stays tappable around the card */
+.pd-tour.pd-try, .pd-tour.pd-try .pd-hole { pointer-events: none; }
+.pd-tour.pd-try { z-index: 2147483001; }
+.pd-tour.pd-try .pd-card { pointer-events: auto; }
+.pd-tour.pd-try .pd-hole { box-shadow: 0 0 0 3px var(--brand-gold, #F2A900), 0 0 0 200vmax rgba(6, 18, 11, .35); animation: pd-pulse-try 1.2s ease-in-out infinite; }
+@keyframes pd-pulse-try { 50% { box-shadow: 0 0 0 9px rgba(242, 169, 0, .6), 0 0 0 200vmax rgba(6, 18, 11, .35); } }
+.pd-card.pd-win .pd-title::before { content: "✓ "; color: var(--brand-gold, #F2A900); }
 @media (prefers-reduced-motion: reduce) { .pd-hole { transition: none; animation: none; } }
 /* keep the Demo button off the chat box and out of the full-screen chats pop-up */
 body.dock-open .pd-chip { display: none; }
-body:has(.composer) .pd-chip { bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); }
 .pd-tour .pg-wipe { z-index: 3; }
