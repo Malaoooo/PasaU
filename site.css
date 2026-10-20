@@ -123,6 +123,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .logo .lock.say small { font: 600 12px/1 "Poppins", var(--body); color: var(--ink); opacity: .8; white-space: nowrap; }
 .logo .lock.say small b { font-weight: 700; color: var(--brand-gold); }
 @media (max-width: 480px) { .nav .logo { gap: 7px; } .nav .logo .lock.say .wm { font-size: 20px; } .logo .lock.say small { font-size: 9.5px; letter-spacing: -.01em; } }
+/* Phones: the tagline goes on two lines so the header (and the page) fits the screen */
+.logo .tag-br { display: none; }
+@media (max-width: 400px) { .nav .logo { min-width: 0; } .logo .tag-br { display: inline; } .logo .lock.say small { font-size: 11px; line-height: 1.15; } }
 /* light surfaces get a green focus ring; gold stays on the green page */
 :is(dialog, .sheet, .login, .card, .dock-panel, .um-form) { --focus: var(--focus-card); }
 @media (prefers-color-scheme: dark) {

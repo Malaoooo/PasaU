@@ -101,7 +101,7 @@
 <div class="page">
 
   <header class="nav">
-    <a class="logo" href="#top" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="lock say" aria-hidden="true"><span class="wm">Pasa<b>U</b></span><small>Kailangan mo? I'll Pasa<b>U</b>! ♻️</small></span></a>
+    <a class="logo" href="#top" aria-label="PasaU home"><span class="mk" aria-hidden="true"></span><span class="lock say" aria-hidden="true"><span class="wm">Pasa<b>U</b></span><small>Kailangan mo?<br class="tag-br"> I'll Pasa<b>U</b>! ♻️</small></span></a>
     <nav class="nav-links" aria-label="Main">
       <a href="#shop">Shop</a>
       <a class="nav-um" href="unimatch.html"><svg class="um-mark" aria-hidden="true" focusable="false"><use href="#ic-um"/></svg>PasaMatch</a>
@@ -925,19 +925,22 @@
     row.replaceChildren.apply(row, acts);
     empty.replaceChildren(el('p', '', title), el('p', 'sub', sub), row);
   }
+  // Returns the cards in sorted order; groupByCampus keeps this order
   function sortCards() {
     var key = UC.sortKey || 'new';
     function price(c) { return c.dataset.price === '' || c.dataset.price == null ? Infinity : +c.dataset.price; }
-    cards.slice().sort(function (a, b) {
+    var sorted = cards.slice().sort(function (a, b) {
       if (key === 'price-asc') return price(a) - price(b);
       if (key === 'price-desc') return (price(b) === Infinity ? -1 : price(b)) - (price(a) === Infinity ? -1 : price(a));
       return (+b.dataset.created || 0) - (+a.dataset.created || 0);
-    }).forEach(function (c) { grid.appendChild(c); });
+    });
+    sorted.forEach(function (c) { grid.appendChild(c); });
+    return sorted;
   }
   function applyFilter() {
     var n = 0, shown = [];
-    if (cards.length && cards[0].dataset.id) sortCards();
-    cards.forEach(function (card) { var show = matches(card); card.hidden = !show; if (show) { n++; shown.push(card); } });
+    var list = cards.length && cards[0].dataset.id ? sortCards() : cards;
+    list.forEach(function (card) { var show = matches(card); card.hidden = !show; if (show) { n++; shown.push(card); } });
     groupByCampus(shown);
     renderEmpty(n);
     renderActive();

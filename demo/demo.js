@@ -108,8 +108,23 @@
   function rpc(name, args) {
     args = args || {};
     var l = args.p_listing && listing(args.p_listing);
-    if (name === 'claim_listing' && l) { l.status = 'reserved'; l.reserved_by = ME; persist(); return { state: 'reserved', position: 0 }; }
-    if (name === 'release_reservation' && l) { l.status = 'active'; l.reserved_by = null; persist(); }
+    // Reserving opens a deal like the real server does, so the "where this deal is" bar moves
+    if (name === 'claim_listing' && l) {
+      l.status = 'reserved'; l.reserved_by = ME;
+      tables.transactions.push({ id: nextId(tables.transactions), listing_id: l.id, buyer_id: ME, seller_id: l.seller_id, kind: l.kind, price_php: l.kind === 'sell' ? l.price_php : null,
+        status: 'reserved', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), listing: { id: l.id, title: l.title, listing_photos: l.listing_photos } });
+      persist(); return { state: 'reserved', position: 0 };
+    }
+    if (name === 'release_reservation' && l) {
+      l.status = 'active'; l.reserved_by = null;
+      tables.transactions.forEach(function (t) { if (t.listing_id === l.id && (t.status === 'reserved' || t.status === 'meetup')) t.status = 'cancelled'; });
+      persist();
+    }
+    if (name === 'propose_meetup' && l) {
+      var buyer = l.reserved_by || ME;
+      tables.meetups.push({ id: nextId(tables.meetups), listing_id: l.id, buyer_id: buyer, seller_id: l.seller_id, spot: args.p_spot, meet_at: args.p_at, proposed_by: ME, status: 'proposed', created_at: new Date().toISOString() });
+      persist();
+    }
     if (name === 'set_listing_status' && l && args.p_status) { l.status = args.p_status; persist(); }
     if (name === 'is_admin') return page === 'admin.html';
     if (name === 'queue_count' && args.p_listing) return tables.queue_entries.filter(function (q) { return q.listing_id === +args.p_listing; }).length;

@@ -115,7 +115,7 @@
   }
 
   // ---------- Conversation list ----------
-  var SELECT = 'id, listing_id, buyer_id, seller_id, created_at, listings(id, title, kind, status, reserved_by, school, price_php)';
+  var SELECT = 'id, listing_id, buyer_id, seller_id, created_at, listings(id, title, kind, status, reserved_by, school, price_php, pickup_spot)';
   function loadConvos() {
     return db.from('conversations').select(SELECT).order('created_at', { ascending: false }).then(function (r) {
       if (r.error) throw r.error;
@@ -183,8 +183,10 @@
   var MEET = 'id, listing_id, buyer_id, seller_id, spot, meet_at, proposed_by, status, created_at';
   var LISTING = 'id, title, kind, status, reserved_by, school, price_php';
   function spotsFor(c) {
-    if (window.UC_SPOTS_FOR) return window.UC_SPOTS_FOR((c.listings || {}).school);
-    return window.UC_DEFAULT_SPOTS || ['Library lobby', 'Guard house', 'Gym lobby', 'Student center', 'Canteen'];
+    var l = c.listings || {};
+    var list = (window.UC_SPOTS_FOR ? window.UC_SPOTS_FOR(l.school) : window.UC_DEFAULT_SPOTS || ['Library lobby', 'Guard house', 'Gym lobby', 'Student center', 'Canteen']).slice();
+    if (l.pickup_spot && list.indexOf(l.pickup_spot) === -1) list.push(l.pickup_spot);
+    return list;
   }
   function meetTime(t) {
     var d = new Date(t), now = new Date();
@@ -272,6 +274,7 @@
   function localStamp(d) { return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16); }
   function suggestForm(c) {
     var spot = h('select', { id: 'dock-spot' }, spotsFor(c).map(function (s) { return h('option', { value: s, text: s }); }));
+    if ((c.listings || {}).pickup_spot) spot.value = c.listings.pickup_spot;
     var noon = new Date(); noon.setDate(noon.getDate() + 1); noon.setHours(12, 0, 0, 0);  // tomorrow at noon, the usual between-class slot
     var at = h('input', { id: 'dock-at', type: 'datetime-local', min: localStamp(new Date()), max: localStamp(new Date(Date.now() + 365 * 864e5)), value: localStamp(noon) });
     var send = act('Send suggestion', 'primary', function (b) {
