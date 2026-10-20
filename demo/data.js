@@ -110,7 +110,7 @@
     ],
     conversation_reads: [],
     verification_requests: [{ id: 1, user_id: ME, status: 'approved', created_at: ago(24 * 50) }, { id: 2, user_id: PAOLO, status: 'pending', school_email: 'paolo.cruz@ubaguio.edu', note: 'Freshman, ID attached at the office', created_at: ago(9) }],
-    wanted_pings: [{ wanted_id: 902, user_id: ME, reason: 'You listed a calculator before', created_at: ago(11), wanted_posts: wanted_posts[1] }],
+    wanted_pings: [{ wanted_id: 902, user_id: ME, reason: 'listed', created_at: ago(11), wanted_posts: wanted_posts[1] }, { wanted_id: 901, user_id: BEA, reason: 'course', created_at: ago(6) }, { wanted_id: 901, user_id: KRIS, reason: 'owned', created_at: ago(6) }],
     wanted_replies: [{ wanted_id: 901, listing_id: ANAT.id, created_at: ago(5), listings: ANAT }],
     waitlist: [],
     guardian_alerts: [
