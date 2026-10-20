@@ -95,6 +95,13 @@
     }
     persist();
     if (method === 'POST' && table === 'messages') out.forEach(function (m) { if (m.sender_id === ME && persona === 'student') replyLater(m); });
+    // A new Looking For post: the real server pings likely students; do the same with sample people
+    if (method === 'POST' && table === 'wanted_posts') out.forEach(function (w) {
+      [['33333333-3333-4333-8333-333333333333', 'course'], ['55555555-5555-4555-8555-555555555555', 'owned']].forEach(function (x) {
+        tables.wanted_pings.push({ wanted_id: w.id, user_id: x[0], reason: x[1], created_at: w.created_at });
+      });
+      persist();
+    });
     return out;
   }
   function listing(id) { return tables.listings.filter(function (l) { return l.id === +id; })[0]; }

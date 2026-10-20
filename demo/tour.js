@@ -55,12 +55,24 @@
       try: { done: function () { return replied; }, after: ['.inbox-thread', '.composer'], title: 'It arrived live', body: 'Bea answered right away, with a notification. Real chats on PasaU work the same way.' },
       title: 'Try it: send a message',
       body: 'Tap the send button and watch the seller reply.' },
-    pasamatch: { as: 'student', url: 'unimatch.html?post=901', target: ['#um-results'], prep: function () { return waitFor('#um-results').then(function (el) { if (el) el.scrollIntoView({ block: 'start' }); return wait(500); }); }, title: 'PasaMatch',
-      body: 'Post what you need. PasaMatch finds listings and pings students who might have it.' },
+    pasamatch: { as: 'student', url: 'unimatch.html', target: ['.um-hero', 'main'], title: 'PasaMatch: ask for what you need',
+      body: 'Can’t find it in the shop? Post what you need once. PasaMatch checks every listing and asks the students most likely to have one.' },
+    pmtry: { as: 'student', url: 'unimatch.html', target: ['#um-post', '#um-form'],
+      prep: function () { return waitFor('#um-form').then(function (f) { var n = document.getElementById('um-need'); if (n && !n.value) { n.value = 'Nursing board exam reviewer'; n.dispatchEvent(new Event('input', { bubbles: true })); } var m = document.getElementById('um-max'); if (m && !m.value) m.value = '500'; if (f) f.scrollIntoView({ block: 'center' }); return wait(400); }); },
+      try: { done: function () { var r = document.getElementById('um-results'); return r && !r.hidden && /Students PasaMatch asked/.test(r.textContent) && !/Loading/.test(r.textContent); },
+        after: ['#um-results'], title: 'Matched in seconds', body: 'It found listings that fit right now, and quietly asked a Nursing upperclassman and a student who bought one before. Andrea gets a notification when they answer.' },
+      title: 'Try it: tap Find a match',
+      body: 'We filled in a request for a Nursing reviewer. Tap the button to post it.' },
+    pmasked: { as: 'student', url: 'unimatch.html', target: ['#um-asked', '#um-board'], prep: function () { return waitFor('#um-asked:not([hidden])').then(function (el) { if (el) el.scrollIntoView({ block: 'center' }); return wait(500); }); }, title: 'It works both ways',
+      body: 'When someone needs what you have, PasaMatch asks you. One tap on “I have this” sends them your listing, so old books find the next batch.' },
     vouches: { as: 'student', url: 'profile.html#vouches', target: ['.p-panel:not([hidden])', '#panel-vouches', 'main'], title: 'Vouches build trust',
       body: 'After a deal, students vouch for each other, so good traders stand out.' },
-    parent: { as: 'parent', url: 'family.html', target: ['.p-panel', 'main'], title: 'Parents can follow along',
-      body: 'Now you’re Maria, Andrea’s mother. Parents see upcoming meetups and deals, never chats, and can report a concern.' },
+    parent: { as: 'parent', url: 'family.html', target: [function () { var l = document.querySelector('.f-student'); return l && l.closest('.p-panel'); }, '.p-panel', 'main'], title: 'Parents can follow along',
+      body: 'Now you’re Maria, Andrea’s mother. Maria sees Andrea’s meetups: where, when, what and with whom, plus whether that student is verified.' },
+    palerts: { as: 'parent', url: 'family.html', target: ['.f-alerts', 'main'], prep: function () { return waitFor('.f-alerts').then(function (el) { if (el) el.scrollIntoView({ block: 'center' }); return wait(400); }); }, title: 'Alerts and check-ins',
+      body: 'Maria is told when a meetup is set. If it isn’t marked done 30 minutes after it starts, she gets a check-in so she can make sure Andrea is okay.' },
+    pconcern: { as: 'parent', url: 'family.html', target: ['.f-concern', 'main'], prep: function () { return waitFor('.f-concern button').then(function (b) { if (b) { b.click(); b.scrollIntoView({ block: 'center' }); } return wait(400); }); }, title: 'Help, not control',
+      body: 'Parents can report a concern straight to the PasaU team. They never see chats and can’t buy, sell or message anyone, and the student can unlink them.' },
     endH: { as: 'student', url: 'index.html', end: true, title: 'That’s the highlights',
       body: 'Explore freely as Andrea, or see the rest of PasaU’s features.', nextText: 'See all features', skipText: 'Explore' },
 
@@ -82,16 +94,16 @@
       body: 'Buyers and sellers chat from a pop-up that follows them around the site.' },
     twostep: { as: 'student', url: 'profile.html#settings', target: [twoStep, '.p-panel:not([hidden])', 'main'], title: 'Two-step login',
       body: 'Students can add an authenticator app, and choose what others see and which alerts they get.' },
-    family: { as: 'student', url: 'profile.html#family', target: ['.p-panel:not([hidden])', 'main'], title: 'Inviting a parent',
-      body: 'A student invites a parent or guardian with a link, and chooses what they share.' },
+    family: { as: 'student', url: 'profile.html#family', target: ['.p-panel:not([hidden])', 'main'], title: 'Invite a parent',
+      body: 'Families worry about meeting strangers. Andrea can invite her mom or a guardian with a link, and she chooses what they see.' },
     admin: { as: 'student', url: 'admin.html', target: ['.stats', '.a-stats', 'main'], title: 'Moderation',
       body: 'The PasaU team handles reports, verifies students and removes bad listings.' },
     endF: { as: 'student', url: 'index.html', end: true, title: 'That’s everything',
       body: 'Explore freely as Andrea. Tap the Demo tab on the left to jump to any feature or leave.', nextText: 'Start exploring' }
   };
   var LISTS = {
-    h: ['welcome', 'signup', 'shop', 'reserve', 'meetup', 'chat', 'pasamatch', 'vouches', 'parent', 'endH'],
-    x: ['campus', 'free', 'seller', 'swap', 'selling', 'sell', 'notes', 'dock', 'twostep', 'family', 'admin', 'endF']
+    h: ['welcome', 'signup', 'shop', 'reserve', 'meetup', 'chat', 'pasamatch', 'pmtry', 'pmasked', 'vouches', 'family', 'parent', 'palerts', 'pconcern', 'endH'],
+    x: ['campus', 'free', 'seller', 'swap', 'selling', 'sell', 'notes', 'dock', 'twostep', 'admin', 'endF']
   };
   // ---------- UI ----------
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
