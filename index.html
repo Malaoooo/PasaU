@@ -834,6 +834,18 @@
 
   // ---------- Catalog: categories, search, filters, saved ----------
   var CAT_LABEL = { books: 'Books', uniforms: 'Uniforms', supplies: 'School supplies', lab_art: 'Lab & art', electronics: 'Electronics', dorm: 'Dorm & living', others: 'Others', saved: 'Saved' };
+  // What the listing's size field means for each category. Calculators and gadgets get a model instead of a size;
+  // on a listing it reads "Details", since older listings put notes like "Good condition" there
+  var SIZE_FIELD = {
+    uniforms: { label: 'Size', hint: 'e.g. M, or 32 waist', fact: 'Size' },
+    lab_art: { label: 'Size', hint: 'e.g. S for a lab gown (optional)', fact: 'Size' },
+    dorm: { label: 'Size', hint: 'e.g. single bed (optional)', fact: 'Size' },
+    others: { label: 'Size', hint: 'Only if it has one', fact: 'Size' },
+    books: { label: 'Edition', hint: 'e.g. 11th edition', fact: 'Edition' },
+    supplies: { label: 'Brand / model', hint: 'e.g. Casio fx-991ES Plus (optional)', fact: 'Details' },
+    electronics: { label: 'Brand / model', hint: 'e.g. Casio fx-991ES Plus (optional)', fact: 'Details' }
+  };
+  window.UC_SIZE_FIELD = function (category) { return SIZE_FIELD[category] || null; };
   var chips = document.querySelectorAll('.chips button');
   var chipSaved = document.getElementById('chip-saved');
   var grid = document.getElementById('grid');
