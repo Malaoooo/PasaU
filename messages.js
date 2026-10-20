@@ -4,6 +4,7 @@
   var inbox = document.getElementById('inbox'), listEl = document.getElementById('convo-list'), pane = document.getElementById('thread');
   var SPOTS = window.UC_DEFAULT_SPOTS || ['Library lobby', 'Guard house', 'Gym lobby', 'Student center', 'Canteen'];
   var QUICK = ['Is this still available?', 'Can we meet tomorrow?', 'I’ll take it', 'Thanks!'];
+  var QUICK_SELLER = ['Yes, it’s still available', 'Can we meet tomorrow?', 'Sorry, it’s already reserved', 'Thanks!'];
   var MAX_PHOTO = 5 * 1024 * 1024;
   var me = null, convos = [], current = null, seen = {}, meetupSlots = {};
 
@@ -63,7 +64,7 @@
 
   // ---------- conversation list ----------
   var SELECT = 'id, listing_id, buyer_id, seller_id, created_at,' +
-    ' listings(id, title, kind, price_php, status, reserved_by, seller_id, school, listing_photos(path, position))';
+    ' listings(id, title, kind, price_php, status, reserved_by, seller_id, school, pickup_spot, listing_photos(path, position))';
   function loadConvos() {
     return db.from('conversations').select(SELECT).order('created_at', { ascending: false }).then(function (r) {
       if (r.error) { listEl.replaceChildren(h('li', { class: 'muted', text: errText(r.error) })); return; }
@@ -149,7 +150,7 @@
         meetBox
       ]) : h('p', { class: 'meet-hint muted', text: l.status === 'sold' ? 'This item has been handed over.' : 'Once the item is reserved for this buyer, you can suggest a meetup time here.' }),
       thread,
-      h('div', { class: 'quick', role: 'group', 'aria-label': 'Quick replies' }, QUICK.map(function (q) {
+      h('div', { class: 'quick', role: 'group', 'aria-label': 'Quick replies' }, (c.seller_id === me.id ? QUICK_SELLER : QUICK).map(function (q) {
         return h('button', { type: 'button', text: q, onclick: function () { send({ body: q }); } });
       })),
       h('form', { class: 'composer', onsubmit: function (e) {
@@ -168,8 +169,10 @@
     );
 
     if (canMeet) {
-      var campusSpots = window.UC_SPOTS_FOR ? window.UC_SPOTS_FOR(l.school) : SPOTS;  // the listing's campus spots (universities.js)
+      var campusSpots = (window.UC_SPOTS_FOR ? window.UC_SPOTS_FOR(l.school) : SPOTS).slice();  // the listing's campus spots (universities.js)
+      if (l.pickup_spot && campusSpots.indexOf(l.pickup_spot) === -1) campusSpots.push(l.pickup_spot);
       var spot = h('select', { id: 'm-spot', 'aria-label': 'Pickup spot' }, campusSpots.map(function (s) { return h('option', { value: s, text: s }); }));
+      if (l.pickup_spot) spot.value = l.pickup_spot;
       function stamp(days) { var d = new Date(Date.now() + days * 864e5); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16); }
       var at = h('input', { id: 'm-at', type: 'datetime-local', 'aria-label': 'Date and time', min: stamp(0), max: stamp(365) });
       meetBox.append(spot, at, h('button', { class: 'pill small', type: 'button', text: 'Send suggestion', onclick: function () {
