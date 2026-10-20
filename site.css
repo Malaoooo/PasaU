@@ -117,6 +117,12 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .logo .wm b { font-weight: inherit; color: var(--brand-gold); }
 .logo .lock { display: grid; gap: 5px; }
 .logo .lock small { font: 500 12.5px/1 "Poppins", var(--body); letter-spacing: .01em; color: var(--on-bg-muted); }
+/* header lockup: PasaU with the "Kailangan mo? I'll PasaU! ♻️" tagline under it */
+.logo .lock.say { gap: 4px; }
+.logo .lock.say .wm { font-size: 25px; }
+.logo .lock.say small { font: 600 12px/1 "Poppins", var(--body); color: var(--ink); opacity: .8; white-space: nowrap; }
+.logo .lock.say small b { font-weight: 700; color: var(--brand-gold); }
+@media (max-width: 480px) { .nav .logo { gap: 7px; } .nav .logo .lock.say .wm { font-size: 20px; } .logo .lock.say small { font-size: 9.5px; letter-spacing: -.01em; } }
 /* light surfaces get a green focus ring; gold stays on the green page */
 :is(dialog, .sheet, .login, .card, .dock-panel, .um-form) { --focus: var(--focus-card); }
 @media (prefers-color-scheme: dark) {
