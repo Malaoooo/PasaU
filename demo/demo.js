@@ -156,7 +156,7 @@
       if (/^factors\/[^/]+\/challenge/.test(ep)) return reply({ id: 'c1', type: 'totp', expires_at: nowS() + 300 });
       if (/^factors\/[^/]+\/verify/.test(ep)) { ss.set('pasau-demo-2fa', '1'); return reply(session()); }
       if (/^factors\/[^/]+$/.test(ep) && method === 'DELETE') { try { sessionStorage.removeItem('pasau-demo-2fa'); } catch (e) {} return reply({ id: 'f1' }); }
-      if (ep.indexOf('factors') === 0) return reply({ id: 'f2', type: 'totp', friendly_name: 'PasaU', totp: { qr_code: D.qr, secret: 'JBSWY3DPEHPK3PXP', uri: 'otpauth://totp/PasaU:andrea.santos@slu.edu.ph?secret=JBSWY3DPEHPK3PXP&issuer=PasaU' } });
+      if (ep.indexOf('factors') === 0) return reply({ id: 'f2', type: 'totp', friendly_name: 'PasaU', totp: { qr_code: D.qr, secret: 'JBSWY3DPEHPK3PXP', uri: 'otpauth://totp/PasaU:andrea.santos@students.uc-bcf.edu.ph?secret=JBSWY3DPEHPK3PXP&issuer=PasaU' } });
       return reply({});
     }
     if (p.indexOf('/rest/v1/rpc/') === 0) return reply(rpc(p.slice(13), json()));
