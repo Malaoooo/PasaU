@@ -2,7 +2,7 @@
 
 Pass it on to the next batch. A student-to-student marketplace for eight Baguio schools: sell, swap or give away textbooks, uniforms and school supplies, then meet on campus and confirm the handover with a 6-digit code.
 
-Live: https://unicycle-seven.vercel.app
+Live: https://pasau.vercel.app
 
 ## Stack
 

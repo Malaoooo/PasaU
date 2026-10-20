@@ -63,7 +63,7 @@ Campus-bound, course-aware and handover-verified, unlike a general classifieds s
 
 ## Evidence on Hand
 
-- Live site at unicycle-seven.vercel.app.
+- Live site at pasau.vercel.app (old address unicycle-seven.vercel.app redirects there).
 - Product map with speaker notes: https://claude.ai/artifact/QdgsYgTncjFeHwtNyWi61J
 - No real users, testimonials, transaction numbers or school endorsements yet. The current listings are test data ("test offer", school "Your University"). Never invent traction, user counts, testimonials, prices or school approval.
 - The course lists per school in `universities.js` are unverified starter lists.
