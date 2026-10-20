@@ -936,8 +936,13 @@
         if (params.get('edit') && who && l.seller_id === who.id) { me = who; openSell(l); } else openDetail(l);
       });
     };
-    if (Object.keys(UC.listings).length) go();
-    else document.addEventListener('uc:listings', function once() { document.removeEventListener('uc:listings', once); go(); });
+    var whenListed = function () {
+      if (Object.keys(UC.listings).length) go();
+      else document.addEventListener('uc:listings', function once() { document.removeEventListener('uc:listings', once); go(); });
+    };
+    // A logged-in visitor's detail needs to know who they are, so wait for the account to load first
+    if (who && !me) document.addEventListener('uc:user', function once() { document.removeEventListener('uc:user', once); whenListed(); });
+    else whenListed();
   });
 
   onUser(me);

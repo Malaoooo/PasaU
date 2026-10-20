@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>PasaU demo</title>
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { display: grid; place-items: center; background: #1F5A36; color: #fff; font: 600 18px/1.4 "Outfit", system-ui, sans-serif; text-align: center; padding: 16px; box-sizing: border-box; }
+  a { color: #F2A900; }
+</style>
+<script>
+  // Entry point for the judges' demo. Not linked from anywhere on the site.
+  // Turns on demo mode for this tab (sample data, no real accounts) and starts the guided tour.
+  try {
+    ['pasau-demo-db', 'pasau-demo-img', 'pasau-demo-2fa', 'pasau-demo-last'].forEach(function (k) { sessionStorage.removeItem(k); });
+    sessionStorage.setItem('pasau-demo', '1');
+    var explore = /[?&]explore\b/.test(location.search);
+    sessionStorage.setItem('pasau-demo-as', explore ? 'student' : 'visitor');
+    sessionStorage.setItem('pasau-demo-tour', explore ? '' : '0');
+    location.replace('index.html');
+  } catch (e) {}
+</script>
+</head>
+<body>
+<p>Opening the PasaU demo&hellip;<br><noscript>Please turn on JavaScript to see the demo.</noscript></p>
+</body>
+</html>
