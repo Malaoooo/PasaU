@@ -12,6 +12,6 @@ Copied from each project's official GitHub repo on 2026-10-20. To update one, co
 | playwright-cli | github.com/microsoft/playwright-cli (`skills/playwright-cli`) | b1a5903 |
 
 Notes:
-- ponytail and caveman ship always-on hooks in their plugin versions. Only the skills are copied here, so call them with /ponytail or /caveman.
+- ponytail and caveman are always on through the repo-root CLAUDE.md (their rule text copied from each repo). Their plugin hooks are not copied, so level switches like /ponytail lite last only for the conversation.
 - graphify needs its Python tool (`graphifyy`); the skill installs it with uv on first run.
 - playwright-cli needs `npm install -g @playwright/cli` before use.
