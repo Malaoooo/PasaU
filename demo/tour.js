@@ -36,14 +36,14 @@
 
   var S = {
     welcome: { as: 'visitor', url: 'index.html', title: 'Welcome to PasaU',
-      body: 'Students from eight Baguio schools buy, sell, swap and give away school things. Here are the highlights, with sample data.' },
+      body: 'Students from eight Baguio schools buy, sell, swap and give away school things. This two-minute tour uses sample data.' },
     signup: { as: 'visitor', url: 'index.html?login=1', target: ['#login form', '#login'],
       prep: function () { return click('#login-modes button[data-mode="signup"]').then(function () { var e = document.getElementById('login-email'); if (e) { e.value = 'andrea.santos@students.uc-bcf.edu.ph'; e.dispatchEvent(new Event('input', { bubbles: true })); } var n = document.getElementById('su-name'); if (n) n.value = 'Andrea Santos'; return wait(300); }); },
       title: 'Students only, by school email',
       body: 'Only school emails can sign up, and the school fills itself in. Confirming the email gives a Verified badge.' },
     shop: { as: 'student', url: 'index.html', target: ['#shop .grid', '#shop'], prep: function () { return waitFor('#shop').then(function (el) { if (el) el.scrollIntoView({ block: 'start' }); return wait(600); }); },
       title: 'You’re now Andrea, a UC student',
-      body: 'This is the shop. Filter by category, condition, price, course and year, and see each price next to the price new.' },
+      body: 'She signed up with her school email, so she’s Verified. In the shop, every price sits next to the price new.' },
     reserve: { as: 'student', url: 'index.html?open=' + L.ANAT, target: [function () { return inSheet(/^Reserve$/); }, 'dialog[open] .box'],
       try: { done: function () { return sheetSays(/Reserved for you/) || !inSheet(/^Reserve$/); }, after: ['dialog[open] .steps-bar', 'dialog[open] .box'], title: 'Reserved!', body: 'It’s held for you. If you back out, it goes to the next person in line automatically.' },
       title: 'Try it: tap Reserve',
@@ -60,19 +60,13 @@
     pmtry: { as: 'student', url: 'unimatch.html', target: ['#um-post', '#um-form'],
       prep: function () { return waitFor('#um-form').then(function (f) { var n = document.getElementById('um-need'); if (n && !n.value) { n.value = 'Nursing board exam reviewer'; n.dispatchEvent(new Event('input', { bubbles: true })); } var m = document.getElementById('um-max'); if (m && !m.value) m.value = '500'; if (f) f.scrollIntoView({ block: 'center' }); return wait(400); }); },
       try: { done: function () { var r = document.getElementById('um-results'); return r && !r.hidden && /Students PasaMatch asked/.test(r.textContent) && !/Loading/.test(r.textContent); },
-        after: ['#um-results'], title: 'Matched in seconds', body: 'It found listings that fit right now, and quietly asked a Nursing upperclassman and a student who bought one before. Andrea gets a notification when they answer.' },
-      title: 'Try it: tap Find a match',
-      body: 'We filled in a request for a Nursing reviewer. Tap the button to post it.' },
+        after: ['#um-results'], title: 'Matched in seconds', body: 'It found listings that fit now, and asked two students likely to have one. Andrea is notified when they reply.' },
+      title: 'Try it: ask PasaMatch',
+      body: 'Can’t find it in the shop? Ask once. We filled in a Nursing reviewer, so tap Find a match.' },
     pmasked: { as: 'student', url: 'unimatch.html', target: ['#um-asked', '#um-board'], prep: function () { return waitFor('#um-asked:not([hidden])').then(function (el) { if (el) el.scrollIntoView({ block: 'center' }); return wait(500); }); }, title: 'It works both ways',
-      body: 'When someone needs what you have, PasaMatch asks you. One tap on “I have this” sends them your listing, so old books find the next batch.' },
+      body: 'When someone needs what you have, PasaMatch asks you. One tap on “I have this” sends them your listing.' },
     vouches: { as: 'student', url: 'profile.html#vouches', target: ['.p-panel:not([hidden])', '#panel-vouches', 'main'], title: 'Vouches build trust',
       body: 'After a deal, students vouch for each other, so good traders stand out.' },
-    parent: { as: 'parent', url: 'family.html', target: [function () { var l = document.querySelector('.f-student'); return l && l.closest('.p-panel'); }, '.p-panel', 'main'], title: 'Parents can follow along',
-      body: 'Now you’re Maria, Andrea’s mother. Maria sees Andrea’s meetups: where, when, what and with whom, plus whether that student is verified.' },
-    palerts: { as: 'parent', url: 'family.html', target: ['.f-alerts', 'main'], prep: function () { return waitFor('.f-alerts').then(function (el) { if (el) el.scrollIntoView({ block: 'center' }); return wait(400); }); }, title: 'Alerts and check-ins',
-      body: 'Maria is told when a meetup is set. If it isn’t marked done 30 minutes after it starts, she gets a check-in so she can make sure Andrea is okay.' },
-    pconcern: { as: 'parent', url: 'family.html', target: ['.f-concern', 'main'], prep: function () { return waitFor('.f-concern button').then(function (b) { if (b) { b.click(); b.scrollIntoView({ block: 'center' }); } return wait(400); }); }, title: 'Help, not control',
-      body: 'Parents can report a concern straight to the PasaU team. They never see chats and can’t buy, sell or message anyone, and the student can unlink them.' },
     endH: { as: 'student', url: 'index.html', end: true, title: 'That’s the highlights',
       body: 'Explore freely as Andrea, or see the rest of PasaU’s features.', nextText: 'See all features', skipText: 'Explore' },
 
@@ -94,16 +88,14 @@
       body: 'Buyers and sellers chat from a pop-up that follows them around the site.' },
     twostep: { as: 'student', url: 'profile.html#settings', target: [twoStep, '.p-panel:not([hidden])', 'main'], title: 'Two-step login',
       body: 'Students can add an authenticator app, and choose what others see and which alerts they get.' },
-    family: { as: 'student', url: 'profile.html#family', target: ['.p-panel:not([hidden])', 'main'], title: 'Invite a parent',
-      body: 'Families worry about meeting strangers. Andrea can invite her mom or a guardian with a link, and she chooses what they see.' },
     admin: { as: 'student', url: 'admin.html', target: ['.stats', '.a-stats', 'main'], title: 'Moderation',
       body: 'The PasaU team handles reports, verifies students and removes bad listings.' },
     endF: { as: 'student', url: 'index.html', end: true, title: 'That’s everything',
       body: 'Explore freely as Andrea. Tap the Demo tab on the left to jump to any feature or leave.', nextText: 'Start exploring' }
   };
   var LISTS = {
-    h: ['welcome', 'signup', 'shop', 'reserve', 'meetup', 'chat', 'pasamatch', 'pmtry', 'pmasked', 'vouches', 'family', 'parent', 'palerts', 'pconcern', 'endH'],
-    x: ['campus', 'free', 'seller', 'swap', 'selling', 'sell', 'notes', 'dock', 'twostep', 'admin', 'endF']
+    h: ['welcome', 'shop', 'reserve', 'meetup', 'chat', 'pmtry', 'pmasked', 'vouches', 'endH'],
+    x: ['signup', 'campus', 'free', 'seller', 'swap', 'selling', 'sell', 'notes', 'dock', 'pasamatch', 'twostep', 'admin', 'endF']
   };
   // ---------- UI ----------
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -277,6 +269,12 @@
 
   function boot() {
     document.body.append(chip, dlg);
+    // The parent persona is a made-up account: say so on the page itself, not only in the tour box
+    if (Demo.persona() === 'parent') {
+      var main = document.querySelector('main');
+      if (main) main.prepend(Object.assign(document.createElement('div'), { className: 'pd-flag', role: 'note',
+        innerHTML: '<strong>Prototype feature</strong><span>Parent accounts are an early prototype we’re still testing. Maria Santos and everything on this page are sample data.</span>' }));
+    }
     var t = ss.get('pasau-demo-tour');
     var p = parse(t) || (/^\d+$/.test(t || '') ? ['h', 0] : null);
     if (!p) return;
