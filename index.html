@@ -443,6 +443,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script>try{if(sessionStorage.getItem("pasau-demo"))document.write('<link rel="stylesheet" href="demo/tour.css"><script src="demo/data.js"><\/script><script src="demo/demo.js"><\/script><script src="demo/tour.js"><\/script>')}catch(e){}</script>
+<script src="lockdown.js"></script>
 <script src="universities.js"></script>
 <script>
 (function () {
@@ -539,6 +540,7 @@
   loginForm.addEventListener('change', function (e) { if (e.target.getAttribute('aria-invalid')) unmark(e.target); });
   var forgotOnly = loginDlg.querySelectorAll('[data-forgot]');
   function setMode(m) {
+    if (m === 'signup' && window.PASAU_LOCKED) m = 'login';
     mode = m;
     modeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === m ? 'true' : 'false'); });
     signupFields.forEach(function (f) { f.hidden = m !== 'signup'; });
@@ -642,7 +644,7 @@
     db.auth.signInWithOtp({ email: email, options: { shouldCreateUser: false } }).then(function (res) {
       loginSend.disabled = false;
       var err = res.error;
-      if (err && /signups? not allowed|not found|no user/i.test(err.message)) { fieldErr(loginEmail, 'There\u2019s no PasaU account with that email. Choose Back to log in, then Create account.'); return; }
+      if (err && /signups? not allowed|not found|no user/i.test(err.message)) { fieldErr(loginEmail, 'There\u2019s no PasaU account with that email.' + (window.PASAU_LOCKED ? ' New accounts are paused for now.' : ' Choose Back to log in, then Create account.')); return; }
       if (err) { emailErr(err, 'send the code'); return; }
       codeEmail = email; codeSent = true;
       setMode('otp');
@@ -917,9 +919,9 @@
       acts.push(btnEl('pill light', 'Show all listings', function () { setCat('all'); filter(); }));
     } else {
       title = cat === 'all' ? 'No listings yet.' : 'No ' + CAT_LABEL[cat] + ' listings yet.';
-      sub = 'Be the first to list one, or post what you need and we’ll notify you when it shows up.';
-      acts.push(btnEl('pill light', 'List an item', function () { if (UC.openSell) UC.openSell(); }));
-      acts.push(btnEl('pill ghost', 'Ask PasaMatch', function () { location.href = 'unimatch.html' + (qRaw ? '?need=' + encodeURIComponent(qRaw) : ''); }));
+      sub = window.PASAU_LOCKED ? 'New listings are paused now that the pre-pilot test is over.' : 'Be the first to list one, or post what you need and we’ll notify you when it shows up.';
+      if (!window.PASAU_LOCKED) acts.push(btnEl('pill light', 'List an item', function () { if (UC.openSell) UC.openSell(); }));
+      if (!window.PASAU_LOCKED) acts.push(btnEl('pill ghost', 'Ask PasaMatch', function () { location.href = 'unimatch.html' + (qRaw ? '?need=' + encodeURIComponent(qRaw) : ''); }));
     }
     var row = el('div', 'empty-actions');
     row.replaceChildren.apply(row, acts);
@@ -1069,7 +1071,7 @@
       var narrowed = qRaw || cat !== 'all' || extraFilters().length;
       var row = el('div', 'empty-actions');
       row.append(
-        btnEl('pill light', 'List the first item', function () { if (UC.openSell) UC.openSell(); }),
+        window.PASAU_LOCKED ? '' : btnEl('pill light', 'List the first item', function () { if (UC.openSell) UC.openSell(); }),
         btnEl('pill ghost', 'See other campuses', function () { campusHeadOthers.scrollIntoView({ behavior: motionOK() ? 'smooth' : 'auto', block: 'start' }); })
       );
       campusEmpty.replaceChildren(
