@@ -39,6 +39,12 @@
   function guest() {
     setHead('PasaU for parents', 'See when your student has a campus meetup, and get a check-in if it isn’t marked done.');
     var loginNext = 'index.html?login=1&next=' + encodeURIComponent('family.html' + (invite ? '?invite=' + invite : ''));
+    if (window.PASAU_LOCKED) {
+      return body.replaceChildren(panel('New parent accounts are paused', [
+        h('p', { class: 'muted', text: 'The pre-pilot test is over, so PasaU isn’t making new accounts for now. Parents who already have an account can still log in.' }),
+        h('div', { class: 'p-row' }, [h('a', { class: 'pill', href: loginNext, text: 'Log in' })])
+      ]));
+    }
     var n = UI.note(), who = h('p', { class: 'f-invite', 'aria-live': 'polite' });
     var code = h('input', { id: 'f-code', type: 'text', maxLength: 10, value: invite, autocomplete: 'off', autocapitalize: 'characters', spellcheck: false, placeholder: 'e.g. 3FA94C0B21' });
     var name = h('input', { id: 'f-name', type: 'text', maxLength: 80, autocomplete: 'name' });

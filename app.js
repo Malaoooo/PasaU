@@ -334,6 +334,7 @@
   })();
   function openSell(ex, preset) {
     ex = ex && ex.id ? ex : null;
+    if (!ex && window.PASAU_LOCKED) { toast(window.PASAU_LOCKED_MSG); return; }
     var kind = ex ? ex.kind : 'sell';
     var seg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Listing type' });
     var title = h('input', { id: 's-title', type: 'text', maxLength: 80, placeholder: 'e.g. PE shirt, size M' });

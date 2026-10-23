@@ -198,7 +198,7 @@
       if (r.error) return panel.replaceChildren(UI.empty('Couldn’t load listings.', errText(r.error)));
       if (!rows.length) {
         return panel.replaceChildren(self
-          ? UI.empty('You haven’t listed anything yet.', 'Sell, swap or give away something you’ve outgrown.', [h('a', { class: 'pill', href: 'index.html?sell=1', text: 'List an item' })])
+          ? UI.empty('You haven’t listed anything yet.', window.PASAU_LOCKED ? 'New listings are paused now that the pre-pilot test is over.' : 'Sell, swap or give away something you’ve outgrown.', window.PASAU_LOCKED ? [] : [h('a', { class: 'pill', href: 'index.html?sell=1', text: 'List an item' })])
           : UI.empty('No listings right now.', 'Check back later.'));
       }
       panel.replaceChildren.apply(panel, [h('ul', { class: 'p-list' }, rows.map(function (l) { return self ? manageRow(l) : browseRow(l); }))]);

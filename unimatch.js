@@ -50,8 +50,13 @@
   school.addEventListener('change', function () { school.dataset.touched = '1'; });
   setDefaultSchool();
 
+  if (window.PASAU_LOCKED) {
+    document.getElementById('um-form-h').textContent = 'Looking For posts are paused';
+    say('The pre-pilot test is over, so new Looking For posts are paused. Your posts and the board below still work.');
+  }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (window.PASAU_LOCKED) return;
     if (!me) { location.href = backHere(draftQuery()); return; }
     var title = need.value.trim();
     if (title.length < 3) { say('Say what you need in a few words, e.g. "anatomy textbook".', true); need.focus(); return; }
@@ -229,7 +234,7 @@
       h('div', { class: 'sheet-in' }, [
         h('h2', { id: 'um-reply-h', text: 'I have this: ' + w.title }),
         h('p', { class: 'muted', text: 'Send one of your listings to the student who posted this. They’ll get a notification.' }),
-        UI.field('Your listing', pick), send, listNow, n
+        UI.field('Your listing', pick), send, window.PASAU_LOCKED ? null : listNow, n
       ]));
     dlg.showModal();
     db.from('listings').select('id, title').eq('seller_id', me.id).eq('status', 'active').then(function (r) {
