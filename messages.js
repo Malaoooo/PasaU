@@ -56,9 +56,12 @@
     c.unread = 0;
     db.from('conversation_reads').upsert({ user_id: me.id, conversation_id: c.id, last_read_at: new Date().toISOString() }, { onConflict: 'user_id,conversation_id' }).then(function () {});
   }
-  function photoOf(c) {
+  function photoOf(c, size) {
     var p = c.listings && (c.listings.listing_photos || []).slice().sort(function (a, b) { return a.position - b.position; })[0];
-    return p ? db.storage.from('listing-photos').getPublicUrl(p.path).data.publicUrl : 'logos/mark-small.svg';
+    var img = h('img', { alt: '', width: size, height: size });
+    if (p) return PasaPhoto.thumbImg(img, p.path);
+    img.src = 'logos/mark-small.svg';
+    return img;
   }
 
   // ---------- conversation list ----------
@@ -97,7 +100,7 @@
       return h('li', {}, [h('button', { type: 'button', class: 'convo' + (current && current.id === c.id ? ' active' : '') + (c.unread ? ' unread' : ''), 'aria-current': current && current.id === c.id ? 'true' : null,
         'aria-label': (c.listings ? c.listings.title : 'Listing') + ', ' + otherName(c) + (c.unread ? ', ' + c.unread + ' unread' : ''),
         onclick: function () { openConvo(c.id, true); } }, [
-        h('img', { src: photoOf(c), alt: '', width: 48, height: 48 }),
+        photoOf(c, 48),
         h('span', { class: 'convo-txt' }, [
           h('b', { text: c.listings ? c.listings.title : 'Listing' }),
           h('small', { text: otherName(c) + ' · ' + (c.buyer_id === me.id ? 'buying' : 'selling') }),
@@ -135,7 +138,7 @@
     pane.replaceChildren(
       h('div', { class: 'thread-head' }, [
         h('button', { class: 'round back', type: 'button', 'aria-label': 'All conversations', onclick: function () { history.pushState({}, '', 'messages.html'); closeConvo(); } }, [icon('M15 5l-7 7 7 7')]),
-        h('img', { src: photoOf(c), alt: '', width: 44, height: 44 }),
+        photoOf(c, 44),
         h('span', { class: 'convo-txt' }, [
           h('b', { text: l.title || 'Listing' }),
           h('small', {}, [h('a', { href: 'profile.html?u=' + otherId(c), text: otherName(c) }),
@@ -192,11 +195,9 @@
       if (f.size > MAX_PHOTO) { note.textContent = 'Photos must be 5 MB or smaller.'; note.classList.add('err'); return; }
       note.textContent = 'Sending photo…';
       note.classList.remove('err');
-      var path = c.id + '/' + Date.now() + '.' + (f.name.split('.').pop() || 'jpg').toLowerCase();
-      db.storage.from('chat-photos').upload(path, f, { contentType: f.type }).then(function (u) {
-        if (u.error) { note.textContent = "Couldn't send the photo: " + errText(u.error); note.classList.add('err'); return; }
+      PasaPhoto.upload(db, 'chat-photos', c.id + '/' + Date.now(), f).then(function (path) {
         send({ photo_path: path });
-      });
+      }, function (e) { note.textContent = "Couldn't send the photo: " + errText(e); note.classList.add('err'); });
     });
 
     db.from('messages').select('*').eq('conversation_id', c.id).order('created_at').limit(300).then(function (r) {

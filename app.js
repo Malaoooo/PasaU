@@ -271,7 +271,7 @@
       var media = h('div', { class: 'spot-media' });
       var photo = (l.listing_photos || []).slice().sort(function (a, b) { return a.position - b.position; })[0];
       var art = document.querySelector('#grid .card[data-id="' + l.id + '"] .media svg');
-      if (photo) media.append(h('img', { src: photoUrl(photo.path), alt: '', loading: 'lazy' }));
+      if (photo) media.append(PasaPhoto.thumbImg(h('img', { alt: '', loading: 'lazy' }), photo.path));
       else if (art) media.append(art.cloneNode(true));
       var free = l.kind === 'free', swap = l.kind === 'swap';
       return h('article', { class: 'spot-card', role: 'listitem' }, [
@@ -389,7 +389,7 @@
     var current = h('div', { class: 'thumbs' });
     function drawKept() {
       current.replaceChildren.apply(current, keptPhotos.map(function (ph) {
-        return h('span', { class: 'kept' }, [h('img', { src: photoUrl(ph.path), alt: '' }), h('button', { type: 'button', class: 'x', 'aria-label': 'Remove this photo', text: '\u00D7', onclick: function () {
+        return h('span', { class: 'kept' }, [PasaPhoto.thumbImg(h('img', { alt: '' }), ph.path), h('button', { type: 'button', class: 'x', 'aria-label': 'Remove this photo', text: '\u00D7', onclick: function () {
           db.from('listing_photos').delete().eq('listing_id', ex.id).eq('path', ph.path).then(function (r) {
             if (r.error) return say(note, errText(r.error), true);
             keptPhotos = keptPhotos.filter(function (k) { return k !== ph; });
@@ -483,9 +483,7 @@
         if (!files.length) return null;
         return Promise.all(files.map(function (f, i) {
           i += start;
-          var path = me.id + '/' + id + '/' + i + '-' + Date.now() + '.' + (f.name.split('.').pop() || 'jpg').toLowerCase();
-          return db.storage.from('listing-photos').upload(path, f, { contentType: f.type }).then(function (u) {
-            if (u.error) throw u.error;
+          return PasaPhoto.upload(db, 'listing-photos', me.id + '/' + id + '/' + i + '-' + Date.now(), f, { thumb: true }).then(function (path) {
             return { listing_id: id, path: path, position: i };
           });
         })).then(function (rows) { return db.from('listing_photos').insert(rows); });

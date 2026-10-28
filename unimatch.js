@@ -19,7 +19,6 @@
   function schoolOf(v) { return window.UC_SCHOOL_OF ? window.UC_SCHOOL_OF(v) : null; }
   function label(sc) { return sc ? (window.UC_SCHOOL_LABEL ? window.UC_SCHOOL_LABEL(sc) : sc.code) : ''; }
   function campusTag(v) { var sc = schoolOf(v); return h('span', { class: 'campus-tag' + (sc ? '' : ' unset'), text: sc ? label(sc) : 'Any campus' }); }
-  function photoUrl(path) { return db.storage.from('listing-photos').getPublicUrl(path).data.publicUrl; }
   function priceOf(l) { return l.kind === 'free' ? 'Free' : l.kind === 'swap' ? 'Swap' : peso(l.price_php); }
   function say(msg, bad) { UI.say(note, msg, bad); }
   // The campus this visitor cares about: their pick on the home page, else their profile school
@@ -80,7 +79,7 @@
   function listingRow(l) {
     var ph = (l.listing_photos || []).slice().sort(function (a, b) { return a.position - b.position; })[0];
     return h('li', {}, [h('a', { class: 'p-item um-listing', href: 'index.html?open=' + l.id }, [
-      ph ? h('img', { class: 'thumb', src: photoUrl(ph.path), alt: '', loading: 'lazy' }) : h('span', { class: 'thumb um-thumb', 'aria-hidden': 'true' }),
+      ph ? PasaPhoto.thumbImg(h('img', { class: 'thumb', alt: '', loading: 'lazy' }), ph.path) : h('span', { class: 'thumb um-thumb', 'aria-hidden': 'true' }),
       h('span', { class: 'p-main' }, [
         h('span', { class: 'p-title', text: l.title }),
         h('span', { class: 'p-meta' }, [campusTag(l.school), [priceOf(l), l.pickup_spot].filter(Boolean).join(' · ')])
