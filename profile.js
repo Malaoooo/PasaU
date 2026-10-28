@@ -22,7 +22,7 @@
   function ok(r) { if (r.error) throw r.error; return r.data; }
   function photo(l) {
     var p = l && (l.listing_photos || []).slice().sort(function (a, b) { return a.position - b.position; })[0];
-    return h('img', { class: 'thumb', src: p ? db.storage.from('listing-photos').getPublicUrl(p.path).data.publicUrl : 'logos/mark-small.svg', alt: '' });
+    return p ? PasaPhoto.thumbImg(h('img', { class: 'thumb', alt: '' }), p.path) : h('img', { class: 'thumb', src: 'logos/mark-small.svg', alt: '' });
   }
   function priceOf(l) { return l.kind === 'free' ? 'Free' : l.kind === 'swap' ? 'Swap' : peso(l.price_php); }
   function chip(text, cls) { return h('span', { class: 'p-chip' + (cls ? ' ' + cls : ''), text: text }); }
@@ -93,10 +93,8 @@
   function uploadAvatar(f) {
     if (!f) return;
     if (f.size > 2 * 1024 * 1024) { toast('Photos must be 2 MB or smaller.'); return; }
-    var path = me.id + '/avatar-' + Date.now() + '.' + (f.name.split('.').pop() || 'jpg').toLowerCase();
     toast('Uploading photo…');
-    db.storage.from('avatars').upload(path, f, { contentType: f.type }).then(function (u) {
-      if (u.error) throw u.error;
+    PasaPhoto.upload(db, 'avatars', me.id + '/avatar-' + Date.now(), f, { max: 400 }).then(function (path) {
       var url = db.storage.from('avatars').getPublicUrl(path).data.publicUrl;
       return db.from('profiles').update({ avatar_url: url }).eq('id', me.id).then(function (r) {
         ok(r);
