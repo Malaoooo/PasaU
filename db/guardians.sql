@@ -27,7 +27,8 @@ create or replace view public.public_profiles as
     p.verified, p.created_at,
     (select count(*) from public.vouches v where v.vouchee_id = p.id)::int as vouch_count
   from public.profiles p
-  where not p.suspended and p.role = 'student';
+  -- definer view (the profiles table only shows your own row), so apply the two-step login lock here too
+  where not p.suspended and p.role = 'student' and (select public.mfa_ok());
 
 -- ---------- Invites, links, alerts ----------
 create table if not exists public.guardian_invites (
