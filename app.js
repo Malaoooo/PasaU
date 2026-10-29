@@ -776,6 +776,13 @@
       });
     } });
     wrap.append(send);
+    // An offer already waiting: say so instead of inviting the same offer again
+    db.from('offers').select('id, offered:listings!offers_offered_listing_id_fkey(title)').eq('listing_id', l.id).eq('buyer_id', me.id).eq('status', 'pending').limit(1).then(function (r) {
+      var o = r.data && r.data[0];
+      if (!o) return;
+      wrap.replaceChildren(h('h3', { text: 'Swap offer sent' }),
+        h('p', { class: 'muted', text: (o.offered && o.offered.title ? 'You offered ' + o.offered.title + '. ' : '') + 'The seller will see it with your listing. You\u2019ll get a notification when they answer.' }));
+    });
     db.from('listings').select('id, title').eq('seller_id', me.id).eq('status', 'active').neq('id', l.id).then(function (r) {
       var rows = r.data || [];
       pick.replaceChildren.apply(pick, rows.length ? [h('option', { value: '', text: 'Choose…' })].concat(rows.map(function (x) { return h('option', { value: x.id, text: x.title }); }))
@@ -824,7 +831,8 @@
       .then(function (r) {
         var m = r.data && r.data[0];
         var head = h('h3', { text: 'Campus meetup' });
-        var spot = h('select', { id: 'm-spot' }, options(spotsFor(l.school)));
+        var spot = h('select', { id: 'm-spot' }, options(spotsFor(l.school, l.pickup_spot)));
+        if (l.pickup_spot) spot.value = l.pickup_spot;
         var at = h('input', { id: 'm-at', type: 'datetime-local', min: localStamp(0), max: localStamp(365) });
         var proposeBtn = h('button', { class: 'pill', type: 'button', text: m ? 'Suggest another time' : 'Propose meetup', onclick: function () {
           var when = meetupTime(at.value);
